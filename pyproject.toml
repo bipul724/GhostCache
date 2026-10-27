@@ -1,0 +1,9 @@
+[project]
+name = "ghostcache"
+version = "0.1.0"
+description = "A local provenance and deletion testbed for AI application memory"
+requires-python = ">=3.12"
+dependencies = []
+
+[project.scripts]
+ghostcache = "ghostcache.__main__:main"
