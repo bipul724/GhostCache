@@ -106,7 +106,7 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 | NFR-02 | Offline unit tests (no network or model) | Met: provider status is mocked in tests |
 | NFR-03 | Localhost-only server with Host and Origin checks, JSON-only POST, size limits and security headers | Met for the local prototype |
 | NFR-04 | No raw content in server logs | Met: the access log records method, path and status, and unexpected errors record only the exception class |
-| NFR-05 | Deterministic fixture evaluation suitable for CI | Met locally. Hosted CI not yet run. |
+| NFR-05 | Deterministic fixture evaluation suitable for CI | Met locally and on GitHub ([Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382), October 28, 2026). |
 | NFR-06 | Concurrency safety for one local user | Controller and store `RLock`s plus SQLite transactions. Not a multi-user or distributed guarantee. |
 | NFR-07 | Accessibility basics | Labels, `aria-*`, `role=status/alert`, reduced-motion styles. No formal audit has been done. |
 | NFR-08 | Honest labelling | Fixture vs live, broken control, and the scope text in reports and the UI |
@@ -124,7 +124,7 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 
 | Implemented MVP | Future (not implemented) |
 | --- | --- |
-| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 62 tests (7 UI contract tests need Node), CI workflow file | Open consistency fixes (T-A7, T-A8, the rest of T-A9), a public repository and hosted Actions run, repeated live evaluations with metadata, Sentry tracing, a public demo on Render or .tech, a Backboard comparison, a Browserbase run, optional ElevenLabs narration and Entire checkpoints |
+| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 62 tests (7 UI contract tests need Node), CI workflow file, a public repository with one successful hosted Actions run (October 28, 2026) | Open consistency fixes (T-A7, T-A8, the rest of T-A9), repeated live evaluations with metadata, Sentry tracing, a public demo on Render or .tech, a Backboard comparison, a Browserbase run, optional ElevenLabs narration and Entire checkpoints |
 
 ## 12. Success measures
 
@@ -147,7 +147,7 @@ A fixture pass supports the software invariants only. A live pass supports only 
 
 - Python 3.12+ standard library and SQLite.
 - Ollama with `gemma4:e2b-it-qat` (about 4.3 GB) for live mode, on the user's laptop.
-- GitHub (repository and Actions) for CI evidence. Not yet set up.
+- GitHub (repository and Actions) for CI evidence. Set up: [bipul724/GhostCache](https://github.com/bipul724/GhostCache), with one successful hosted run (October 28, 2026).
 - Planned external services: Sentry, Render, a .tech domain registrar and its DNS, Backboard, Browserbase, ElevenLabs, Entire. Their pricing, free allowances and eligibility were checked on October 27, 2026 according to `context.md`, and **must be rechecked** before use.
 
 ## 14. Risks
@@ -178,7 +178,7 @@ These apply only if the category is entered. Each one requires **real use plus e
 | ID | Category | Requirement for listing it in the submission |
 | --- | --- | --- |
 | CAT-01 | Gemma | Explain Gemma's role, the model ID and the saved live evidence, including any failures. *(Ready now.)* |
-| CAT-02 | GitHub Copilot (via Actions, which the official category description includes) | A public repository and a successful hosted workflow run whose fixture-report artifact can be inspected. Do not claim Copilot authorship. |
+| CAT-02 | GitHub Copilot (via Actions, which the official category description includes) | A public repository and a successful hosted workflow run whose fixture-report artifact can be inspected. Do not claim Copilot authorship. *(Repository and a successful hosted run exist: [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382). The uploaded artifact has not been downloaded or inspected.)* |
 | CAT-03 | Sentry Agent Tracing | Metadata-only spans for retrieval, generation, deletion, rebuild and verify, plus real trace screenshots and one explained finding |
 | CAT-04 | Render | A reachable Render-hosted frontend or demo, labelled replay, simulation or live |
 | CAT-05 | .tech domain | Evidence of the promo claim, plus a live HTTPS subdomain serving the project; the existing apex is preserved |

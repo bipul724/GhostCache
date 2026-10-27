@@ -1,6 +1,6 @@
 # GhostCache architecture
 
-Part 1 describes the **current** system (version 0.1.0), checked against the source on October 27, 2026. Part 2 covers proposed external integrations and publication. The GitHub Actions workflow already exists locally; its hosted execution and the other external integrations remain unverified or unimplemented as specified below.
+Part 1 describes the **current** system (version 0.1.0), checked against the source on October 27, 2026. Part 2 covers proposed external integrations and publication. The GitHub Actions workflow has one successful hosted run ([run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382), October 28, 2026); the other external integrations remain unverified or unimplemented as specified below.
 
 ---
 
@@ -47,7 +47,7 @@ flowchart TB
 | `web/index.html`, `web/app.js`, `web/style.css` | Single-page UI with no build step and no external assets. The answer trace shows `trace.parent_ids` as "Context: …". |
 | `tests/ui/app_contract.js`, `tests/test_ui.py` | 7 UI contract tests. They run the real `web/app.js` in `node:vm` with a fake DOM and fetch. The 6 Node cases skip when `node` is not on PATH. |
 | `tests/test_store.py`, `test_app.py`, `test_http.py`, `test_providers.py` | 55 tests: 11 store (including 2 publication-primitive tests), 23 controller (including 5 reset-failure and 10 publication tests), 9 HTTP-handler (including 2 transport and 1 storage-failure test), 12 provider-response, transport and CLI tests. |
-| `.github/workflows/checks.yml` | CI definition (not yet run on GitHub). |
+| `.github/workflows/checks.yml` | CI definition. Hosted [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on GitHub on October 28, 2026. |
 | `results/` | Saved evidence: two JSON reports and two screenshots. |
 
 ## Data model (SQLite)
@@ -388,7 +388,7 @@ These remaining discrepancies are tracked in [tasks.md](tasks.md). Resolved item
 
 # Part 2: Proposed architecture (not implemented)
 
-The hosted operations and integrations in this part are not complete. GitHub Actions has a local workflow configuration, but no hosted run. The other integration code and GhostCache deployment/DNS setup are not implemented; external account ownership and remaining allowances have not been fully audited. Each item needs the evidence listed in [tasks.md](tasks.md) before it can be claimed.
+The hosted operations and integrations in this part are not complete. GitHub Actions is the exception: it has one successful hosted run (see the table below). The other integration code and GhostCache deployment/DNS setup are not implemented; external account ownership and remaining allowances have not been fully audited. Each item needs the evidence listed in [tasks.md](tasks.md) before it can be claimed.
 
 ```mermaid
 flowchart LR
@@ -405,7 +405,7 @@ flowchart LR
 
 | Integration | Proposed design | Constraints already identified |
 | --- | --- | --- |
-| **GitHub Actions** | Publish `ghostcache/` itself as the repository root so `.github/workflows/checks.yml` is discovered | The workflow file exists. If the parent `week 4/` folder were published instead, the workflow would be nested and never run. |
+| **GitHub Actions** | Publish `ghostcache/` itself as the repository root so `.github/workflows/checks.yml` is discovered | Done: [bipul724/GhostCache](https://github.com/bipul724/GhostCache) has `ghostcache/` as its root, and [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) discovered and ran the workflow on October 28, 2026. Publishing the parent `week 4/` folder instead would have left the workflow nested and never run. |
 | **Sentry** | Spans for `retrieve`, `generate`, `delete.source_only`, `delete.cascade`, `rebuild` and `verify`. Attributes: durations, token counts, result counts, mode, error class. The DSN is read from the environment. | **No** document text, questions, answers or markers. The SDK's default capture must be checked. Free-plan quota unverified. This would add the first third-party dependency. |
 | **Public demo (Render) + .tech** | Option A: a static, clearly labelled **recorded replay** of a saved run, with local live mode shown by instructions and video. Option B: a redesigned service with per-session state, correct bind and Host handling, and limits on cost and state. | Copying `web/` to a static host does not work, because the UI needs `/api/*`. Free Render cannot run the 4.3 GB model, and a cloud host cannot reach the laptop's `127.0.0.1`. Promo eligibility of `bipulchamoli.tech` and its DNS host are unverified. |
 | **Backboard** | An optional third provider, used only by a comparison command. Stateless requests carrying only the supplied context, with request, token and cost caps. Output: one report per model in the existing check format. | Do not introduce provider-side memory into the deletion claim. Keep Ollama as the local path. Credits are finite and need rechecking. |

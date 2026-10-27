@@ -198,11 +198,12 @@ The evidence for each record is code, tests, saved results or the workspace hand
 
 ## D-15. Publish `ghostcache/` itself as the repository root
 
-- **Status:** Proposed
+- **Status:** Accepted (implemented October 28, 2026)
 - **Context:** GitHub only discovers workflows at `<repo root>/.github/workflows/`. No Git repository exists yet.
 - **Decision:** Initialise the repository in the application directory. `context.md` stays in the parent workspace unless D-16 decides otherwise.
 - **Consequences:** Publishing the parent folder unchanged would leave the workflow undiscovered.
 - **Evidence:** `context.md` §18.
+- **Outcome (October 28, 2026):** published as [bipul724/GhostCache](https://github.com/bipul724/GhostCache) with `ghostcache/` as the root; [Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) discovered and ran the workflow successfully.
 
 ## D-16. Whether to ship the handoff context in the repository
 

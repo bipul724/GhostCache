@@ -5,7 +5,7 @@ GhostCache is a small, local, standard-library Python testbed. It shows how with
 ## Layout
 
 ```text
-ghostcache/            # application root = intended Git repository root
+ghostcache/            # application root = Git repository root (bipul724/GhostCache)
 ├── ghostcache/        # Python package
 │   ├── __main__.py    # CLI (serve/evaluate) and local HTTP handler
 │   ├── app.py         # Experiment controller, QUESTIONS, evaluate()

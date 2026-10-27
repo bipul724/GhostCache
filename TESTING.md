@@ -35,6 +35,20 @@ node tests/ui/app_contract.js context_from_parent_ids
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
 
+## Hosted CI run #1 (October 28, 2026)
+
+- **Repository:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache): public, MIT, default branch `main`, with `ghostcache/` as the repository root. 25 commits; HEAD `6e767ee`. `git ls-files` lists 32 files, with no `__pycache__`, `.local/`, `.env` or `.DS_Store`.
+- **Run:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) (job 122423115717) of the workflow "GhostCache deletion checks", triggered by the push of `6e767ee` on 2026-10-27 at 19:35 UTC (October 28, 01:05 IST). Conclusion: **success**. The job "Tests and fresh synthetic evaluation" took 10 s; the run took 14 s in total.
+
+| Step | Result |
+| --- | --- |
+| Check storage, provenance, and HTTP invariants | `Ran 62 tests in 3.013s` / `OK`, none skipped. All 7 `test_ui` tests ran and passed, so Node was on the hosted runner's PATH. |
+| Evaluate a fresh synthetic deletion case | Success. `evaluate` exits 0 only when the report has `passed: true` (`__main__.py`), so the hosted fixture evaluation passed. |
+| Upload | Artifact `ghostcache-synthetic-evaluation`, 2,107 bytes, kept 3 days. **Its JSON was not downloaded or inspected.** |
+
+- The pinned actions (checkout `v7.0.1`, setup-python `v7.1.0`, upload-artifact `v7.0.2`) resolved, with no errors.
+- One notice: `ubuntu-latest` migrates to Ubuntu 26 from October 19, 2026 (actions/runner-images#14748). It is informational only; Python 3.12 is installed by setup-python.
+
 ## UI fixes T-A2, T-A3 and T-A4 (October 27, 2026)
 
 **Changes (in `web/` only, with no backend change):**
@@ -274,15 +288,15 @@ The top-level keys are `project`, `mode`, `model`, `passed`, `checks[]`, `oracle
 - **Triggers and runner:** push, pull request or manual dispatch, on `ubuntu-latest` with Python 3.12 and a 5-minute timeout.
 - **Steps:** runs the unit suite, then a fresh fixture evaluation into `$RUNNER_TEMP`, and uploads only that JSON (`ghostcache-synthetic-evaluation`, kept 3 days).
 - **The evaluation still runs if the tests fail**, as long as Python setup succeeded.
-- **UI contract tests:** they run inside the same `unittest` command, so they need `node` on the runner's PATH. Otherwise they are skipped and the job still passes. Whether the hosted runner provides Node is unverified until a real Actions run; the workflow was not changed.
+- **UI contract tests:** they run inside the same `unittest` command, so they need `node` on the runner's PATH. Otherwise they are skipped and the job still passes. Hosted run #1 confirmed that the runner provides Node: all 7 UI tests ran and passed. The workflow was not changed.
 - **Security settings:** read-only contents, no persisted credentials, actions pinned to commit SHAs, no secrets, no model and no live inference.
 
 **Status:**
 
 - The commands were verified locally.
-- **No GitHub-hosted run has happened, because no repository exists yet.**
-- `ghostcache/` must be the repository root, or the workflow will not be discovered.
-- Pending evidence: a run URL and the downloaded report (T-B2).
+- **Done:** hosted [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026 (see "Hosted CI run #1" above).
+- `ghostcache/` is the repository root, so the workflow was discovered.
+- Evidence: the run URL is recorded. The uploaded report was not downloaded; the evaluate step's success means it had `passed: true`.
 
 ## Collecting new evidence without overwriting the old
 
@@ -319,5 +333,5 @@ Worthwhile additions, in order:
 1. A rebuild `ProviderError` keeps cleanup complete, logs `summary.rebuild_failed` and returns `rebuild_error`.
 2. `main(["evaluate", "--output", tmp])` in fixture mode writes a passing report and returns 0.
 3. Asking during the `source_only` stage never saves a stale conversation.
-4. An automated real-browser run of the UI contract. The manual check is done; the rest of T-A9 is new screenshots and a hosted CI run with Node.
+4. An automated real-browser run of the UI contract. The manual check and hosted CI with Node are done; the rest of T-A9 is new screenshots.
 5. Retrieval tie-break ordering.
