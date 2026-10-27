@@ -44,10 +44,17 @@ Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders
 | --- | --- |
 | Check storage, provenance, and HTTP invariants | `Ran 62 tests in 3.013s` / `OK`, none skipped. All 7 `test_ui` tests ran and passed, so Node was on the hosted runner's PATH. |
 | Evaluate a fresh synthetic deletion case | Success. `evaluate` exits 0 only when the report has `passed: true` (`__main__.py`), so the hosted fixture evaluation passed. |
-| Upload | Artifact `ghostcache-synthetic-evaluation`, 2,107 bytes, kept 3 days. **Its JSON was not downloaded or inspected.** |
+| Upload | Artifact `ghostcache-synthetic-evaluation`, 2,107 bytes, kept 3 days. Run #1's artifact was not downloaded. The report from run #3 was downloaded and inspected instead (JSON SHA-256 `cf68765a7cd229ad54274e2457e163e09cec5b83d9eb4625c40b984724490bc7`; see below). |
 
 - The pinned actions (checkout `v7.0.1`, setup-python `v7.1.0`, upload-artifact `v7.0.2`) resolved, with no errors.
 - One notice: `ubuntu-latest` migrates to Ubuntu 26 from October 19, 2026 (actions/runner-images#14748). It is informational only; Python 3.12 is installed by setup-python.
+
+### Hosted CI runs #2 and #3
+
+- **Run #3** ([run](https://github.com/bipul724/GhostCache/actions/runs/40573873485), push of `172ccb4`) also passed: 62 tests and a successful evaluation step.
+- **Run #2** (same commit, created in the same second) was cancelled before any step by the workflow's `cancel-in-progress` concurrency setting. It was a duplicate push event, not a failure.
+- **Run #3's report, downloaded and inspected by the planner on October 28, 2026.** The `ghostcache-synthetic-evaluation` zip is 2,106 bytes (SHA-256 `1170be7817b55f64fa8533aa8fbc57f66dd79e170eb948659b10c5ba1426f281`). It contains one file, `ghostcache-fixture.json`: 13,531 bytes, SHA-256 `cf68765a7cd229ad54274e2457e163e09cec5b83d9eb4625c40b984724490bc7`.
+- Contents: mode `fixture`, `passed: true`, model "Deterministic fixture — no AI call", 10 of 10 checks passed. It has the same top-level keys and the same 10 check names, in the same order, as `results/fixture.json`. Its fresh marker differs from the saved report's, so it is a new synthetic case. No runner paths or credentials appear in it. The file was not added to the repository.
 
 ## UI fixes T-A2, T-A3 and T-A4 (October 27, 2026)
 
@@ -296,7 +303,7 @@ The top-level keys are `project`, `mode`, `model`, `passed`, `checks[]`, `oracle
 - The commands were verified locally.
 - **Done:** hosted [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026 (see "Hosted CI run #1" above).
 - `ghostcache/` is the repository root, so the workflow was discovered.
-- Evidence: the run URL is recorded. The uploaded report was not downloaded; the evaluate step's success means it had `passed: true`.
+- Evidence: the run URLs are recorded. Run #1's report was not downloaded; run #3's report was downloaded and inspected (10 of 10 checks, `passed: true`; see "Hosted CI runs #2 and #3" above).
 
 ## Collecting new evidence without overwriting the old
 

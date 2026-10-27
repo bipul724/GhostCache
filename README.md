@@ -26,7 +26,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Local fixture and live-Gemma experiment, browser UI, provenance cleanup | **Implemented** |
 | Automated tests | **62 tests pass** under Python 3.12.6 with Node 22 on PATH (rerun on October 27, 2026 after the T-A2–T-A4 UI fixes; 7 are UI contract tests, 6 of which skip without Node; see [TESTING.md](TESTING.md)) |
 | Saved evaluations | One fixture report and **one** live Gemma report, each 10/10 checks ([results/](results/)) |
-| GitHub Actions workflow | **Passed on GitHub:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) on October 28, 2026 (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. The uploaded report was not downloaded. |
+| GitHub Actions workflow | **Passed on GitHub:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) on October 28, 2026 (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) (push of `172ccb4`) also passed, and its uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. |
 | Sentry, Render, .tech domain, Backboard, Browserbase | **Planned, not implemented** |
 | ElevenLabs, Entire | **Optional, not started** |
 | Public repository | **Created:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache) (public, MIT) |
