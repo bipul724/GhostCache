@@ -1,0 +1,54 @@
+name: GhostCache deletion checks
+
+"on":
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ghostcache-checks-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deletion-invariants:
+    name: Tests and fresh synthetic evaluation
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONUTF8: "1"
+    steps:
+      - name: Check out the project
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.12
+        id: python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - name: Check storage, provenance, and HTTP invariants
+        run: python -m unittest discover -s tests -v
+
+      # Run this independent control even if a unit test failed. This is fixture
+      # evidence, not live Gemma inference; it uses only a new fictional corpus.
+      - name: Evaluate a fresh synthetic deletion case
+        id: fixture
+        if: ${{ !cancelled() && steps.python.outcome == 'success' }}
+        run: python -m ghostcache evaluate --mode fixture --output "$RUNNER_TEMP/ghostcache-fixture.json"
+
+      # Keep the bounded report even when its checks fail. Never upload the
+      # working tree, local database, live reports, or user documents.
+      - name: Retain the synthetic evaluation report
+        if: ${{ !cancelled() && steps.fixture.outcome != 'skipped' }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ghostcache-synthetic-evaluation
+          path: ${{ runner.temp }}/ghostcache-fixture.json
+          if-no-files-found: error
+          retention-days: 3
