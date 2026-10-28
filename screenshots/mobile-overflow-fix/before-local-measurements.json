@@ -1,0 +1,466 @@
+[
+ {
+  "w": 320,
+  "h": 720,
+  "mobile": true,
+  "initial": {
+   "clientWidth": 320,
+   "scrollWidth": 573,
+   "bodyScrollWidth": 573,
+   "innerWidth": 573,
+   "offenders": [
+    "span.tiny-label:48-333",
+    "article:16-573",
+    "p.eyebrow:16-573",
+    "h2:16-573",
+    "p:16-573",
+    "article:16-573"
+   ],
+   "offenderCount": 16
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 573,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 17,
+   "pressedOk": true,
+   "articles": [
+    557,
+    557,
+    557
+   ],
+   "preRight": 573,
+   "command": {
+    "clientWidth": 555,
+    "scrollWidth": 555,
+    "scrolledTo": 0
+   },
+   "table": {
+    "clientWidth": 256,
+    "scrollWidth": 520,
+    "scrolledTo": 60
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [
+   "log.error: network http://127.0.0.1:8790/favicon.ico"
+  ],
+  "shot": "before-local-320x720-explainers.png"
+ },
+ {
+  "w": 360,
+  "h": 780,
+  "mobile": true,
+  "initial": {
+   "clientWidth": 360,
+   "scrollWidth": 573,
+   "bodyScrollWidth": 573,
+   "innerWidth": 573,
+   "offenders": [
+    "article:16-573",
+    "p.eyebrow:16-573",
+    "h2:16-573",
+    "p:16-573",
+    "article:16-573",
+    "p.eyebrow:16-573"
+   ],
+   "offenderCount": 15
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 573,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 15,
+   "pressedOk": true,
+   "articles": [
+    557,
+    557,
+    557
+   ],
+   "preRight": 573,
+   "command": {
+    "clientWidth": 555,
+    "scrollWidth": 555,
+    "scrolledTo": 0
+   },
+   "table": {
+    "clientWidth": 296,
+    "scrollWidth": 520,
+    "scrolledTo": 60
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": null
+ },
+ {
+  "w": 375,
+  "h": 812,
+  "mobile": true,
+  "initial": {
+   "clientWidth": 375,
+   "scrollWidth": 573,
+   "bodyScrollWidth": 573,
+   "innerWidth": 573,
+   "offenders": [
+    "article:16-573",
+    "p.eyebrow:16-573",
+    "h2:16-573",
+    "p:16-573",
+    "article:16-573",
+    "p.eyebrow:16-573"
+   ],
+   "offenderCount": 15
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 573,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 15,
+   "pressedOk": true,
+   "articles": [
+    557,
+    557,
+    557
+   ],
+   "preRight": 573,
+   "command": {
+    "clientWidth": 555,
+    "scrollWidth": 555,
+    "scrolledTo": 0
+   },
+   "table": {
+    "clientWidth": 311,
+    "scrollWidth": 520,
+    "scrolledTo": 60
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": "before-local-375x812-explainers.png"
+ },
+ {
+  "w": 390,
+  "h": 844,
+  "mobile": true,
+  "initial": {
+   "clientWidth": 390,
+   "scrollWidth": 573,
+   "bodyScrollWidth": 573,
+   "innerWidth": 573,
+   "offenders": [
+    "article:16-573",
+    "p.eyebrow:16-573",
+    "h2:16-573",
+    "p:16-573",
+    "article:16-573",
+    "p.eyebrow:16-573"
+   ],
+   "offenderCount": 15
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 573,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 15,
+   "pressedOk": true,
+   "articles": [
+    557,
+    557,
+    557
+   ],
+   "preRight": 573,
+   "command": {
+    "clientWidth": 555,
+    "scrollWidth": 555,
+    "scrolledTo": 0
+   },
+   "table": {
+    "clientWidth": 326,
+    "scrollWidth": 520,
+    "scrolledTo": 60
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": null
+ },
+ {
+  "w": 414,
+  "h": 896,
+  "mobile": true,
+  "initial": {
+   "clientWidth": 414,
+   "scrollWidth": 573,
+   "bodyScrollWidth": 573,
+   "innerWidth": 573,
+   "offenders": [
+    "article:16-573",
+    "p.eyebrow:16-573",
+    "h2:16-573",
+    "p:16-573",
+    "article:16-573",
+    "p.eyebrow:16-573"
+   ],
+   "offenderCount": 15
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 573,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 15,
+   "pressedOk": true,
+   "articles": [
+    557,
+    557,
+    557
+   ],
+   "preRight": 573,
+   "command": {
+    "clientWidth": 555,
+    "scrollWidth": 555,
+    "scrolledTo": 0
+   },
+   "table": {
+    "clientWidth": 350,
+    "scrollWidth": 520,
+    "scrolledTo": 60
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": "before-local-414x896-explainers.png"
+ },
+ {
+  "w": 375,
+  "h": 812,
+  "mobile": false,
+  "initial": {
+   "clientWidth": 375,
+   "scrollWidth": 573,
+   "bodyScrollWidth": 573,
+   "innerWidth": 375,
+   "offenders": [
+    "article:16-573",
+    "p.eyebrow:16-573",
+    "h2:16-573",
+    "p:16-573",
+    "article:16-573",
+    "p.eyebrow:16-573"
+   ],
+   "offenderCount": 15
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 573,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 15,
+   "pressedOk": true,
+   "articles": [
+    557,
+    557,
+    557
+   ],
+   "preRight": 573,
+   "command": {
+    "clientWidth": 555,
+    "scrollWidth": 555,
+    "scrolledTo": 0
+   },
+   "table": {
+    "clientWidth": 311,
+    "scrollWidth": 520,
+    "scrolledTo": 60
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": null
+ },
+ {
+  "w": 768,
+  "h": 1024,
+  "mobile": false,
+  "initial": {
+   "clientWidth": 768,
+   "scrollWidth": 768,
+   "bodyScrollWidth": 768,
+   "innerWidth": 768,
+   "offenders": [],
+   "offenderCount": 0
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 768,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 0,
+   "pressedOk": true,
+   "articles": [
+    688,
+    688,
+    688
+   ],
+   "preRight": 728,
+   "command": {
+    "clientWidth": 686,
+    "scrollWidth": 686,
+    "scrolledTo": 0
+   },
+   "table": {
+    "clientWidth": 646,
+    "scrollWidth": 646,
+    "scrolledTo": 0
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": "before-local-768x1024-explainers.png"
+ },
+ {
+  "w": 980,
+  "h": 900,
+  "mobile": false,
+  "initial": {
+   "clientWidth": 980,
+   "scrollWidth": 980,
+   "bodyScrollWidth": 980,
+   "innerWidth": 980,
+   "offenders": [],
+   "offenderCount": 0
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 980,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 0,
+   "pressedOk": true,
+   "articles": [
+    900,
+    900,
+    900
+   ],
+   "preRight": 940,
+   "command": {
+    "clientWidth": 898,
+    "scrollWidth": 898,
+    "scrolledTo": 0
+   },
+   "table": {
+    "clientWidth": 858,
+    "scrollWidth": 858,
+    "scrolledTo": 0
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": null
+ },
+ {
+  "w": 981,
+  "h": 900,
+  "mobile": false,
+  "initial": {
+   "clientWidth": 981,
+   "scrollWidth": 981,
+   "bodyScrollWidth": 981,
+   "innerWidth": 981,
+   "offenders": [],
+   "offenderCount": 0
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 981,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 0,
+   "pressedOk": true,
+   "articles": [
+    286,
+    286,
+    286
+   ],
+   "preRight": 941,
+   "command": {
+    "clientWidth": 284,
+    "scrollWidth": 555,
+    "scrolledTo": 60
+   },
+   "table": {
+    "clientWidth": 859,
+    "scrollWidth": 859,
+    "scrolledTo": 0
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": null
+ },
+ {
+  "w": 1280,
+  "h": 900,
+  "mobile": false,
+  "initial": {
+   "clientWidth": 1280,
+   "scrollWidth": 1280,
+   "bodyScrollWidth": 1280,
+   "innerWidth": 1280,
+   "offenders": [],
+   "offenderCount": 0
+  },
+  "walk": {
+   "states": 33,
+   "maxScroll": 1280,
+   "worst": "run 0 stage 0",
+   "maxOffenders": 0,
+   "pressedOk": true,
+   "articles": [
+    372,
+    372,
+    372
+   ],
+   "preRight": 1220,
+   "command": {
+    "clientWidth": 370,
+    "scrollWidth": 555,
+    "scrolledTo": 60
+   },
+   "table": {
+    "clientWidth": 1118,
+    "scrollWidth": 1118,
+    "scrolledTo": 0
+   },
+   "bannerVisible": true,
+   "cardsInside": true,
+   "cardCount": 4,
+   "fontPx": "14px"
+  },
+  "problems": [],
+  "shot": "before-local-1280x900-explainers.png"
+ }
+]
