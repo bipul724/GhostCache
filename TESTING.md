@@ -92,13 +92,14 @@ All times in this section are IST on October 28, 2026. The user created a Sentry
 | `results/sentry-c-vault-search.jpg` (1800×979) | 255,933 | `a87e803ce2b791ffb0206747052c6acf41a0b96aa3730f983d94fb5c4ea93e39` |
 | `results/sentry-warm-trace.jpg` (1800×982) | 244,400 | `e78d8a1b4705e0527864bbbefd9f4700c90ddb399bcb02195a9e074fd0abb438` |
 | `results/sentry-warm-chat-tokens.jpg` (1800×984) | 271,669 | `219e6fe15ecf7204165ebdeb1656cb890d312619bfc9624eea3b0f53635e79e4` |
+| `results/sentry-failed-run.jpg` (1800×979; added later on October 28, from source PNG SHA-256 `23b7a39d81393df51efe5e2daf8bdfd360d61b43332aee6c86d8334ea8683a30`) | 153,911 | `4142d9b6cfe3121839951462eead848fc5cd7ca5f1a011c77ab5fd1fbf3efd5a` |
 
 The fixture report stays outside the repository: `../runs/sentry-fixture.json`, SHA-256 `7e2fc0cc6ace4ae8d1e59c9640b46cf96017e9733ef92e91bf714dd3cd105270`.
 
 **Not verified.**
 
 - The cause of the slow first call. Model loading is inferred; no `load_duration`, memory or Ollama log was recorded (T-C2 stays open).
-- The traces of the three failed 09:16 attempts were not inspected.
+- Of the three failed 09:16 attempts, one trace was inspected later on October 28, 2026: `7e075ad683f247d687b59dddbb038ce5` (`results/sentry-failed-run.jpg`). It has 1 span, the root `ghostcache.evaluate` "evaluate live", 9.69 ms (`duration 9.68504`), status `internal_error`, 0 issues, `error.type: ProviderError`, `ghostcache.mode: live`, `origin: manual`, release `ghostcache@0.1.0`, environment `local-live`. Its `precise.start_ts` 1793159179.292204 is 03:46:19 UTC (09:16:19 IST). It has no `ghostcache.error.category`, because the run stopped at the Ollama availability check in `Experiment.reset`, before any `gen_ai.chat` span; that attribute is set only on a failed chat span. Sentry's note "This span returned an error status but has no associated issue" is expected, because `telemetry.py` drops every error event. The other two failed traces were not inspected.
 - No screenshot of the fixture trace itself was saved; it is seen only as a conversation in the Agents view.
 - These traces come from the user's manual runs. No automated test or CI step sends anything to Sentry.
 
@@ -108,7 +109,7 @@ The planner read these values from the user's Sentry screenshots on October 28, 
 
 - **Settings → Subscription → Overview:** "Trial plan", a **Business Plan Trial** with 14 days left. No billing details and no payment method on file, so no card was needed. Usage period Oct 28 – Nov 10, 2026: **spans 120 used of 100M**, errors 0 of 1M, and 0 for every other feature.
 - **Settings → Stats & Usage** (Errors, last 14 days): 0 errors in total, accepted, filtered, rate-limited or invalid. This is expected, because `telemetry.py` drops every error event (`before_send` returns `None`) and sends traces only.
-- **Cross-check:** 120 spans is consistent with the recorded runs. The fixture, cold and warm evaluations sent 39 spans each (117). Each of the three failed 09:16 IST attempts could send only its root `ghostcache.evaluate` span (3): `Experiment.reset` checks Ollama's availability and raises before it opens the `ghostcache.reset` span (`app.py`). The failed-attempt traces were not inspected individually, so this is consistent with the count, not verified trace by trace.
+- **Cross-check:** 120 spans is consistent with the recorded runs. The fixture, cold and warm evaluations sent 39 spans each (117). Each of the three failed 09:16 IST attempts could send only its root `ghostcache.evaluate` span (3): `Experiment.reset` checks Ollama's availability and raises before it opens the `ghostcache.reset` span (`app.py`). One failed trace, `7e075ad683f247d687b59dddbb038ce5` (`results/sentry-failed-run.jpg`), was later confirmed to contain exactly one span. The other two are inferred, not inspected.
 - **What it means:** the account used a 14-day Business trial, not the free Developer plan the original plan targeted. The Developer plan's limits and what happens when the trial ends were not checked. At about 40 spans per evaluation, the span quota is no practical constraint for this challenge. The trace screenshots are saved in `results/`, so the evidence does not depend on Sentry's retention after the trial.
 
 ## Sentry tracing T-D2 (October 28, 2026)

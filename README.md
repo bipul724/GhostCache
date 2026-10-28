@@ -161,6 +161,10 @@ Every later chat span took about 1–3 s in both traces, so that first call acco
 
 ![Source-only assistant span in the cold trace, with answer_contains_marker true](results/sentry-source-only-leak.jpg)
 
+**Failures are traced too.** One of the three live attempts that failed at 09:16, before `ollama serve` was started, was inspected: trace `7e075ad683f247d687b59dddbb038ce5`. It has a single span, the root `ghostcache.evaluate` "evaluate live" (9.69 ms), with status `internal_error`, `error.type: ProviderError` and `ghostcache.mode: live`. The run stopped at the Ollama availability check in `Experiment.reset`, before the `ghostcache.reset` span opens, so the trace shows the failure's class but no `ghostcache.error.category`; that attribute is set only on a failed `chat` span. Sentry shows "no associated issue" because GhostCache drops every error event and sends traces only.
+
+![Failed live attempt: one root span with internal_error and error.type ProviderError](results/sentry-failed-run.jpg)
+
 More screenshots: [the memory search that returned `c-vault`](results/sentry-c-vault-search.jpg), [the warm trace](results/sentry-warm-trace.jpg) and [the warm first model call, 181 input + 55 output tokens](results/sentry-warm-chat-tokens.jpg). Method, cross-checks and what was not verified: [TESTING.md](TESTING.md), "Real Sentry traces T-D3".
 
 ## Demonstration workflow (browser)
@@ -194,7 +198,7 @@ Each evaluation uses a fresh in-memory database, separate from the UI database. 
 | [results/live-gemma.json](results/live-gemma.json) | One live run with `gemma4:e2b-it-qat`, 10/10 checks. 11 model calls, 130,650 ms summed call time, 3,209 input and 677 output tokens. |
 | [results/ghostcache-ui-desktop.jpg](results/ghostcache-ui-desktop.jpg), [results/ghostcache-ui-mobile.jpg](results/ghostcache-ui-mobile.jpg) | Screenshots from a fixture-mode browser session, taken at different moments. Not a Browserbase run. |
 | [results/sentry-live-cold.json](results/sentry-live-cold.json), [results/sentry-live-warm.json](results/sentry-live-warm.json) | Two traced live runs with `gemma4:e2b-it-qat` on October 28, 2026, 10/10 checks each. 11 model calls each: 61,325 ms summed call time cold, 22,078 ms warm. |
-| Six `results/sentry-*.jpg` screenshots | Sentry's Agents view and the two live traces. See [What the real traces showed](#what-the-real-traces-showed). |
+| Seven `results/sentry-*.jpg` screenshots | Sentry's Agents view, the two live traces and one failed live attempt ([results/sentry-failed-run.jpg](results/sentry-failed-run.jpg)). See [What the real traces showed](#what-the-real-traces-showed). |
 
 All four reports show the same stage pattern:
 
