@@ -25,6 +25,8 @@ These images show a static recorded walkthrough, a Render deployment dashboard, 
 | [14-public-api-not-found.png](14-public-api-not-found.png) | Browser shows Not Found for the public /api URL. | 2047 x 1331 |
 | [15-public-api-state-extra-asterisks-not-found.png](15-public-api-state-extra-asterisks-not-found.png) | Browser shows Not Found for /api/state** with a tracking query; this is not a screenshot of the clean /api/state URL. | 2047 x 1331 |
 
+Later captures for the narrow-screen overflow fix (T-E7, local before/after, October 28, 2026) are in [mobile-overflow-fix/](mobile-overflow-fix/README.md), with their own checksum manifest. They are not covered by `SHA256SUMS.txt` in this folder.
+
 ## Evidence notes
 
 - Screenshot 10 is byte-for-byte identical to screenshot 09. Both were retained.
