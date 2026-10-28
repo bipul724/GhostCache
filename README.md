@@ -27,7 +27,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Automated tests | **71 tests pass** under Python 3.12.6 with Node 22 on PATH (rerun on October 28, 2026 after Sentry tracing, T-D2). 7 are UI contract tests, 6 of which skip without Node. 9 are telemetry tests, 6 of which skip without the optional `sentry-sdk`; all 71 ran with it in `.venv`. See [TESTING.md](TESTING.md) |
 | Saved evaluations | One fixture report and **one** live Gemma report, each 10/10 checks ([results/](results/)) |
 | GitHub Actions workflow | **Passed on GitHub:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) on October 28, 2026 (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) (push of `172ccb4`) also passed, and its uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. |
-| Sentry Agent Tracing | **Implemented** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **Real traces captured on October 28, 2026** from one fixture and two live evaluations, with two findings; see [What the real traces showed](#what-the-real-traces-showed). The Sentry plan and span quota are not yet recorded (T-D1). |
+| Sentry Agent Tracing | **Implemented** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **Real traces captured on October 28, 2026** from one fixture and two live evaluations, with two findings; see [What the real traces showed](#what-the-real-traces-showed). Sent from a 14-day Sentry Business trial with no payment method; the runs used 120 of its 100M spans. |
 | Render, .tech domain, Backboard, Browserbase | **Planned, not implemented** |
 | ElevenLabs, Entire | **Optional, not started** |
 | Public repository | **Created:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache) (public, MIT) |
@@ -140,7 +140,7 @@ On October 28, 2026 (times IST) the user ran three traced evaluations with `GHOS
 | 09:18 | live, `gemma4:e2b-it-qat`; the first evaluation after `ollama serve` was started (**cold**) | [results/sentry-live-cold.json](results/sentry-live-cold.json) | `dd21f76b3293450b84b0ad5ca45961dd` |
 | 09:19 | live, same model, straight afterwards with the model still loaded (**warm**) | [results/sentry-live-warm.json](results/sentry-live-warm.json) | `fb1530272ecd481399aa77f95d505dfa` |
 
-Each live trace has the root `ghostcache.evaluate` "evaluate live", 39 spans, release `0.1.0`, environment `local-live` and 0 issues.
+Each live trace has the root `ghostcache.evaluate` "evaluate live", 39 spans, release `0.1.0`, environment `local-live` and 0 issues. The traces were sent from a 14-day Sentry Business trial with no payment method on file; all the runs together used 120 of its 100M spans.
 
 ![Sentry Agents view: three conversations of 11 messages each, with Sentry's note that inputs and outputs weren't captured](results/sentry-agents-overview.jpg)
 
@@ -233,7 +233,7 @@ This shows readiness **for each category, not entries made**. Only list a catego
 | --- | --- |
 | Best Use of Gemma | **Implemented**, one live 10/10 run saved |
 | Best Use of GitHub Copilot (the official description includes GitHub Actions) | **Hosted run exists:** [Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026. Do not claim Copilot wrote this code. |
-| Best Use of Sentry Agent Tracing | **Real traces captured** on October 28, 2026, with two explained findings ([details](#what-the-real-traces-showed)). The Sentry quota is not yet recorded (T-D1). |
+| Best Use of Sentry Agent Tracing | **Real traces captured** on October 28, 2026, with two explained findings ([details](#what-the-real-traces-showed)). |
 | Best Use of Render | Planned |
 | Best Use of a .tech Domain | Planned; whether the domain qualifies under the Hacktoberfest promo is **unverified** |
 | Best Use of Backboard | Planned |

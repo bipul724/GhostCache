@@ -98,10 +98,18 @@ The fixture report stays outside the repository: `../runs/sentry-fixture.json`, 
 **Not verified.**
 
 - The cause of the slow first call. Model loading is inferred; no `load_duration`, memory or Ollama log was recorded (T-C2 stays open).
-- The Sentry plan name and monthly span quota (T-D1 stays open).
 - The traces of the three failed 09:16 attempts were not inspected.
 - No screenshot of the fixture trace itself was saved; it is seen only as a conversation in the Agents view.
 - These traces come from the user's manual runs. No automated test or CI step sends anything to Sentry.
+
+### Sentry plan and usage T-D1 (October 28, 2026)
+
+The planner read these values from the user's Sentry screenshots on October 28, 2026. The screenshots are not saved in `results/`.
+
+- **Settings → Subscription → Overview:** "Trial plan", a **Business Plan Trial** with 14 days left. No billing details and no payment method on file, so no card was needed. Usage period Oct 28 – Nov 10, 2026: **spans 120 used of 100M**, errors 0 of 1M, and 0 for every other feature.
+- **Settings → Stats & Usage** (Errors, last 14 days): 0 errors in total, accepted, filtered, rate-limited or invalid. This is expected, because `telemetry.py` drops every error event (`before_send` returns `None`) and sends traces only.
+- **Cross-check:** 120 spans is consistent with the recorded runs. The fixture, cold and warm evaluations sent 39 spans each (117). Each of the three failed 09:16 IST attempts could send only its root `ghostcache.evaluate` span (3): `Experiment.reset` checks Ollama's availability and raises before it opens the `ghostcache.reset` span (`app.py`). The failed-attempt traces were not inspected individually, so this is consistent with the count, not verified trace by trace.
+- **What it means:** the account used a 14-day Business trial, not the free Developer plan the original plan targeted. The Developer plan's limits and what happens when the trial ends were not checked. At about 40 spans per evaluation, the span quota is no practical constraint for this challenge. The trace screenshots are saved in `results/`, so the evidence does not depend on Sentry's retention after the trial.
 
 ## Sentry tracing T-D2 (October 28, 2026)
 
@@ -128,7 +136,7 @@ The fixture report stays outside the repository: `../runs/sentry-fixture.json`, 
 
 **Not done.** No real Sentry account, DSN, network call or trace (T-D1, T-D3). No live Gemma run: the live path was tested with mocked Ollama. The new CI step has not run on GitHub yet.
 
-*Update, later on October 28, 2026:* the CI step has now run on GitHub: [run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599) succeeded (see "Hosted CI run #5" below). Real traces and two live runs are recorded in "Real Sentry traces T-D3" above. T-D1 is still open.
+*Update, later on October 28, 2026:* the CI step has now run on GitHub: [run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599) succeeded (see "Hosted CI run #5" below). Real traces and two live runs are recorded in "Real Sentry traces T-D3" above. The Sentry plan and usage (T-D1) were recorded later the same day; see "Sentry plan and usage T-D1".
 
 ## Hosted CI run #1 (October 28, 2026)
 
