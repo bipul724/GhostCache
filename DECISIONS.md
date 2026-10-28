@@ -188,13 +188,13 @@ The evidence for each record is code, tests, saved results or the workspace hand
   - Visitors see real recorded evidence without anything running on the laptop, and cannot get new AI answers.
   - The public evidence keeps the fictional marker, as all saved reports do (D-11).
   - `site/data/evidence.json` must be regenerated and committed when the selected reports change; `scripts/export_site_data.py --check` and `tests/test_site.py` fail if it is out of date.
-  - Render hosts the page but is not entered as a category (D-14). The deployment itself needs the user's Render account and is not done yet (T-E3).
+  - Render hosts the page but is not entered as a category (D-14). The deployment itself needs the user's Render account and is not done yet (T-E3). *(Category status superseded October 29, 2026: Best Use of Render is now an intended category (D-14, second amendment). Render's role is unchanged: it hosts this static page only.)*
   - *Resolution (October 28, 2026): the user deployed it from `render.yaml` as the Blueprint-managed static site `ghostcache-walkthrough`, live at <https://ghostcache-walkthrough.onrender.com/> from commit `8013d01`. The page, `/data/evidence.json` and the Blueprint's security headers are served, and `/api/state` returns 404. It still runs no inference, and Render is still hosting only (D-14).*
 - **Evidence:** `site/`, `scripts/export_site_data.py`, `render.yaml`, `tests/test_site.py` (20 tests); TESTING.md, "Public recorded walkthrough T-E2 (October 28, 2026)" and "Render deployment T-E3 (October 28, 2026)"; [screenshots/README.md](screenshots/README.md).
 
 ## D-14. Category expansion only through useful, evidenced integrations
 
-- **Status:** Accepted as strategy; amended October 28, 2026 to three entered categories (see the amendment)
+- **Status:** Accepted as strategy; amended October 28, 2026 to three entered categories, and October 29, 2026 to four intended categories by adding Render (see the amendments)
 - **Context:** The user asked for more categories, and also for real, demonstrable integrations rather than a list of sponsor names (`context.md` §2).
 - **Decision:**
   - Seven targets: Gemma (implemented), GitHub Copilot via **GitHub Actions** (configured), Sentry, Render, .tech, Backboard, Browserbase.
@@ -206,7 +206,19 @@ The evidence for each record is code, tests, saved results or the workspace hand
   - One person can still win at most one prize, so more categories are not independent chances.
   - Writing quality carries the most weight in judging.
 - **Evidence:** [CATEGORIES.md](CATEGORIES.md); [tasks.md](tasks.md).
-- **Amendment (October 28, 2026): three categories.** The submission enters only the three categories with working use and evidence: Gemma, GitHub (through Actions) and Sentry Agent Tracing. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire targets are dropped, and none of them has code or evidence. Render hosts the public walkthrough (D-13) but is not added to the category list; that would need a separate decision after a verified deployment. The original seven-target text above is kept as history. *(Update, October 28, 2026: the deployment was verified (T-E3), and no decision to add Render was made, so it remains hosting only.)*
+- **Amendment (October 28, 2026): three categories.** The submission enters only the three categories with working use and evidence: Gemma, GitHub (through Actions) and Sentry Agent Tracing. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire targets are dropped, and none of them has code or evidence. Render hosts the public walkthrough (D-13) but is not added to the category list; that would need a separate decision after a verified deployment. The original seven-target text above is kept as history. *(Update, October 28, 2026: the deployment was verified (T-E3), and no decision to add Render was made, so it remains hosting only.)* *(Resolved October 29, 2026: the separate decision this amendment called for was made; Render is now an intended category. See the next amendment. The rest of this amendment, including the dropped categories, still stands.)*
+- **Amendment (October 29, 2026): four intended categories, adding Render.** Authorized by the user on October 29, 2026.
+  - **Intended categories:** Best Use of Gemma, Best Use of GitHub Copilot (targeted through GitHub Actions only; no claim that Copilot wrote the project), Best Use of Sentry Agent Tracing, and Best Use of Render.
+  - **Why Render now:** the earlier amendment required a verified deployment first, and that evidence now exists:
+    - the public walkthrough is deployed from [render.yaml](render.yaml) (T-E3, initial commit `8013d01`, [screenshot 00](screenshots/00-render-dashboard-live-8013d01.png));
+    - it is checked read-only ([DEPLOYMENT.md](DEPLOYMENT.md), "Verification record");
+    - the narrow-screen fix is served byte for byte (T-E7, [deployed evidence](screenshots/mobile-overflow-fix/deployed-2a1ffb0/README.md)).
+  - **Official wording, checked October 29, 2026 (19:34 UTC on October 28) at <https://dev.to/challenges/hf26>:** "Use Render as your project's AI runtime, to host an agent's front end, or to run Hermes or OpenClaw." GhostCache relies only on "to host an agent's front end": Render hosts the public front end for recorded runs of GhostCache's local Gemma assistant. It is not an AI runtime and does not run Hermes or OpenClaw.
+  - **Interpretation, not confirmation:** the wording does not explicitly address a static walkthrough of recorded runs with no live agent behind it. This is a reasonable intended entry under that wording, not organizer-confirmed eligibility, and acceptance is not guaranteed.
+  - **What does not change:** Render's role. It serves the static walkthrough (D-13) and nothing else. It runs no inference, and the Python backend, the SQLite experiment and Ollama stay on the laptop.
+  - **Entry:** these are intended categories. A category is entered only when the eventual DEV submission lists it. The official page says each submission "is automatically in the running for the overall prize and every partner category it qualifies for", so the organizers decide whether it qualifies. Editing these documents enters nothing.
+  - **Unchanged:** the .tech domain, Backboard, Browserbase, ElevenLabs and Entire stay dropped.
+  - **History:** the original seven-target text and the October 28 three-category amendment are kept above as history.
 
 ## D-15. Publish `ghostcache/` itself as the repository root
 

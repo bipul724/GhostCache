@@ -3,8 +3,8 @@
 | Field | Value |
 | --- | --- |
 | Version | 0.1.0 (the `pyproject.toml` and `ghostcache/__init__.py` version) |
-| Document date | October 27, 2026; status reviewed in the documentation audit of October 28, 2026 |
-| Status | The MVP below is implemented. The public demo is deployed as a static recorded walkthrough (D-13, T-E3). The three chosen categories (Gemma, GitHub through Actions, Sentry) have working use and evidence, but no DEV post exists yet, as a draft or published (T-I2, T-I4). |
+| Document date | October 27, 2026; status reviewed in the documentation audit of October 28, 2026; category scope updated October 29, 2026 |
+| Status | The MVP below is implemented. The public demo is deployed as a static recorded walkthrough (D-13, T-E3). The four intended categories (Gemma, GitHub Copilot through Actions, Sentry Agent Tracing and, since October 29, 2026, Render) have working use and evidence. No DEV post exists yet, as a draft or published, so none is entered (T-I2, T-I4). |
 | Source of truth | The code in `ghostcache/`, `web/` and `tests/` defines what is implemented. The workspace handoff `context.md` records intent and history. Where they differ, this document follows the code and says so. |
 
 ## 1. Problem
@@ -156,7 +156,7 @@ A fixture pass supports the software invariants only. A live pass supports only 
 | Risk | Mitigation |
 | --- | --- |
 | Seen as an obvious bug in a Halloween costume | Present the provenance DAG, the preservation controls, the bounded claims and the prior art honestly |
-| Overclaiming (unlearning, global deletion, categories entered without evidence; the submission enters three) | Status labels everywhere; the rules in [AGENTS.md](AGENTS.md) |
+| Overclaiming (unlearning, global deletion, categories entered without evidence; four categories are intended, none entered until the DEV post, and Render's eligibility is an interpretation, not organizer confirmation) | Status labels everywhere; the rules in [AGENTS.md](AGENTS.md) |
 | Three live runs are weak evidence | Repeated live runs with saved failures (T-C1) |
 | A public demo exposes a single shared, resettable state | Decided (D-13): a static recorded walkthrough in `site/`, never the current server (T-E2; deployed on Render, T-E3) |
 | Free tiers change or are already used up | Recheck before each integration; keep fixture and local paths working |
@@ -174,14 +174,18 @@ A fixture pass supports the software invariants only. A live pass supports only 
 
 ## 16. Category-related requirements (not MVP)
 
-These apply only if the category is entered. **As of October 28, 2026 the submission enters CAT-01, CAT-02 and CAT-03 only;** CAT-04 is not entered (Render only hosts the walkthrough) and CAT-05 to CAT-09 are dropped (D-14 amendment). Each one requires **real use plus evidence**. Installing an SDK or adding a logo or placeholder does not count.
+These apply only if the category is entered. **As of October 28, 2026 the submission enters CAT-01, CAT-02 and CAT-03 only;** CAT-04 is not entered (Render only hosts the walkthrough) and CAT-05 to CAT-09 are dropped (D-14 amendment). **Updated October 29, 2026:**
+
+- **Intended scope:** CAT-01 to CAT-04, with CAT-04 (Render) added by the second D-14 amendment. CAT-05 to CAT-09 stay dropped.
+- **What Render does:** it still only hosts the static walkthrough. Its eligibility under the official "host an agent's front end" wording is an interpretation, not organizer confirmation.
+- **Entry:** a category is entered only when the DEV submission lists it. Each one requires **real use plus evidence**. Installing an SDK or adding a logo or placeholder does not count.
 
 | ID | Category | Requirement for listing it in the submission |
 | --- | --- | --- |
 | CAT-01 | Gemma | Explain Gemma's role, the model ID and the saved live evidence, including any failures. *(Ready now.)* |
 | CAT-02 | GitHub Copilot (via Actions, which the official category description includes) | A public repository and a successful hosted workflow run whose fixture-report artifact can be inspected. Do not claim Copilot authorship. *(Repository and successful hosted runs exist: [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) and [run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485). Run #3's fixture-report artifact was downloaded and inspected: 10 of 10 checks passed.)* |
 | CAT-03 | Sentry Agent Tracing | Metadata-only spans for retrieval, generation, deletion, rebuild and verify, plus real trace screenshots and one explained finding *(The instrumentation is implemented with offline privacy tests (T-D2, October 28, 2026). Real traces were captured the same day: seven screenshots in `results/sentry-*.jpg` and two explained findings, in README.md, "What the real traces showed" (T-D3). They were sent from a 14-day Sentry Business trial with no payment method, using 120 of 100M spans (T-D1).)* |
-| CAT-04 | Render | A reachable Render-hosted frontend or demo, labelled replay, simulation or live *(Not entered. The static recorded walkthrough is deployed from `render.yaml` at <https://ghostcache-walkthrough.onrender.com/> (October 28, 2026), labelled as a recorded run; hosting only.)* |
+| CAT-04 | Render | A reachable Render-hosted frontend or demo, labelled replay, simulation or live *(Not entered. The static recorded walkthrough is deployed from `render.yaml` at <https://ghostcache-walkthrough.onrender.com/> (October 28, 2026), labelled as a recorded run; hosting only.)* *(October 29, 2026: intended. Requirement met by the deployed walkthrough, its read-only verification and the T-E7 deployed evidence ([DEPLOYMENT.md](DEPLOYMENT.md), [CATEGORIES.md](CATEGORIES.md#best-use-of-render)); still hosting only, with no inference on Render.)* |
 | CAT-05 | .tech domain | Evidence of the promo claim, plus a live HTTPS subdomain serving the project; the existing apex is preserved *(Dropped October 28, 2026.)* |
 | CAT-06 | Backboard | A comparison of 2–3 open-weight models on the same corpus and checks, with model IDs, token and cost figures, and failures reported *(Dropped October 28, 2026.)* |
 | CAT-07 | Browserbase (stretch) | A Stagehand or Browserbase session driving the workflow with assertions, plus session evidence *(Dropped October 28, 2026.)* |

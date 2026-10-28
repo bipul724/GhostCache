@@ -1,6 +1,6 @@
 # GhostCache tasks
 
-Last updated October 29, 2026 (T-E7 deployed and verified; earlier the same night, the documentation audit after the Render deployment). The list is ordered: work top to bottom unless a dependency says otherwise.
+Last updated October 29, 2026 (category scope amended to four intended categories, adding Render; before that, T-E7 deployed and verified and the documentation audit after the Render deployment). The list is ordered: work top to bottom unless a dependency says otherwise.
 
 **Priority:**
 
@@ -79,7 +79,9 @@ Last updated October 29, 2026 (T-E7 deployed and verified; earlier the same nigh
 
 No open tasks. T-D1, T-D2 and T-D3 are done (October 28, 2026); see "Completed, with evidence".
 
-## E. Public demo hosting (Render; not an entered category)
+## E. Public demo hosting (Render; an intended category since October 29, 2026)
+
+*Until October 29, 2026 this section's heading said Render was not an entered category. The D-14 amendment of that date makes Best Use of Render an intended category. Render still hosts the static walkthrough only. Its evidence and limits: [CATEGORIES.md](CATEGORIES.md#best-use-of-render).*
 
 T-E3 (deploy the static walkthrough on Render from `render.yaml`; acceptance: a reachable HTTPS `onrender.com` URL, the banner, controls and headers checked as listed in the README, and `/api/state` returning 404) is done (October 28, 2026); see "Completed, with evidence". Deployment details: [DEPLOYMENT.md](DEPLOYMENT.md). T-E7 (fix the narrow-screen overflow) is done (deployed in `2a1ffb0`, verified October 28–29, 2026); see "Completed, with evidence".
 
@@ -118,6 +120,6 @@ T-E3 (deploy the static walkthrough on Render from `render.yaml`; acceptance: a 
 | --- | --- | --- | --- | --- | --- |
 | T-I0 | P0 | Confirm the real deadline with the organizers or platform | none | One authoritative timestamp recorded | Link or message |
 | T-I1 | P0 | Record a short demo video: failure → lineage → cleanup → retained answers, with the mode stated | T-A2, T-A3, T-A4 | Under about 3 minutes; mode visible; no real data | Video link |
-| T-I2 | P0 | Write a DEV draft using the official template (What I Built, Demo, Code, How I Built It, Why Does Open Innovation Matter?, optional My Agent Session and The Spirit of It, Prize Categories), tagged `devchallenge` and `hf26challenge` | T-B1, T-I1 | Includes the broken-control disclosure, prior art, scope limits and real numbers; lists **only** the three entered categories (Gemma, GitHub through Actions, Sentry), each with one evidence item; links the walkthrough only if T-E3 is done (done October 28: <https://ghostcache-walkthrough.onrender.com/>), labelled as recorded; accurate AI-assistance disclosure | Draft URL (unpublished) |
+| T-I2 | P0 | Write a DEV draft using the official template (What I Built, Demo, Code, How I Built It, Why Does Open Innovation Matter?, optional My Agent Session and The Spirit of It, Prize Categories), tagged `devchallenge` and `hf26challenge` | T-B1, T-I1 | Includes the broken-control disclosure, prior art, scope limits and real numbers; lists **only** the four intended categories (Best Use of Gemma, Best Use of GitHub Copilot through GitHub Actions, Best Use of Sentry Agent Tracing, Best Use of Render), each with one evidence item; uses the Render paragraph from [CATEGORIES.md](CATEGORIES.md#best-use-of-render) and does not present Render eligibility as organizer-confirmed *(until October 29, 2026: the three categories without Render)*; links the walkthrough only if T-E3 is done (done October 28: <https://ghostcache-walkthrough.onrender.com/>), labelled as recorded; accurate AI-assistance disclosure | Draft URL (unpublished) |
 | T-I3 | P0 | Final verification: rerun the tests and fixture evaluation, check every link, and check category claims against this file | T-I2 | All pass; no category listed without evidence | Command output and checklist |
 | T-I4 | P0 | Publish, **only after the user authorizes it** | T-I3, T-I0 | Published before the confirmed deadline | Post URL |

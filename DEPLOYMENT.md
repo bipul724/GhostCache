@@ -2,7 +2,13 @@
 
 GhostCache has exactly one public deployment: the **static recorded walkthrough** in [site/](site/), hosted on Render. It replays three saved live Gemma reports. It runs **no inference**, cannot answer new questions, stores nothing and deletes nothing. The interactive app in `web/`, the Python server, the SQLite database and Ollama stay on the author's laptop and are never deployed (DECISIONS.md D-13).
 
-Render is used only for hosting. It is not one of the submission's categories (Gemma, GitHub through Actions, Sentry).
+Render is used only for hosting: it serves these static files and runs nothing else. Since October 29, 2026, **Best Use of Render** is one of the four intended submission categories, alongside Gemma, GitHub Copilot through Actions and Sentry Agent Tracing (DECISIONS.md D-14, second amendment).
+
+- **Basis:** the deployment and verification recorded here.
+- **Eligibility:** our interpretation of the category's "host an agent's front end" wording, not organizer confirmation ([CATEGORIES.md](CATEGORIES.md#best-use-of-render)).
+- **Effect on Render:** entering the category changes nothing about what runs there.
+
+*(Until October 29, 2026, Render was hosting only and not one of the submission's categories.)*
 
 ## Current deployment
 
