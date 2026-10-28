@@ -88,9 +88,24 @@ Every check below was read-only. Full command tables are in [TESTING.md](TESTING
 
 The screenshots show what the browser displayed; they do not establish HTTP status codes. Screenshot 15 has extra characters after `/api/state` in its URL and is **not** evidence of the clean `/api/state` check, which comes from `curl`. Screenshots 09 and 10 are identical and both kept.
 
+## Verify the T-E7 fix after deployment
+
+1. In the Render dashboard, confirm that a deploy of the commit containing the `site/style.css` change finished and is live. Note its commit hash.
+2. Compare the served stylesheet with the committed one (from the repository root):
+
+   ```sh
+   curl -s https://ghostcache-walkthrough.onrender.com/style.css | shasum -a 256
+   shasum -a 256 site/style.css           # the fixed file: 035e46ec…bc488027
+   ```
+
+3. Repeat the [Verify a deployment](#verify-a-deployment) checks (status codes and headers).
+4. On the public URL, measure `document.documentElement.clientWidth` and `scrollWidth` at 320, 360, 375, 390, 414, 768, 980, 981 px and a desktop width, and confirm that the command block and timing table scroll inside themselves.
+5. Record the deployed commit, the hash comparison and the measurements in the verification record above and in TESTING.md; only then mark T-E7 done.
+
 ## Known issues and gaps
 
 - **Horizontal overflow on narrow screens (found October 28, 2026).** In headless Chrome emulation, at the tested 375 px viewport, the document's scrollWidth was 573 px, while the layout viewport stayed 375 px, so the page scrolled sideways. The cause is in `site/style.css`: below 980 px it sets `.explainers` to `grid-template-columns:1fr`, and the `white-space:pre` command block in "Run it yourself" held that column at about 557 px. The exact width at which overflow starts can vary with browser and font metrics, and no real phone was tested. This contradicts the earlier local T-E2 check, which reported no overflow at the 375×812 preset. Fix and recheck: T-E7 in [tasks.md](tasks.md).
+  *Resolution in progress (October 28, 2026, about 22:30 IST): fixed and verified locally on October 28, 2026; awaiting deployment.* Two rules in `site/style.css` changed: `.explainers` uses `minmax(0,1fr)` below 980 px, and `.tiny-label` may wrap below 650 px (a second, smaller offender at 320 px). Served locally, `scrollWidth` equalled `clientWidth` at every tested width from 320 to 1280 px, and the command block scrolls inside itself. The public site keeps the old stylesheet until the change is pushed and Render rebuilds it. See [TESTING.md](TESTING.md), "Narrow-screen overflow fix T-E7", and [screenshots/mobile-overflow-fix/](screenshots/mobile-overflow-fix/README.md).
 - **No favicon.** Browsers request `/favicon.ico`, which returns 404 and logs one console error. Cosmetic only (T-E8).
 - **Not checked:** a real phone, browsers other than Chrome, and assistive technology (T-E6). The click-throughs pressed each button once; they did not try every combination of run, stage and question.
 - **No live inference by design.** The page cannot show a new Gemma run. To see one, run GhostCache locally (README.md, "Run it with local Gemma").
