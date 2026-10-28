@@ -25,7 +25,7 @@ These images show a static recorded walkthrough, a Render deployment dashboard, 
 | [14-public-api-not-found.png](14-public-api-not-found.png) | Browser shows Not Found for the public /api URL. | 2047 x 1331 |
 | [15-public-api-state-extra-asterisks-not-found.png](15-public-api-state-extra-asterisks-not-found.png) | Browser shows Not Found for /api/state** with a tracking query; this is not a screenshot of the clean /api/state URL. | 2047 x 1331 |
 
-Later captures for the narrow-screen overflow fix (T-E7, local before/after, October 28, 2026) are in [mobile-overflow-fix/](mobile-overflow-fix/README.md), with their own checksum manifest. They are not covered by `SHA256SUMS.txt` in this folder.
+Later captures for the narrow-screen overflow fix (T-E7, local before/after, October 28, 2026) are in [mobile-overflow-fix/](mobile-overflow-fix/README.md), with their own checksum manifest. They are not covered by `SHA256SUMS.txt` in this folder. Evidence for the deployed fix, saved October 29, 2026, is in [mobile-overflow-fix/deployed-2a1ffb0/](mobile-overflow-fix/deployed-2a1ffb0/README.md), with its own manifest. It contains the user's DevTools screenshots of the public site, a record of their manual results, and a read-only stylesheet comparison.
 
 ## Evidence notes
 
@@ -34,7 +34,7 @@ Later captures for the narrow-screen overflow fix (T-E7, local before/after, Oct
 - This set does not include a separate selected view for the reworded secret question after cleanup.
 - Full SHA-256 hashes for every PNG are in [SHA256SUMS.txt](SHA256SUMS.txt). Each copied PNG was compared with its original after copying. To check them from the repository root, run `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)`; the manifest holds bare file names, so it must run inside this folder. All 16 passed in the documentation audit of October 28, 2026.
 - Screenshot 14 shows the `/api` path, not `/api/state`.
-- Screenshots 01 to 03 are full-page captures saved at 632–672 px wide, but they show the desktop layout (three explainer columns side by side), so they were taken in a wider window and scaled. They say nothing about phone layouts; an emulated 375 px viewport overflows horizontally (DEPLOYMENT.md, "Known issues and gaps").
+- Screenshots 01 to 03 are full-page captures saved at 632–672 px wide, but they show the desktop layout (three explainer columns side by side), so they were taken in a wider window and scaled. They say nothing about phone layouts; an emulated 375 px viewport overflowed horizontally when they were taken (DEPLOYMENT.md, "Known issues and gaps"), which was later fixed and deployed (T-E7).
 
 ## Original attachment names
 

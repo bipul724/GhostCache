@@ -1,6 +1,6 @@
 # Narrow-screen overflow fix (T-E7) — before and after
 
-Captured on October 28, 2026 by the documentation and fix pass. Every file here is **local**: `site/` was served with `python3.12 -m http.server --bind 127.0.0.1 --directory site` and loaded in headless Chrome through the Chrome DevTools Protocol. None of these images shows the deployed Render site; the deployed check is recorded separately once the fix is pushed (DEPLOYMENT.md, T-E7).
+Captured on October 28, 2026 by the documentation and fix pass. Every file here is **local**: `site/` was served with `python3.12 -m http.server --bind 127.0.0.1 --directory site` and loaded in headless Chrome through the Chrome DevTools Protocol. None of these images shows the deployed Render site; the deployed check is recorded separately once the fix is pushed (DEPLOYMENT.md, T-E7). *That deployed evidence (commit `2a1ffb0`) is now in [deployed-2a1ffb0/](deployed-2a1ffb0/README.md), with its own manifest; this folder's files and manifest are unchanged.*
 
 - **Before:** `site/style.css` as committed in `3cc0814` (SHA-256 `86b48762…100b0927`).
 - **After:** `site/style.css` with the two-rule fix described in [TESTING.md](../../TESTING.md), "Narrow-screen overflow fix T-E7".
