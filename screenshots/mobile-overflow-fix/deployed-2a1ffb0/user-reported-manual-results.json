@@ -1,0 +1,42 @@
+{
+  "description": "Manual checks of the public walkthrough after the T-E7 fix was deployed, as reported by the repository owner (the user). These are the user's own observations, not automated tests, and the coding agent did not reproduce them.",
+  "reported_by": "the user (repository owner)",
+  "site": "https://ghostcache-walkthrough.onrender.com/",
+  "deployed_commit_reported_by_user": "2a1ffb0 (shown as successfully deployed in Render dashboard screenshots supplied by the user; those screenshots were no longer available to copy, see index)",
+  "date": "Not stated by the user. The saved screenshot source files were last modified between 2026-10-28 23:25 and 2026-10-29 00:04 IST (file metadata only).",
+  "method": "Chrome DevTools responsive device emulation",
+  "reported_height_px": 812,
+  "console_expression": "({viewportWidth: document.documentElement.clientWidth, pageWidth: document.documentElement.scrollWidth, horizontalOverflow: document.documentElement.scrollWidth > document.documentElement.clientWidth})",
+  "width_checks": [
+    {"width": 320, "viewportWidth": 320, "pageWidth": 320, "horizontalOverflow": false},
+    {"width": 360, "viewportWidth": 360, "pageWidth": 360, "horizontalOverflow": false},
+    {"width": 375, "viewportWidth": 375, "pageWidth": 375, "horizontalOverflow": false},
+    {"width": 390, "viewportWidth": 390, "pageWidth": 390, "horizontalOverflow": false},
+    {"width": 414, "viewportWidth": 414, "pageWidth": 414, "horizontalOverflow": false},
+    {"width": 768, "viewportWidth": 768, "pageWidth": 768, "horizontalOverflow": false},
+    {"width": 980, "viewportWidth": 980, "pageWidth": 980, "horizontalOverflow": false},
+    {"width": 981, "viewportWidth": 981, "pageWidth": 981, "horizontalOverflow": false},
+    {"width": 1280, "viewportWidth": 1280, "pageWidth": 1280, "horizontalOverflow": false}
+  ],
+  "functional_checks": [
+    {"check": "Command/code box internal horizontal scrolling", "result": "PASS"},
+    {"check": "Timing table layout and scrolling", "result": "PASS"},
+    {"check": "All six recorded-question buttons", "result": "PASS"},
+    {"check": "All three recorded-run selectors", "result": "PASS"},
+    {"check": "All five stage selectors", "result": "PASS"}
+  ],
+  "not_covered": "No other widths, heights, devices, browsers or run/stage/question combinations were reported. Not a physical-phone, Safari, Firefox or accessibility check (T-E6).",
+  "screenshot_correspondence_noted_by_agent": {
+    "320": "Console screenshot listed by the user was unavailable at copy time (source path no longer exists); no screenshot saved for this width.",
+    "360": "01-devtools-responsive-360x812-console-no-overflow-cropped.png: DevTools toolbar shows Responsive 360 x 812; console shows viewportWidth 360, pageWidth 360, horizontalOverflow false.",
+    "375": "02-devtools-responsive-375x404-console-no-overflow-cropped.png: DevTools toolbar shows Responsive 375 x 404, not 812; console shows viewportWidth 375, pageWidth 375, horizontalOverflow false. The user-reported 812 px height is kept above as reported.",
+    "390": "03-devtools-responsive-390x812-console-no-overflow-cropped.png: Responsive 390 x 812; 390 / 390 / false.",
+    "414": "04-devtools-responsive-414x812-console-no-overflow-cropped.png: Responsive 414 x 812; 414 / 414 / false.",
+    "768": "05-devtools-responsive-768x812-console-no-overflow-cropped.png: Responsive 768 x 812; 768 / 768 / false.",
+    "980": "06-devtools-responsive-980x812-console-no-overflow-cropped.png: Responsive 980 x 812; 980 / 980 / false.",
+    "981": "07-devtools-responsive-981x812-console-no-overflow-cropped.png: Responsive 981 x 812; 981 / 981 / false.",
+    "1280": "08-devtools-responsive-1280x812-console-no-overflow-cropped.png: Responsive 1280 x 812; 1280 / 1280 / false.",
+    "command_box": "09-command-box-scrolled-to-start.png and 10-command-box-scrolled-right.png: cropped views of the 'Run it yourself' command block at two horizontal scroll positions; the emulated width is not visible in the crops.",
+    "timing_table_and_selectors": "No saved screenshot specifically shows the timing table or the selector checks; those results rest on the user's report."
+  }
+}
