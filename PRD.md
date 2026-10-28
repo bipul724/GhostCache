@@ -102,7 +102,7 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 
 | ID | Requirement | Current state |
 | --- | --- | --- |
-| NFR-01 | No third-party Python dependencies. Python ≥3.12. | Met. Verified on 3.12.6; 3.15 untested. |
+| NFR-01 | No third-party Python dependencies. Python ≥3.12. | Met for the core: `dependencies = []`. The only third-party package is the optional `sentry` extra (`sentry-sdk==2.72.0`), used only for tracing. Verified on 3.12.6; 3.15 untested. |
 | NFR-02 | Offline unit tests (no network or model) | Met: provider status is mocked in tests |
 | NFR-03 | Localhost-only server with Host and Origin checks, JSON-only POST, size limits and security headers | Met for the local prototype |
 | NFR-04 | No raw content in server logs | Met: the access log records method, path and status, and unexpected errors record only the exception class |
@@ -124,7 +124,7 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 
 | Implemented MVP | Future (not implemented) |
 | --- | --- |
-| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 62 tests (7 UI contract tests need Node), CI workflow file, a public repository with one successful hosted Actions run (October 28, 2026) | Open consistency fixes (T-A7, T-A8, the rest of T-A9), repeated live evaluations with metadata, Sentry tracing, a public demo on Render or .tech, a Backboard comparison, a Browserbase run, optional ElevenLabs narration and Entire checkpoints |
+| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 71 tests (7 UI contract tests need Node; 6 telemetry tests need the optional `sentry-sdk`), optional metadata-only Sentry tracing (no real traces yet), CI workflow file, a public repository with one successful hosted Actions run (October 28, 2026) | Open consistency fixes (T-A7, T-A8, the rest of T-A9), repeated live evaluations with metadata, real Sentry traces (T-D3), a public demo on Render or .tech, a Backboard comparison, a Browserbase run, optional ElevenLabs narration and Entire checkpoints |
 
 ## 12. Success measures
 
@@ -146,6 +146,7 @@ A fixture pass supports the software invariants only. A live pass supports only 
 ## 13. Dependencies
 
 - Python 3.12+ standard library and SQLite.
+- Optional: `sentry-sdk==2.72.0` (the `sentry` extra), only for tracing.
 - Ollama with `gemma4:e2b-it-qat` (about 4.3 GB) for live mode, on the user's laptop.
 - GitHub (repository and Actions) for CI evidence. Set up: [bipul724/GhostCache](https://github.com/bipul724/GhostCache), with one successful hosted run (October 28, 2026).
 - Planned external services: Sentry, Render, a .tech domain registrar and its DNS, Backboard, Browserbase, ElevenLabs, Entire. Their pricing, free allowances and eligibility were checked on October 27, 2026 according to `context.md`, and **must be rechecked** before use.
@@ -179,7 +180,7 @@ These apply only if the category is entered. Each one requires **real use plus e
 | --- | --- | --- |
 | CAT-01 | Gemma | Explain Gemma's role, the model ID and the saved live evidence, including any failures. *(Ready now.)* |
 | CAT-02 | GitHub Copilot (via Actions, which the official category description includes) | A public repository and a successful hosted workflow run whose fixture-report artifact can be inspected. Do not claim Copilot authorship. *(Repository and successful hosted runs exist: [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) and [run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485). Run #3's fixture-report artifact was downloaded and inspected: 10 of 10 checks passed.)* |
-| CAT-03 | Sentry Agent Tracing | Metadata-only spans for retrieval, generation, deletion, rebuild and verify, plus real trace screenshots and one explained finding |
+| CAT-03 | Sentry Agent Tracing | Metadata-only spans for retrieval, generation, deletion, rebuild and verify, plus real trace screenshots and one explained finding *(The instrumentation is implemented locally with offline privacy tests (T-D2, October 28, 2026). No real traces, screenshots or finding yet.)* |
 | CAT-04 | Render | A reachable Render-hosted frontend or demo, labelled replay, simulation or live |
 | CAT-05 | .tech domain | Evidence of the promo claim, plus a live HTTPS subdomain serving the project; the existing apex is preserved |
 | CAT-06 | Backboard | A comparison of 2–3 open-weight models on the same corpus and checks, with model IDs, token and cost figures, and failures reported |

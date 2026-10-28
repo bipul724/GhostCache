@@ -24,10 +24,11 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Area | Status |
 | --- | --- |
 | Local fixture and live-Gemma experiment, browser UI, provenance cleanup | **Implemented** |
-| Automated tests | **62 tests pass** under Python 3.12.6 with Node 22 on PATH (rerun on October 27, 2026 after the T-A2–T-A4 UI fixes; 7 are UI contract tests, 6 of which skip without Node; see [TESTING.md](TESTING.md)) |
+| Automated tests | **71 tests pass** under Python 3.12.6 with Node 22 on PATH (rerun on October 28, 2026 after Sentry tracing, T-D2). 7 are UI contract tests, 6 of which skip without Node. 9 are telemetry tests, 6 of which skip without the optional `sentry-sdk`; all 71 ran with it in `.venv`. See [TESTING.md](TESTING.md) |
 | Saved evaluations | One fixture report and **one** live Gemma report, each 10/10 checks ([results/](results/)) |
 | GitHub Actions workflow | **Passed on GitHub:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) on October 28, 2026 (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) (push of `172ccb4`) also passed, and its uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. |
-| Sentry, Render, .tech domain, Backboard, Browserbase | **Planned, not implemented** |
+| Sentry Agent Tracing | **Implemented locally** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **No real Sentry traces yet.** |
+| Render, .tech domain, Backboard, Browserbase | **Planned, not implemented** |
 | ElevenLabs, Entire | **Optional, not started** |
 | Public repository | **Created:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache) (public, MIT) |
 | Deployment, video, DEV submission | **Not created** |
@@ -70,7 +71,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Need | Detail |
 | --- | --- |
 | Python | `>=3.12` (from `pyproject.toml`). Verified with **Python 3.12.6** at `/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12`. The Mac's default `python3` is 3.15.0, which has **not** been tested. |
-| Python packages | None. Uses only the standard library (`sqlite3`, `http.server`, `urllib`, `unittest`). |
+| Python packages | None required. The core uses only the standard library (`sqlite3`, `http.server`, `urllib`, `unittest`). The optional `sentry` extra (`sentry-sdk==2.72.0`) is needed only for tracing; install it into `.venv`, never the system Python. |
 | Front end | Plain HTML, CSS and JavaScript in `web/`. No build step or npm install. |
 | Live mode only | [Ollama](https://ollama.com) running locally, with the model pulled (`ollama list` should show `gemma4:e2b-it-qat`, about 4.3 GB). |
 | Optional | Node.js, only used for `node --check web/app.js`. |
@@ -110,6 +111,24 @@ You can also switch to live mode from the page's **Run mode** menu once the mode
 Live seeding makes four model calls (three summaries and the saved baseline answer). The first call took about 81 s in the saved run; the cause of that delay has not been separately measured.
 
 To use a different installed model, pass `--model` or set `GHOSTCACHE_MODEL` (see [.env.example](.env.example)). If Ollama is missing, the model errors, or its response is malformed (not a JSON object with `text` and supplied-context `citations`), live mode reports the error: HTTP 502 in the UI, or a failed report with exit status `1` from the CLI. It never substitutes fixture text. Connection problems are reported only as a fixed category, such as "Local model call failed (connection failed)." The underlying error text is never shown.
+
+## Optional Sentry tracing
+
+Tracing is **off** unless `GHOSTCACHE_SENTRY_DSN` is set. Without it, `sentry_sdk` is never imported and nothing changes. The core stays standard-library only.
+
+```sh
+python3.12 -m venv .venv
+.venv/bin/python -m pip install "sentry-sdk==2.72.0"     # the optional `sentry` extra
+export GHOSTCACHE_SENTRY_DSN="https://<public-key>@<org>.ingest.sentry.io/<project-id>"
+.venv/bin/python -m ghostcache evaluate --mode fixture --output results/fixture-traced.json
+```
+
+`serve` and `evaluate` print `Sentry tracing enabled (metadata only)` to stderr. The DSN is never printed. If the DSN is set but `sentry-sdk` is not installed, both exit `1` with a fixed message.
+
+- **Traces.** One root transaction per `POST /api/*` request (`GET /api/state` is not traced) and one per `evaluate` run. Inside them: the assistant (`invoke_agent ghostcache-assistant`) with memory search, model call (`chat <model>`) and memory write; the summarizer; reset; deletion (`delete_memory`, with rebuilds nested); and verification.
+- **Sent:** operation and span names (fixed strings), the provider and model name, token counts, durations, record counts, synthetic artifact IDs (`d-vault`, `c-vault`, …), the stage and mode, a question kind (`secret`, `paraphrase`, `retained`, `shared` or `custom`), booleans such as `answer_contains_marker`, check counts, and an error's class name and fixed category. A random conversation ID per reset groups an experiment's spans.
+- **Never sent:** document text or titles, questions, answers, prompts, the marker, request bodies, the Ollama URL, the machine's hostname or file paths. Every attribute must be in `ALLOWED_KEYS` in [ghostcache/telemetry.py](ghostcache/telemetry.py), and `telemetry.set` rejects anything else. Error events are dropped (traces only), default integrations (automatic HTTP spans, logging, excepthook) are off, and `server_name` is `ghostcache-local`.
+- **Verified offline only.** `tests/test_telemetry.py` captures envelopes in memory and asserts that no marker, question, document title or body, answer, hostname, home path or Ollama URL appears in them. No real Sentry project, DSN or trace has been used yet (T-D3).
 
 ## Demonstration workflow (browser)
 
@@ -179,7 +198,7 @@ This shows readiness **for each category, not entries made**. Only list a catego
 | --- | --- |
 | Best Use of Gemma | **Implemented**, one live 10/10 run saved |
 | Best Use of GitHub Copilot (the official description includes GitHub Actions) | **Hosted run exists:** [Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026. Do not claim Copilot wrote this code. |
-| Best Use of Sentry Agent Tracing | Planned |
+| Best Use of Sentry Agent Tracing | Implemented locally; no real Sentry traces yet |
 | Best Use of Render | Planned |
 | Best Use of a .tech Domain | Planned; whether the domain qualifies under the Hacktoberfest promo is **unverified** |
 | Best Use of Backboard | Planned |
@@ -196,7 +215,7 @@ This shows readiness **for each category, not entries made**. Only list a catego
 - [tasks.md](tasks.md): ordered remaining work with acceptance criteria
 - [AGENTS.md](AGENTS.md): instructions for coding agents
 - [CATEGORIES.md](CATEGORIES.md): category plan, free-tier limits and evidence needed
-- [.env.example](.env.example): the one supported environment variable
+- [.env.example](.env.example): the supported environment variables
 
 The detailed project handoff (`context.md`) sits in the parent workspace, outside this application directory.
 

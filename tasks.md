@@ -30,7 +30,7 @@ Last updated October 27, 2026. The list is ordered: work top to bottom unless a 
 | Fixture and live Ollama providers with no silent fallback | `test_live_request_never_silently_uses_fixture`, `test_missing_live_model_is_an_error…` |
 | Local browser UI (graph, inspector, checks, ledger) | `web/`; screenshots in `results/` |
 | 8-check interactive and 10-check CLI verification | `app.py` `verify` and `evaluate` |
-| 22 tests passing (before T-A5/T-A6) | Rerun with Python 3.12.6 during the documentation audit: `Ran 22 tests … OK`. After T-A5/T-A6: `Ran 36 tests … OK`. After the reopened T-A5/T-A6 fixes: `Ran 52 tests … OK`. After the first-attach follow-up: `Ran 55 tests … OK`. After the UI fixes (T-A2 to T-A4): `Ran 62 tests … OK`. |
+| 22 tests passing (before T-A5/T-A6) | Rerun with Python 3.12.6 during the documentation audit: `Ran 22 tests … OK`. After T-A5/T-A6: `Ran 36 tests … OK`. After the reopened T-A5/T-A6 fixes: `Ran 52 tests … OK`. After the first-attach follow-up: `Ran 55 tests … OK`. After the UI fixes (T-A2 to T-A4): `Ran 62 tests … OK`. After Sentry tracing (T-D2): `Ran 71 tests … OK` with `sentry-sdk` in `.venv`, and `OK (skipped=6)` without it. |
 | Fixture evaluation 10/10 | `results/fixture.json` (SHA-256 `b4d187bd…c7a19044`); fresh rerun to a scratch path also passed 10/10, exit 0 |
 | One live Gemma evaluation 10/10 | `results/live-gemma.json` (SHA-256 `1146258e…89d44992`), model `gemma4:e2b-it-qat` |
 | Desktop and 390 px mobile browser QA in fixture mode (no console errors reported) | `results/ghostcache-ui-*.jpg`; described in `context.md` §12 (performed in an earlier session, not repeated here) |
@@ -43,6 +43,7 @@ Last updated October 27, 2026. The list is ordered: work top to bottom unless a 
 | T-B1: public repository with `ghostcache/` as its root, MIT license (October 28) | [bipul724/GhostCache](https://github.com/bipul724/GhostCache), default branch `main`; 25 commits, HEAD `6e767ee`; `git ls-files` = 32 files, with no `__pycache__`, `.local/`, `.env` or `.DS_Store` |
 | T-B2: workflow run on GitHub (October 28) | [Run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) (job 122423115717), triggered by the push of `6e767ee`: success. `Ran 62 tests in 3.013s` OK, none skipped (all 7 UI tests ran). The evaluate step succeeded, and `evaluate` exits 0 only when the report has `passed: true`. Run #1's artifact (2,107 bytes) was not downloaded. The artifact from [run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) (push of `172ccb4`; also 62 tests and a successful evaluation) was downloaded and inspected on October 28: `ghostcache-fixture.json`, SHA-256 `cf68765a7cd229ad54274e2457e163e09cec5b83d9eb4625c40b984724490bc7`, mode `fixture`, `passed: true`, 10 of 10 checks. |
 | T-B4: action pins resolve on GitHub (October 28) | The same [run](https://github.com/bipul724/GhostCache/actions/runs/40570510382): checkout `v7.0.1`, setup-python `v7.1.0` and upload-artifact `v7.0.2` resolved with no errors |
+| T-D2: optional, metadata-only Sentry tracing, off unless `GHOSTCACHE_SENTRY_DSN` is set (October 28) | `ghostcache/telemetry.py` (`ALLOWED_KEYS`); spans in `app.py` and `__main__.py`; `tests/test_telemetry.py` (9 tests: 3 always run, 6 need `sentry-sdk`), including a privacy test over the serialized envelopes; all 6 SDK tests fail with the instrumentation removed; `.env.example` and DECISIONS.md D-17 updated. Suite `Ran 71 tests … OK`. Done before T-D1 because it needs no account. **No real traces yet (T-D3).** |
 | T-A1: reconciled evaluation instructions and title cleanup wording (October 27 review) | `EVALUATION.md` uses Python 3.12 and fresh report names; describes neutral replacement titles, evaluator retention, eight versus ten checks and the known parsing gap |
 
 ## A. Consistency and hardening
@@ -71,9 +72,8 @@ Last updated October 27, 2026. The list is ordered: work top to bottom unless a 
 
 | ID | Pri | Task | Depends on | Acceptance criteria | Evidence required |
 | --- | --- | --- | --- | --- | --- |
-| T-D1 | P1 | Check the user's Sentry free-plan eligibility and tracing quota (no card) | none | Quota written down with date | Note |
-| T-D2 | P1 | Add optional, metadata-only tracing (DSN from environment, off when unset) for retrieve, generate, delete, rebuild and verify | T-D1 | Attributes limited to durations, token and result counts, mode and error class; a test asserts no body, question, answer or marker leaves the process; default PII off | Tests; `.env.example` updated in the same change |
-| T-D3 | P1 | Capture real traces and explain one finding (e.g., first-call latency dominates the recorded model time; investigate its cause rather than assuming model load) | T-D2 | A trace screenshot with a written finding | Screenshot and text |
+| T-D1 | P1 | Check the user's Sentry free-plan eligibility and tracing quota (no card). **Needs the user's account.** | none | Quota written down with date | Note |
+| T-D3 | P1 | Capture real traces and explain one finding (e.g., first-call latency dominates the recorded model time; investigate its cause rather than assuming model load). **Needs the user's Sentry project and DSN**; T-D2 is done | T-D1, T-D2 | A trace screenshot with a written finding | Screenshot and text |
 
 ## E. Public demo: Render and a .tech domain (targets)
 

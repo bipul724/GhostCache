@@ -7,10 +7,12 @@ import json
 import secrets
 import threading
 import time
+import uuid
 from pathlib import Path
 from typing import Any
 
-from .providers import FixtureProvider, OllamaProvider, ProviderError
+from . import telemetry
+from .providers import FixtureProvider, OllamaProvider, ProviderError, error_category
 from .store import Store
 
 
@@ -20,6 +22,13 @@ QUESTIONS = {
     "retained": "When does the roof garden open?",
     "shared": "What is the archive reading room called?",
 }
+
+MEMORY_STORE = "ghostcache-sqlite"  # gen_ai.memory.store.id in traces
+
+
+def _question_kind(question: str) -> str:
+    """A fixed label for traces; the question text itself is never sent."""
+    return next((kind for kind, text in QUESTIONS.items() if text == question), "custom")
 
 
 class StorageError(RuntimeError):
@@ -32,7 +41,8 @@ class Experiment:
     """Single-user local controller. The test oracle is not assistant memory."""
 
     # Everything a reset replaces together; restored as a unit if a reset fails.
-    _RUN_STATE = ("store", "provider", "scenario", "events", "stage", "seed_checks", "_attached")
+    _RUN_STATE = ("store", "provider", "scenario", "events", "stage", "seed_checks", "_attached",
+                  "conversation_id")
 
     def __init__(self, db_path: str | Path = ":memory:", model: str | None = None) -> None:
         self.path = str(db_path)
@@ -51,6 +61,8 @@ class Experiment:
         self.stage = "empty"
         self.generation_number = 0
         self.seed_checks: list[dict[str, Any]] = []
+        # Random per reset; groups this experiment's traces. Never derived from content.
+        self.conversation_id: str | None = None
 
     def _event(self, name: str, result: dict[str, Any] | None = None, **details: Any) -> None:
         result = result or {}
@@ -63,17 +75,55 @@ class Experiment:
                            result: dict[str, Any], artifact_id: str | None = None) -> dict[str, Any]:
         # Capture every supplied context artifact, not just model-selected citations.
         # Store.add_artifact revalidates parent/root status atomically on commit.
-        return self.store.add_artifact(kind, title, result["text"],
-                                       [p["id"] for p in parents], artifact_id)
+        with telemetry.span("gen_ai.memory.client", "create_memory", {
+                "gen_ai.operation.name": "create_memory", "gen_ai.memory.store.id": MEMORY_STORE}) as span:
+            artifact = self.store.add_artifact(kind, title, result["text"],
+                                               [p["id"] for p in parents], artifact_id)
+            telemetry.set(span, "gen_ai.memory.record.id", artifact["id"])
+            telemetry.set(span, "gen_ai.memory.record.count", 1)
+            return artifact
+
+    def _agent_data(self, agent: str) -> dict[str, Any]:
+        return {"gen_ai.operation.name": "invoke_agent", "gen_ai.agent.name": agent,
+                **self._provider_data(), "ghostcache.mode": self.provider.mode,
+                "ghostcache.stage": self.stage}
+
+    def _provider_data(self) -> dict[str, Any]:
+        live = self.provider.mode == "live"
+        return {"gen_ai.provider.name": "ollama" if live else "ghostcache-fixture",
+                "gen_ai.request.model": self.provider.model}
+
+    def _chat(self, call) -> dict[str, Any]:
+        """Run one provider call inside a gen_ai.chat span (metadata only)."""
+        live = self.provider.mode == "live"
+        with telemetry.span("gen_ai.chat", f"chat {self.provider.model}", {
+                "gen_ai.operation.name": "chat", **self._provider_data(),
+                "gen_ai.request.temperature": OllamaProvider.temperature if live else None,
+                "gen_ai.request.max_tokens": OllamaProvider.max_tokens if live else None}) as span:
+            try:
+                result = call()
+            except ProviderError as exc:
+                telemetry.set(span, "ghostcache.error.category", error_category(exc))
+                raise
+            telemetry.set(span, "gen_ai.response.model", result["provider"])
+            tokens = (result["input_tokens"], result["output_tokens"])
+            if all(isinstance(t, int) for t in tokens):
+                telemetry.set(span, "gen_ai.usage.input_tokens", tokens[0])
+                telemetry.set(span, "gen_ai.usage.output_tokens", tokens[1])
+                telemetry.set(span, "gen_ai.usage.total_tokens", sum(tokens))
+            telemetry.set(span, "ghostcache.citation_count", len(result["citations"]))
+            return result
 
     def _summary(self, artifact_id: str, title: str, parent_ids: list[str]) -> dict[str, Any]:
-        parents = [self.store.get_artifact(p) for p in parent_ids]
-        if any(p is None for p in parents):
-            raise ValueError("Summary context is missing.")
-        result = self.provider.summarize(parents)
-        artifact = self._commit_generation("summary", title, parents, result, artifact_id)
-        self._event("summary.generated", result, artifact_id=artifact["id"], parent_ids=parent_ids)
-        return artifact
+        with telemetry.span("gen_ai.invoke_agent", "invoke_agent ghostcache-summarizer",
+                            self._agent_data("ghostcache-summarizer")):
+            parents = [self.store.get_artifact(p) for p in parent_ids]
+            if any(p is None for p in parents):
+                raise ValueError("Summary context is missing.")
+            result = self._chat(lambda: self.provider.summarize(parents))
+            artifact = self._commit_generation("summary", title, parents, result, artifact_id)
+            self._event("summary.generated", result, artifact_id=artifact["id"], parent_ids=parent_ids)
+            return artifact
 
     def reset(self, mode: str = "fixture") -> dict[str, Any]:
         """Seed a complete in-memory candidate, then publish it in one step.
@@ -105,7 +155,10 @@ class Experiment:
                 self.store = candidate
                 self.provider = self.live if mode == "live" else FixtureProvider()
                 self.events, self.seed_checks, self.stage = [], [], "seeding"
-                self._seed()
+                self.conversation_id = uuid.uuid4().hex
+                telemetry.set_conversation(self.conversation_id)
+                with telemetry.span("ghostcache.reset", "reset experiment", {"ghostcache.mode": mode}):
+                    self._seed()
                 if self.path == ":memory:":
                     published = candidate
                 elif self._attached:
@@ -221,53 +274,78 @@ class Experiment:
             self._require_storage()
             if not isinstance(question, str) or not question.strip() or len(question) > 1000:
                 raise ValueError("Provide a question of 1–1000 characters.")
-            # Baseline intentionally permits stale artifacts so the leak is observable.
-            # After cascade, add a second independent deleted-root guard.
-            parents = self.store.retrieve(question, limit=6, exclude_stale=self.stage == "cleaned")
-            fingerprint = hashlib.sha256(json.dumps(
-                [(p["id"], p["body"]) for p in parents], sort_keys=True).encode()).hexdigest()[:16]
-            result = self.provider.answer(question, parents)
-            if parents and persist:
-                # During the deliberately incomplete stage, stale generated responses
-                # can be shown but must never re-enter persistent assistant memory.
-                try:
-                    self._commit_generation("conversation", "Saved assistant answer", parents, result)
-                except ValueError:
-                    if self.stage != "source_only":
-                        raise
-            trace = {"parent_ids": [p["id"] for p in parents], "context_fingerprint": fingerprint,
-                     **{k: result[k] for k in ("duration_ms", "input_tokens", "output_tokens")}}
-            self._event("answer.generated", result, parent_ids=trace["parent_ids"], context_fingerprint=fingerprint)
-            return {"answer": result["text"], "citations": result["citations"],
-                    "provider": result["provider"], "mode": result["mode"], "trace": trace}
+            telemetry.set_conversation(self.conversation_id)
+            with telemetry.span("gen_ai.invoke_agent", "invoke_agent ghostcache-assistant", {
+                    **self._agent_data("ghostcache-assistant"),
+                    "ghostcache.question_kind": _question_kind(question)}) as agent:
+                # Baseline intentionally permits stale artifacts so the leak is observable.
+                # After cascade, add a second independent deleted-root guard.
+                exclude_stale = self.stage == "cleaned"
+                with telemetry.span("gen_ai.memory.client", "search_memory", {
+                        "gen_ai.operation.name": "search_memory", "gen_ai.memory.store.id": MEMORY_STORE,
+                        "ghostcache.exclude_stale": exclude_stale}) as search:
+                    parents = self.store.retrieve(question, limit=6, exclude_stale=exclude_stale)
+                    telemetry.set(search, "gen_ai.memory.record.count", len(parents))
+                    telemetry.set(search, "ghostcache.context_ids", json.dumps([p["id"] for p in parents]))
+                fingerprint = hashlib.sha256(json.dumps(
+                    [(p["id"], p["body"]) for p in parents], sort_keys=True).encode()).hexdigest()[:16]
+                result = self._chat(lambda: self.provider.answer(question, parents))
+                persisted = False
+                if parents and persist:
+                    # During the deliberately incomplete stage, stale generated responses
+                    # can be shown but must never re-enter persistent assistant memory.
+                    try:
+                        self._commit_generation("conversation", "Saved assistant answer", parents, result)
+                        persisted = True
+                    except ValueError:
+                        if self.stage != "source_only":
+                            raise
+                canary = self.scenario.get("canary")
+                telemetry.set(agent, "ghostcache.persisted", persisted)
+                telemetry.set(agent, "ghostcache.answer_contains_marker", bool(canary) and canary in result["text"])
+                trace = {"parent_ids": [p["id"] for p in parents], "context_fingerprint": fingerprint,
+                         **{k: result[k] for k in ("duration_ms", "input_tokens", "output_tokens")}}
+                self._event("answer.generated", result, parent_ids=trace["parent_ids"], context_fingerprint=fingerprint)
+                return {"answer": result["text"], "citations": result["citations"],
+                        "provider": result["provider"], "mode": result["mode"], "trace": trace}
 
     def delete(self, mode: str) -> dict[str, Any]:
         with self.lock:
             self._require_storage()
             if not self.scenario:
                 raise ValueError("Seed an experiment first.")
-            if mode == "source_only":
-                if self.stage == "cleaned":
-                    raise ValueError("Reset before repeating the intentionally incomplete deletion.")
-                result = self.store.delete_source_only(self.scenario["source_id"])
-                self.stage = "source_only"
-                self._event("delete.source_only", affected_ids=result["affected_ids"])
-            elif mode == "cascade":
-                result = self.store.purge_derived(self.scenario["source_id"])
-                # Cleanup itself is complete even if a subsequent model rebuild fails.
-                self.stage = "cleaned"
-                self._event("delete.propagated", affected_ids=result["affected_ids"])
-                roots = result["retained_root_ids"]
-                if roots and result["affected_ids"]:
-                    replacement_id = f"s-rebuilt-{self.generation_number}-{len(self.events)}"
-                    try:
-                        self._summary(replacement_id, "Rebuilt from surviving sources", roots)
-                    except ProviderError as exc:
-                        self._event("summary.rebuild_failed", error_type=type(exc).__name__)
-                        # Do not silently insert fixture output into a live run.
-                        result["rebuild_error"] = str(exc)
-            else:
-                raise ValueError("Deletion mode must be source_only or cascade.")
+            telemetry.set_conversation(self.conversation_id)
+            with telemetry.span("gen_ai.memory.client", "delete_memory", {
+                    "gen_ai.operation.name": "delete_memory", "gen_ai.memory.store.id": MEMORY_STORE,
+                    "gen_ai.memory.record.id": self.scenario["source_id"]}) as span:
+                if mode == "source_only":
+                    if self.stage == "cleaned":
+                        raise ValueError("Reset before repeating the intentionally incomplete deletion.")
+                    result = self.store.delete_source_only(self.scenario["source_id"])
+                    self.stage = "source_only"
+                    self._event("delete.source_only", affected_ids=result["affected_ids"])
+                elif mode == "cascade":
+                    result = self.store.purge_derived(self.scenario["source_id"])
+                    # Cleanup itself is complete even if a subsequent model rebuild fails.
+                    self.stage = "cleaned"
+                    self._event("delete.propagated", affected_ids=result["affected_ids"])
+                    roots = result["retained_root_ids"]
+                    if roots and result["affected_ids"]:
+                        replacement_id = f"s-rebuilt-{self.generation_number}-{len(self.events)}"
+                        try:
+                            self._summary(replacement_id, "Rebuilt from surviving sources", roots)
+                        except ProviderError as exc:
+                            self._event("summary.rebuild_failed", error_type=type(exc).__name__)
+                            # Do not silently insert fixture output into a live run.
+                            result["rebuild_error"] = str(exc)
+                else:
+                    raise ValueError("Deletion mode must be source_only or cascade.")
+                affected = len(result["affected_ids"])
+                for key, value in (("gen_ai.memory.record.count", affected), ("ghostcache.affected_count", affected),
+                                   ("ghostcache.retained_root_count", len(result["retained_root_ids"])),
+                                   ("ghostcache.rebuild_failed", "rebuild_error" in result),
+                                   ("ghostcache.stage", self.stage)):
+                    telemetry.set(span, key, value)
             state = self.state()
             state["deletion"] = result
             return state
@@ -277,6 +355,20 @@ class Experiment:
             self._require_storage()
             if not self.scenario:
                 raise ValueError("Seed an experiment first.")
+            telemetry.set_conversation(self.conversation_id)
+            with telemetry.span("ghostcache.verify", "verify deletion") as span:
+                result = self._verify()
+                checks = result["checks"]
+                storage = result["state"]["audit"]
+                for key, value in (("ghostcache.checks_passed", sum(c["passed"] for c in checks)),
+                                   ("ghostcache.checks_total", len(checks)),
+                                   ("ghostcache.matched_marker_rows", storage["matched_canary"]),
+                                   ("ghostcache.stale_descendants", storage["stale_descendants"])):
+                    telemetry.set(span, key, value)
+                return result
+
+    def _verify(self) -> dict[str, Any]:
+        with self.lock:
             canary = self.scenario["canary"]
             artifacts = self.store.list_artifacts()
             descendants = self.store.descendants(self.scenario["source_id"])

@@ -213,11 +213,12 @@ The evidence for each record is code, tests, saved results or the workspace hand
 
 ## D-17. Sentry telemetry is metadata only
 
-- **Status:** Proposed
+- **Status:** Accepted (implemented October 28, 2026)
 - **Context:** Telemetry creates a new data path, and the cleanup claim depends on content staying local.
 - **Decision:** If Sentry is added, spans carry durations, token counts, result counts, mode and error class only. No bodies, questions, answers or markers. It is off unless a DSN is set in the environment.
 - **Consequences:** A test must prove that no content leaves the process. Debugging gets less context.
-- **Evidence:** None yet (T-D2).
+- **Amendment (October 28, 2026):** synthetic artifact IDs (for example `ghostcache.context_ids` and `gen_ai.memory.record.id`) and the boolean `ghostcache.answer_contains_marker` flag are allowed, because they are identifiers and signals, not content. The marker value itself never is. The full list is `ALLOWED_KEYS` in `ghostcache/telemetry.py`; `telemetry.set` rejects every other key and any non-scalar value. `sentry-sdk==2.72.0` is an optional extra (`dependencies = []` is unchanged, D-02) and is imported only when the DSN is set.
+- **Evidence:** `ghostcache/telemetry.py`; `tests/test_telemetry.py` (9 tests, including the envelope privacy test); TESTING.md, section "Sentry tracing T-D2 (October 28, 2026)". No real Sentry traces yet (T-D3).
 
 ## D-18. The Backboard comparison is stateless and optional
 

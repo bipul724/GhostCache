@@ -10,9 +10,10 @@ ghostcache/            # application root = Git repository root (bipul724/GhostC
 │   ├── __main__.py    # CLI (serve/evaluate) and local HTTP handler
 │   ├── app.py         # Experiment controller, QUESTIONS, evaluate()
 │   ├── store.py       # SQLite artifacts and provenance, deletion, retrieval, audit
-│   └── providers.py   # FixtureProvider, OllamaProvider, ProviderError
+│   ├── providers.py   # FixtureProvider, OllamaProvider, ProviderError
+│   └── telemetry.py   # optional metadata-only Sentry tracing (ALLOWED_KEYS)
 ├── web/               # index.html, app.js, style.css (no build step)
-├── tests/             # test_store.py, test_app.py, test_http.py, test_providers.py, test_ui.py (unittest)
+├── tests/             # test_store.py, test_app.py, test_http.py, test_providers.py, test_ui.py, test_telemetry.py (unittest)
 │   └── ui/            # app_contract.js: web/app.js contract cases under node:vm (Node built-ins only)
 ├── results/           # saved evidence: do not overwrite
 ├── .github/workflows/checks.yml
@@ -29,6 +30,7 @@ python3.12 -m ghostcache evaluate --mode fixture --output results/<new-name>.jso
 python3.12 -m ghostcache serve --port 8765             # fixture UI
 python3.12 -m ghostcache serve --port 8765 --mode live # needs Ollama + gemma4:e2b-it-qat
 node --check web/app.js                                # optional JS syntax check
+.venv/bin/python -m unittest discover -s tests -v      # with the optional sentry-sdk in .venv
 ```
 
 - **Do not start a server on a port that is already in use.** Check first.
@@ -75,7 +77,7 @@ node --check web/app.js                                # optional JS syntax chec
 
 - Use fictional data only. Never add real personal documents to tests, fixtures or results.
 - Never commit secrets. `.env` is git-ignored, and nothing loads it automatically. Document only variables the code actually reads in [.env.example](.env.example).
-- Logs and any future telemetry (such as Sentry) may contain only metadata: operation names, durations, token and result counts, mode, and error class. Never send document bodies, questions, answers or markers. Keep request content out of URLs.
+- Logs and telemetry may contain only metadata. Every Sentry span attribute must be a key in `ALLOWED_KEYS` in `ghostcache/telemetry.py` and be set through `telemetry.set`, which rejects anything else; Sentry does not filter manually set data. Never add `gen_ai.input.messages`, `gen_ai.output.messages`, `gen_ai.system_instructions`, `gen_ai.memory.query.text` or `gen_ai.memory.records`. Span names are fixed strings. Never send document bodies or titles, questions, answers or markers, and extend the privacy test in `tests/test_telemetry.py` when you add attributes. Keep request content out of URLs.
 - Keep the localhost bind, the Host and Origin checks, the JSON-only POST, the size limits and the security headers. Do not expose the current shared-state server publicly. A public demo needs the design decided in DECISIONS.md D-13.
 
 ## Evidence

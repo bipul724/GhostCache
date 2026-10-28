@@ -1,6 +1,6 @@
 # GhostCache architecture
 
-Part 1 describes the **current** system (version 0.1.0), checked against the source on October 27, 2026. Part 2 covers proposed external integrations and publication. The GitHub Actions workflow has one successful hosted run ([run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382), October 28, 2026); the other external integrations remain unverified or unimplemented as specified below.
+Part 1 describes the **current** system (version 0.1.0), checked against the source on October 27, 2026. Part 2 covers proposed external integrations and publication. The GitHub Actions workflow has one successful hosted run ([run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382), October 28, 2026); optional metadata-only Sentry tracing is implemented locally but has not sent a real trace yet; the other external integrations remain unverified or unimplemented as specified below.
 
 ---
 
@@ -43,9 +43,11 @@ flowchart TB
 | `ghostcache/__main__.py` | CLI (`serve` and `evaluate`), HTTP handler factory, static-asset allowlist, Host/Origin/content-type checks, error-to-status mapping. `ROOT` = the application directory. |
 | `ghostcache/app.py` | `QUESTIONS`, `StorageError`, the `Experiment` controller (reset/seed and publication, ask, delete, verify, state, event ledger), and the `evaluate()` end-to-end function. |
 | `ghostcache/store.py` | `Store`: SQLite schema, artifact insertion with parent and root validation, lineage, recursive descendants, both deletion policies, lexical retrieval, audit, and the publication primitives `replace_contents` (online backup) and `check_writable`. |
-| `ghostcache/providers.py` | `FixtureProvider`, `OllamaProvider`, `ProviderError`, `DEFAULT_MODEL`. |
+| `ghostcache/providers.py` | `FixtureProvider`, `OllamaProvider` (with its fixed `temperature` and `max_tokens`), `ProviderError`, `error_category`, `DEFAULT_MODEL`. |
+| `ghostcache/telemetry.py` | Optional Sentry tracing: `init`, `span`, `set`, `flush` and `ALLOWED_KEYS`, the privacy boundary. Off unless `GHOSTCACHE_SENTRY_DSN` is set; imports `sentry_sdk` only then. |
 | `web/index.html`, `web/app.js`, `web/style.css` | Single-page UI with no build step and no external assets. The answer trace shows `trace.parent_ids` as "Context: …". |
 | `tests/ui/app_contract.js`, `tests/test_ui.py` | 7 UI contract tests. They run the real `web/app.js` in `node:vm` with a fake DOM and fetch. The 6 Node cases skip when `node` is not on PATH. |
+| `tests/test_telemetry.py` | 9 telemetry tests: 3 run without the SDK (disabled by default, missing SDK, allowlist); 6 skip unless `sentry-sdk` is installed (spans, root transaction, privacy, live tokens and errors, marker flag, broken exporter). |
 | `tests/test_store.py`, `test_app.py`, `test_http.py`, `test_providers.py` | 55 tests: 11 store (including 2 publication-primitive tests), 23 controller (including 5 reset-failure and 10 publication tests), 9 HTTP-handler (including 2 transport and 1 storage-failure test), 12 provider-response, transport and CLI tests. |
 | `.github/workflows/checks.yml` | CI definition. Hosted [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on GitHub on October 28, 2026. |
 | `results/` | Saved evidence: two JSON reports and two screenshots. |
@@ -343,7 +345,7 @@ python3.12 -m ghostcache evaluate [--mode fixture|live] [--model NAME] [--output
 - **`serve`** runs `reset(mode)` before it starts listening. **A successful reset replaces the contents of `--database`** in place with a freshly seeded experiment, copied by SQLite online backup from an in-memory candidate. No other file is created. If that first reset fails, `serve` exits 1 and prints only fixed messages. An existing file's bytes are unchanged unless the copy completed and only the write check after it failed (see "Concurrency, transactions and failure behaviour"). A file it created during the failed attempt is removed.
 - **`--output`** creates missing parent directories.
 - **`pyproject.toml`** declares a `ghostcache` console script. Installing the package has **not** been tested; the verified way to run it is `-m` from the application directory.
-- **The only environment variable read is `GHOSTCACHE_MODEL`**, and `--model` takes precedence over it. The Ollama URL `http://127.0.0.1:11434`, the timeouts and the inference options are fixed in the source. No `.env` file is loaded (see [.env.example](.env.example)).
+- **Two environment variables are read:** `GHOSTCACHE_MODEL` (`--model` takes precedence over it) and `GHOSTCACHE_SENTRY_DSN` (optional tracing; see Part 2). If the DSN is set without `sentry-sdk`, `serve` and `evaluate` exit 1 before doing anything else. The Ollama URL `http://127.0.0.1:11434`, the timeouts and the inference options are fixed in the source. No `.env` file is loaded (see [.env.example](.env.example)).
 
 ## Fixture vs live mode
 
@@ -388,14 +390,14 @@ These remaining discrepancies are tracked in [tasks.md](tasks.md). Resolved item
 
 # Part 2: Proposed architecture (not implemented)
 
-The hosted operations and integrations in this part are not complete. GitHub Actions is the exception: it has one successful hosted run (see the table below). The other integration code and GhostCache deployment/DNS setup are not implemented; external account ownership and remaining allowances have not been fully audited. Each item needs the evidence listed in [tasks.md](tasks.md) before it can be claimed.
+The hosted operations and integrations in this part are not complete. GitHub Actions is the exception: it has one successful hosted run (see the table below). Sentry tracing is implemented locally but has no real traces yet. The other integration code and GhostCache deployment/DNS setup are not implemented; external account ownership and remaining allowances have not been fully audited. Each item needs the evidence listed in [tasks.md](tasks.md) before it can be claimed.
 
 ```mermaid
 flowchart LR
     subgraph Local["Local machine (private path)"]
         App[GhostCache core] --> Ollama[(Ollama + Gemma)]
     end
-    App -. metadata-only spans .-> Sentry[(Sentry)]
+    App -. metadata-only spans, only when a DSN is set .-> Sentry[(Sentry)]
     App -. optional comparison provider, synthetic data .-> BB[(Backboard: 2–3 open-weight models)]
     GH[GitHub repo] --> GHA[GitHub Actions: tests + fixture eval]
     Public["Public demo on Render<br/>replay / simulation, or a redesigned per-session service"] --> DNS["ghostcache.bipulchamoli.tech (suggested)"]
@@ -403,10 +405,12 @@ flowchart LR
     EL["ElevenLabs narration (optional)"] -.-> Video[Demo video]
 ```
 
+**Sentry data flow (implemented, optional).** Only when `GHOSTCACHE_SENTRY_DSN` is set, the process sends span metadata to the DSN's Sentry host. Spans carry operation and span names (fixed strings), the provider and model name, token counts, durations, record counts, synthetic artifact IDs (`d-vault`, `c-vault`, …), the stage and mode, a question kind (`secret`, `paraphrase`, `retained`, `shared` or `custom`), booleans such as `answer_contains_marker`, check counts, and an error's class name and fixed category. They never carry document text or titles, questions, answers, prompts, the marker, request bodies, the Ollama URL, the machine's hostname or file paths. The SDK adds its own envelope fields: release `ghostcache@0.1.0`, environment `local-<mode>`, server name `ghostcache-local`, SDK and Python runtime versions, thread IDs, trace and span IDs, timestamps and a random `gen_ai.conversation.id`. Because the SDK does not filter manually set span data, `telemetry.set` is the privacy boundary, and `tests/test_telemetry.py` checks the serialized envelopes.
+
 | Integration | Proposed design | Constraints already identified |
 | --- | --- | --- |
 | **GitHub Actions** | Publish `ghostcache/` itself as the repository root so `.github/workflows/checks.yml` is discovered | Done: [bipul724/GhostCache](https://github.com/bipul724/GhostCache) has `ghostcache/` as its root, and [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) discovered and ran the workflow on October 28, 2026. Publishing the parent `week 4/` folder instead would have left the workflow nested and never run. |
-| **Sentry** | Spans for `retrieve`, `generate`, `delete.source_only`, `delete.cascade`, `rebuild` and `verify`. Attributes: durations, token counts, result counts, mode, error class. The DSN is read from the environment. | **No** document text, questions, answers or markers. The SDK's default capture must be checked. Free-plan quota unverified. This would add the first third-party dependency. |
+| **Sentry** | **Implemented locally (T-D2, October 28, 2026)** in `ghostcache/telemetry.py`. Root transactions per `POST /api/*` and per `evaluate`; `gen_ai.invoke_agent` (assistant and summarizer), `gen_ai.chat`, `gen_ai.memory.client` (`search_memory`, `create_memory`, `delete_memory`), `ghostcache.reset` and `ghostcache.verify` spans. The DSN is read from `GHOSTCACHE_SENTRY_DSN`. | Attributes only from `ALLOWED_KEYS`; no document text, titles, questions, answers or markers (D-17). The SDK's capture was checked offline: `default_integrations=False`, `server_name="ghostcache-local"`, error events dropped. Optional dependency `sentry-sdk==2.72.0`. Free-plan quota unverified (T-D1); no real traces (T-D3). |
 | **Public demo (Render) + .tech** | Option A: a static, clearly labelled **recorded replay** of a saved run, with local live mode shown by instructions and video. Option B: a redesigned service with per-session state, correct bind and Host handling, and limits on cost and state. | Copying `web/` to a static host does not work, because the UI needs `/api/*`. Free Render cannot run the 4.3 GB model, and a cloud host cannot reach the laptop's `127.0.0.1`. Promo eligibility of `bipulchamoli.tech` and its DNS host are unverified. |
 | **Backboard** | An optional third provider, used only by a comparison command. Stateless requests carrying only the supplied context, with request, token and cost caps. Output: one report per model in the existing check format. | Do not introduce provider-side memory into the deletion claim. Keep Ollama as the local path. Credits are finite and need rechecking. |
 | **Browserbase / Stagehand** | A script that drives the public demo through seed → ask → source-only → echo → cascade → verify, asserting on what the UI shows | Allowances need rechecking. A replay run is a UI regression test, not a live evaluation. Needs a demo the browser can reach. |

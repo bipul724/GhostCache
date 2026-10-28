@@ -6,7 +6,7 @@ This file covers what to run, what each result shows, what has actually been ver
 
 - **Python ≥3.12.** The verified interpreter is **Python 3.12.6** at `/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12`, which is also `python3.12` on this Mac's PATH.
 - The default `python3` here is **3.15.0**, which is **untested**. Use `python3.12`.
-- There are no packages to install, and no virtualenv is needed.
+- No packages are needed for the core suite. The 6 SDK-dependent tests in `tests/test_telemetry.py` need the optional `sentry-sdk==2.72.0`, installed only into a virtualenv: `python3.12 -m venv .venv && .venv/bin/python -m pip install "sentry-sdk==2.72.0"`. Without it they are **skipped** with the reason "sentry-sdk not installed; optional extra".
 - Run every command from the application directory (the one containing `pyproject.toml`). The tests import `ghostcache` from the current directory.
 - Live evaluation also needs Ollama running locally, with `gemma4:e2b-it-qat` (or your `--model`) pulled.
 - **Node.js is optional.** The UI contract tests in `tests/test_ui.py` call `node`. If `node` is not on PATH, those six tests are **skipped** with the reason "Node.js is not on PATH", and the suite still passes. Verified with Node v22.23.4; no npm packages are used.
@@ -31,9 +31,37 @@ node --check web/app.js && node --check tests/ui/app_contract.js
 
 # 5. One UI contract case directly (optional, needs Node); exits 0 or prints FAIL and exits 1
 node tests/ui/app_contract.js context_from_parent_ids
+
+# 6. Every test, including the 6 telemetry tests that need the optional sentry-sdk
+.venv/bin/python -m unittest discover -s tests -v
 ```
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
+
+## Sentry tracing T-D2 (October 28, 2026)
+
+**Change.** New `ghostcache/telemetry.py` adds optional, metadata-only Sentry tracing, off unless `GHOSTCACHE_SENTRY_DSN` is set. `app.py` and `__main__.py` are instrumented and wired; `providers.py` gains `error_category` and names its fixed `temperature` and `max_tokens`. No return value, report field, ledger entry, HTTP response or exit code changes. `pyproject.toml` adds the optional `sentry` extra; `dependencies = []` is unchanged. The SDK was installed only into `.venv` (`sentry-sdk 2.72.0`, which brought its own dependencies `urllib3 2.8.0` and `certifi 2026.10.23`).
+
+| Command | Result |
+| --- | --- |
+| `python3.12 -m unittest discover -s tests -v` (no `sentry-sdk`; Node v22.23.4 on PATH) | **Ran 71 tests in 0.889s: OK (skipped=6)**. The 6 skips are the SDK telemetry tests ("sentry-sdk not installed; optional extra") |
+| `.venv/bin/python -m unittest discover -s tests -v` (`sentry-sdk` 2.72.0) | **Ran 71 tests in 0.830s: OK**, none skipped. One `DeprecationWarning`: 2.72.0 deprecates `send_default_pii` in favour of `data_collection`; `send_default_pii=False` is still honoured |
+| `python3.12 -m ghostcache evaluate --mode fixture --output <scratch>/a.json` (DSN unset) | exit 0; `passed: true`; 10/10; nothing on stderr |
+| `python3.12 -c "import ghostcache.app, sys; print('sentry_sdk' in sys.modules)"` | `False` |
+| `GHOSTCACHE_SENTRY_DSN=<dummy> python3.12 -m ghostcache evaluate --mode fixture` (no SDK) | exit 1; stderr is only the fixed message; the DSN is not printed |
+| `node --check web/app.js` | passes |
+| `shasum -a 256 results/*` | all four evidence files unchanged |
+
+**Proof that the tests depend on the instrumentation.** In scratch copies, all 6 SDK tests failed (4 failures, 2 errors) both with the previous `app.py` and `__main__.py` and with `telemetry.span` turned into a no-op. A third copy that sent the question text as `ghostcache.question_kind` failed the privacy test: "Which access phrase opens the observatory vault?" was found in the envelope bytes. The missing-SDK test also fails against the previous `__main__.py`. During that proof, a first attempt with the previous `__main__.py` (which has no DSN check) let the missing-SDK test start a real `serve` on the default port 8765, with a temporary `--database`. It was stopped, and the test now patches the HTTP server so it can never bind a port. `.local/assistant.sqlite` was not touched.
+
+**SDK behaviour confirmed in the installed 2.72.0 source:**
+- `start_transaction(op=, name=)` and `start_span(op=, name=)` exist; spans are sent only inside a transaction; `Span.set_data(key, value)` and `Span.set_status("internal_error")` exist; `Span` has no `attributes=` argument.
+- `Scope.set_conversation_id` and `sentry_sdk.ai.set_conversation_id` both exist; the code uses the scope method. The SDK copies the ID onto `gen_ai.*` spans as `gen_ai.conversation.id` when they finish.
+- `gen_ai.*` spans are split out of the transaction into a separate `span` envelope item (version 2, typed attributes), so the tests read every item.
+- `Transport.capture_envelope(envelope)` is the abstract method; `transport=` accepts an instance. A raising transport propagates out of a transaction's finish, so `telemetry.span` swallows exporter errors.
+- `default_integrations=False` also skips the auto-enabling integrations.
+
+**Not done.** No real Sentry account, DSN, network call or trace (T-D1, T-D3). No live Gemma run: the live path was tested with mocked Ollama. The new CI step has not run on GitHub yet.
 
 ## Hosted CI run #1 (October 28, 2026)
 
@@ -141,7 +169,7 @@ The last two rows below record the bugs as found. They were fixed afterwards (T-
 
 **Not run in this audit:** live Gemma evaluation (no model calls were made), browser QA, and GitHub Actions. The saved files in `results/` were not modified.
 
-## Test inventory (62)
+## Test inventory (71)
 
 **`tests/test_store.py`: 11 store tests** (9 in `StoreTests`, 2 in `PublicationPrimitiveTests`), using in-memory SQLite except for the reopen and publication-primitive tests:
 
@@ -230,6 +258,20 @@ The last two rows below record the bugs as found. They were fixed afterwards (T-
 | `test_reset_and_delete_clear_stale_display` | After an answer and 8/8 checks are shown, both `reset` and `source-only` hide the answer and show "NOT RUN" |
 | `test_paraphrase_fallback_matches_backend_question` | Pure Python, no Node: the `paraphrase` fallback string in `app.js` equals `ghostcache.app.QUESTIONS["paraphrase"]` |
 
+**`tests/test_telemetry.py`: 9 telemetry tests.** The 3 in `DisabledTelemetryTests` always run. The 6 others need `sentry-sdk` and are skipped without it. They use the DSN `https://public@example.invalid/1` with an in-memory capturing `Transport`, so nothing leaves the process, and `tearDown` closes the client (`telemetry.shutdown()`). Ollama status is patched.
+
+| Test | Covers |
+| --- | --- |
+| `test_disabled_by_default_never_imports_the_sdk_or_changes_the_report` | In a subprocess with no DSN: `init` returns `False`, `evaluate` exits 0, `sentry_sdk` is not in `sys.modules`, and the report's top-level keys and check names equal `results/fixture.json` |
+| `test_missing_sdk_exits_1_with_a_fixed_message_and_never_prints_the_dsn` | DSN set, `sys.modules["sentry_sdk"] = None`: `evaluate` and `serve --database <temp>` exit 1 with exactly the fixed message; the DSN is not printed; no report or database is created; the HTTP server is patched so it cannot bind |
+| `test_allowlist_rejects_unknown_keys_and_non_scalar_values` | `telemetry.set` rejects unknown keys and the five forbidden `gen_ai.*` content keys, and dict, list, tuple and bytes values; it accepts a JSON string and skips `None`; disabled `span()` yields `None` |
+| `test_fixture_evaluation_emits_agent_memory_reset_and_verify_spans` | A traced `evaluate`: one root (`ghostcache.evaluate`, "evaluate fixture"); `gen_ai.invoke_agent` (assistant and summarizer), `gen_ai.chat`, `gen_ai.memory.client` (`search_memory`, `create_memory`, `delete_memory`), `ghostcache.reset` and `ghostcache.verify` (8 of 8, 0 marker rows, 0 stale); every `gen_ai` span has `gen_ai.operation.name` and a 32-character conversation ID |
+| `test_post_request_is_a_root_transaction` | `POST /api/ask` through the real handler is a `ghostcache.request` transaction named "POST /api/ask"; the assistant span is its child, with `search_memory`, `chat …` and `create_memory` in order |
+| `test_no_content_leaves_the_process` | Serializes every envelope and asserts that none of these appear: both markers, "MOTH-", every `QUESTIONS` text and a custom question, every seeded title and body, every report answer, the hostname, the home directory and "127.0.0.1:11434" |
+| `test_chat_spans_carry_token_usage_and_errors_carry_only_a_category` | Live reset with mocked Ollama: 4 `chat mock-model` spans with integer tokens (120, 30, 150), the response model, temperature 0 and max tokens 420. Timeout, HTTP 503 and malformed output each give one error-status chat span with `error.type` `ProviderError` and the category ("timed out", "HTTP status 503", "invalid_output"); the sentinel in the exception text and the model's answer never appear |
+| `test_marker_flag_follows_source_only_and_cascade_deletion` | After source-only deletion the paraphrase span has `answer_contains_marker` true and its search context includes `c-vault`; after cascade it is false and `c-vault` is gone; both `delete_memory` spans name `d-vault` with the stage after the call |
+| `test_a_failing_sentry_transport_never_changes_results` | `capture_envelope` raises: `evaluate` and `POST /api/ask` give the same results as an untraced run (with a fixed marker; wall-clock times, random IDs and the fingerprint over them removed), and the exporter was really called twice |
+
 ## Fixture evaluation vs live evaluation
 
 | | Fixture | Live |
@@ -295,6 +337,7 @@ The top-level keys are `project`, `mode`, `model`, `passed`, `checks[]`, `oracle
 - **Triggers and runner:** push, pull request or manual dispatch, on `ubuntu-latest` with Python 3.12 and a 5-minute timeout.
 - **Steps:** runs the unit suite, then a fresh fixture evaluation into `$RUNNER_TEMP`, and uploads only that JSON (`ghostcache-synthetic-evaluation`, kept 3 days).
 - **The evaluation still runs if the tests fail**, as long as Python setup succeeded.
+- **Telemetry step (added October 28, 2026; not yet run on GitHub):** after the steps above, "Check telemetry privacy with the optional Sentry SDK" installs `sentry-sdk==2.72.0` and runs `python -m unittest tests.test_telemetry -v`. The earlier steps run without the SDK, so its 6 tests skip there. No DSN or secret is used, and nothing contacts Sentry.
 - **UI contract tests:** they run inside the same `unittest` command, so they need `node` on the runner's PATH. Otherwise they are skipped and the job still passes. Hosted run #1 confirmed that the runner provides Node: all 7 UI tests ran and passed. The workflow was not changed.
 - **Security settings:** read-only contents, no persisted credentials, actions pinned to commit SHAs, no secrets, no model and no live inference.
 
@@ -327,7 +370,8 @@ The current tests do **not** cover:
 - concurrent HTTP requests;
 - Python 3.15;
 - package installation through the console script;
-- the CLI `main()` success path (exit 0), and `serve` startup failure other than live transport errors;
+- `serve` startup failure other than live transport errors and the missing-SDK check (the `evaluate` success path, exit 0, is now covered by `tests/test_telemetry.py`);
+- real Sentry ingestion: no real DSN, project or trace has been used, and the SDK's network transport is never exercised;
 - the `summary.rebuild_failed` path;
 - crash safety or durability of reset publication (process kill or power loss mid-copy), concurrent writers from other processes, and Windows;
 - the UI's handling of `storage_failed` (see architecture.md known discrepancy 4);
@@ -338,7 +382,7 @@ They do not prove secure disk erasure, model unlearning, production authorisatio
 Worthwhile additions, in order:
 
 1. A rebuild `ProviderError` keeps cleanup complete, logs `summary.rebuild_failed` and returns `rebuild_error`.
-2. `main(["evaluate", "--output", tmp])` in fixture mode writes a passing report and returns 0.
+2. *(Done October 28, 2026, in `tests/test_telemetry.py`.)* `main(["evaluate", "--output", tmp])` in fixture mode writes a passing report and returns 0.
 3. Asking during the `source_only` stage never saves a stale conversation.
 4. An automated real-browser run of the UI contract. The manual check and hosted CI with Node are done; the rest of T-A9 is new screenshots.
 5. Retrieval tie-break ordering.

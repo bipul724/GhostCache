@@ -52,6 +52,14 @@ def _transport_category(exc: BaseException) -> str:
     return "transport error"
 
 
+def error_category(exc: ProviderError) -> str:
+    """The fixed category of a failed model call: a transport category or invalid_output."""
+    cause = exc.__cause__
+    if isinstance(cause, (OSError, http.client.HTTPException)):
+        return _transport_category(cause)
+    return "invalid_output"
+
+
 def _count(value: Any) -> int | None:
     return value if isinstance(value, int) and not isinstance(value, bool) and value >= 0 else None
 
@@ -121,6 +129,8 @@ class FixtureProvider:
 
 class OllamaProvider:
     mode = "live"
+    temperature = 0
+    max_tokens = 420
 
     def __init__(self, model: str | None = None, timeout: float = 150) -> None:
         self.model = model or os.environ.get("GHOSTCACHE_MODEL", DEFAULT_MODEL)
@@ -175,7 +185,7 @@ class OllamaProvider:
                 "text": {"type": "string"},
                 "citations": {"type": "array", "items": {"type": "string"}}},
                 "required": ["text", "citations"], "additionalProperties": False},
-            "options": {"temperature": 0, "num_ctx": 4096, "num_predict": 420},
+            "options": {"temperature": self.temperature, "num_ctx": 4096, "num_predict": self.max_tokens},
         }
         request = urllib.request.Request(
             f"{self.url}/api/chat", data=json.dumps(payload).encode(),

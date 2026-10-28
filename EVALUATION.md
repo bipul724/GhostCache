@@ -34,6 +34,7 @@ Random markers change on every run. The detailed JSON is the record of the actua
 | Python automated suite after the reset-publication and transport-error fixes (D-20, D-10) | 52 tests passed (11 store, 20 controller, 9 HTTP-handler, 12 provider/transport/CLI) | same command; see [TESTING.md](TESTING.md) |
 | Python automated suite after the first-attach follow-up (D-20) | 55 tests passed (11 store, 23 controller, 9 HTTP-handler, 12 provider/transport/CLI) | same command; see [TESTING.md](TESTING.md) |
 | Python automated suite after the T-A2–T-A4 UI fixes | 62 tests passed, including 7 UI contract tests run with Node v22 (6 skip without Node) | same command; see [TESTING.md](TESTING.md) |
+| Python automated suite after Sentry tracing (T-D2) | 71 tests passed with `sentry-sdk` 2.72.0 in `.venv`; with plain `python3.12` the 6 SDK tests skip | same command, and `.venv/bin/python -m unittest discover -s tests -v`; see [TESTING.md](TESTING.md) |
 | Controlled fixture evaluation | 10 of 10 checks passed | [results/fixture.json](results/fixture.json) |
 | Live local Gemma evaluation | 10 of 10 checks passed | [results/live-gemma.json](results/live-gemma.json), model `gemma4:e2b-it-qat` |
 

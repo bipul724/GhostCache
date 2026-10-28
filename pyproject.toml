@@ -5,5 +5,8 @@ description = "A local provenance and deletion testbed for AI application memory
 requires-python = ">=3.12"
 dependencies = []
 
+[project.optional-dependencies]
+sentry = ["sentry-sdk==2.72.0"]
+
 [project.scripts]
 ghostcache = "ghostcache.__main__:main"

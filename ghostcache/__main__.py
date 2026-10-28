@@ -10,11 +10,13 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
 
+from . import telemetry
 from .app import Experiment, StorageError, evaluate
 from .providers import ProviderError
 
 
 ROOT = Path(__file__).resolve().parent.parent
+POST_ROUTES = ("/api/reset", "/api/ask", "/api/delete", "/api/verify")
 
 
 def make_handler(experiment: Experiment):
@@ -80,18 +82,20 @@ def make_handler(experiment: Experiment):
                 if not isinstance(payload, dict):
                     raise ValueError("Request body must be a JSON object.")
                 route = urlparse(self.path).path
-                if route == "/api/reset":
-                    result = experiment.reset(payload.get("mode", "fixture"))
-                elif route == "/api/ask":
-                    result = experiment.ask(payload.get("question", ""))
-                    result["state"] = experiment.state()
-                elif route == "/api/delete":
-                    result = experiment.delete(payload.get("mode", ""))
-                elif route == "/api/verify":
-                    result = experiment.verify()
-                else:
+                if route not in POST_ROUTES:
                     self.send_json(404, {"error": "Not found"})
                     return
+                # The name is one of the fixed routes above, never request content.
+                with telemetry.span("ghostcache.request", f"POST {route}", root=True):
+                    if route == "/api/reset":
+                        result = experiment.reset(payload.get("mode", "fixture"))
+                    elif route == "/api/ask":
+                        result = experiment.ask(payload.get("question", ""))
+                        result["state"] = experiment.state()
+                    elif route == "/api/delete":
+                        result = experiment.delete(payload.get("mode", ""))
+                    else:
+                        result = experiment.verify()
                 self.send_json(200, result)
             except ProviderError as exc:
                 self.send_json(502, {"error": str(exc), "mode": experiment.provider.mode})
@@ -119,15 +123,26 @@ def main(argv: list[str] | None = None) -> int:
     evaluation.add_argument("--model", default=None)
     evaluation.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
+    try:
+        if telemetry.init(args.mode):
+            # stderr, so that evaluate's stdout stays one JSON document. The DSN is never printed.
+            print(telemetry.ENABLED_MESSAGE, file=sys.stderr, flush=True)
+    except telemetry.TelemetryError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
     if args.command == "evaluate":
         try:
-            report = evaluate(args.mode, args.model)
+            with telemetry.span("ghostcache.evaluate", f"evaluate {args.mode}",
+                                {"ghostcache.mode": args.mode}, root=True):
+                report = evaluate(args.mode, args.model)
         # Expected failures (model/provider errors, invalid input) become a failed
         # report. Anything else is a programming defect: let it raise with a
         # traceback and nonzero exit rather than disguise it as an evaluation result.
         except (ProviderError, ValueError) as exc:
             report = {"project": "GhostCache", "mode": args.mode, "passed": False,
                       "error": str(exc), "note": "No silent switch to fixture mode."}
+        finally:
+            telemetry.flush()
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)
             args.output.write_text(json.dumps(report, indent=2) + "\n")
@@ -159,6 +174,7 @@ def main(argv: list[str] | None = None) -> int:
     finally:
         httpd.server_close()
         experiment.close()
+        telemetry.flush()
     return 0
 
 
