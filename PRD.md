@@ -118,13 +118,13 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 - **Evidence artifacts:** saved reports, screenshots and any future recording or narration. They are outside the cleanup claim and may contain the fictional marker.
 - **Event ledger:** stores operation names, time of day, mode and provider, durations, token counts, artifact and parent IDs, and context fingerprints. It does not store prompts or answers. Full answers do appear in API responses and reports.
 - **Live mode:** traffic goes only to `127.0.0.1:11434`. No hosted inference.
-- **Cloud features** (Sentry, now implemented; Render hosting for the static walkthrough, prepared) must use fictional data. The walkthrough publishes recorded reports that already use fictional data, and runs no model. Sentry may receive only deliberately chosen metadata. Local-mode privacy does not carry over to them automatically.
+- **Cloud features** (Sentry, now implemented; Render hosting for the static walkthrough, deployed October 28, 2026) must use fictional data. The walkthrough publishes recorded reports that already use fictional data, and runs no model. Sentry may receive only deliberately chosen metadata. Local-mode privacy does not carry over to them automatically.
 
 ## 11. MVP and future scope
 
 | Implemented MVP | Future (not implemented) |
 | --- | --- |
-| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 91 tests (7 UI contract tests and 1 walkthrough syntax test need Node; 6 telemetry tests need the optional `sentry-sdk`), optional metadata-only Sentry tracing with real traces from one fixture and two live runs (October 28, 2026), CI workflow file, a public repository with successful hosted Actions runs (October 28, 2026), a static recorded walkthrough of the live runs with a Render Blueprint (implemented and tested locally October 28, 2026; not deployed) | Open consistency fixes (T-A7, T-A8, the rest of T-A9), repeated live evaluations with metadata, deploying the walkthrough on Render (T-E3). Dropped on October 28, 2026: the .tech domain, a Backboard comparison, a Browserbase run, ElevenLabs narration and Entire checkpoints |
+| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 91 tests (7 UI contract tests and 1 walkthrough syntax test need Node; 6 telemetry tests need the optional `sentry-sdk`), optional metadata-only Sentry tracing with real traces from one fixture and two live runs (October 28, 2026), CI workflow file, a public repository with successful hosted Actions runs (October 28, 2026), a static recorded walkthrough of the live runs with a Render Blueprint (implemented and tested locally, and deployed on Render at <https://ghostcache-walkthrough.onrender.com/>, October 28, 2026; recorded runs only, no live inference) | Open consistency fixes (T-A7, T-A8, the rest of T-A9), repeated live evaluations with metadata, the demo video and the DEV submission (T-I1 to T-I4). Dropped on October 28, 2026: the .tech domain, a Backboard comparison, a Browserbase run, ElevenLabs narration and Entire checkpoints |
 
 ## 12. Success measures
 
@@ -149,7 +149,7 @@ A fixture pass supports the software invariants only. A live pass supports only 
 - Optional: `sentry-sdk==2.72.0` (the `sentry` extra), only for tracing.
 - Ollama with `gemma4:e2b-it-qat` (about 4.3 GB) for live mode, on the user's laptop.
 - GitHub (repository and Actions) for CI evidence. Set up: [bipul724/GhostCache](https://github.com/bipul724/GhostCache), with one successful hosted run (October 28, 2026).
-- External services in use: Sentry (implemented; real traces from a 14-day Business trial, October 28, 2026). Prepared: Render, for a static site only (`render.yaml`; not deployed). Dropped on October 28, 2026: a .tech domain registrar and its DNS, Backboard, Browserbase, ElevenLabs, Entire. *(Originally listed as planned on October 27, 2026; kept as history.)*
+- External services in use: Sentry (implemented; real traces from a 14-day Business trial, October 28, 2026). Hosting: Render, for a static site only (`render.yaml`; deployed October 28, 2026). Dropped on October 28, 2026: a .tech domain registrar and its DNS, Backboard, Browserbase, ElevenLabs, Entire. *(Originally listed as planned on October 27, 2026; kept as history.)*
 
 ## 14. Risks
 
@@ -181,7 +181,7 @@ These apply only if the category is entered. **As of October 28, 2026 the submis
 | CAT-01 | Gemma | Explain Gemma's role, the model ID and the saved live evidence, including any failures. *(Ready now.)* |
 | CAT-02 | GitHub Copilot (via Actions, which the official category description includes) | A public repository and a successful hosted workflow run whose fixture-report artifact can be inspected. Do not claim Copilot authorship. *(Repository and successful hosted runs exist: [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) and [run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485). Run #3's fixture-report artifact was downloaded and inspected: 10 of 10 checks passed.)* |
 | CAT-03 | Sentry Agent Tracing | Metadata-only spans for retrieval, generation, deletion, rebuild and verify, plus real trace screenshots and one explained finding *(The instrumentation is implemented with offline privacy tests (T-D2, October 28, 2026). Real traces were captured the same day: seven screenshots in `results/sentry-*.jpg` and two explained findings, in README.md, "What the real traces showed" (T-D3). They were sent from a 14-day Sentry Business trial with no payment method, using 120 of 100M spans (T-D1).)* |
-| CAT-04 | Render | A reachable Render-hosted frontend or demo, labelled replay, simulation or live *(Not entered. The static recorded walkthrough and `render.yaml` are ready locally; not deployed.)* |
+| CAT-04 | Render | A reachable Render-hosted frontend or demo, labelled replay, simulation or live *(Not entered. The static recorded walkthrough is deployed from `render.yaml` at <https://ghostcache-walkthrough.onrender.com/> (October 28, 2026), labelled as a recorded run; hosting only.)* |
 | CAT-05 | .tech domain | Evidence of the promo claim, plus a live HTTPS subdomain serving the project; the existing apex is preserved *(Dropped October 28, 2026.)* |
 | CAT-06 | Backboard | A comparison of 2–3 open-weight models on the same corpus and checks, with model IDs, token and cost figures, and failures reported *(Dropped October 28, 2026.)* |
 | CAT-07 | Browserbase (stretch) | A Stagehand or Browserbase session driving the workflow with assertions, plus session evidence *(Dropped October 28, 2026.)* |

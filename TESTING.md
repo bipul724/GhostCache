@@ -44,9 +44,31 @@ python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
 
+## Render deployment T-E3 (October 28, 2026)
+
+The user deployed the walkthrough from `render.yaml` as the Blueprint-managed Render static site `ghostcache-walkthrough`, live at <https://ghostcache-walkthrough.onrender.com/> from commit `8013d01` ([dashboard screenshot](screenshots/00-render-dashboard-live-8013d01.png)). It performs no live inference; the Python backend and Ollama stay on the laptop.
+
+**Fresh checks during the documentation update (October 28, 2026, about 21:00 IST; read-only requests):**
+
+| Command or check | Result |
+| --- | --- |
+| `curl` status of `/`, `/data/evidence.json`, `/style.css`, `/walkthrough.js` | 200 each (`text/html`, `application/json`, `text/css`, `application/javascript`) |
+| `curl` status of the exact `/api/state` | 404 (`text/plain`) |
+| `curl -sI` on `/` and `/data/evidence.json` | `Content-Security-Policy` identical to `render.yaml`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `X-Frame-Options: DENY`; `/data/evidence.json` also `Cache-Control: no-cache` |
+| SHA-256 of the deployed `index.html`, `style.css`, `walkthrough.js`, `data/evidence.json` against `git show 8013d01:site/…` | identical for all four |
+| Headless Chrome 1280×900 (temporary profile, Chrome DevTools Protocol), clicking every button once | Banner "Recorded local Gemma evaluation — no live inference"; no load error; 3 run buttons (each 10/10 checks, 14 items), 5 stage buttons (stage 5 shows the checks) and 6 question buttons (the unrelated-fact answer contains `07:40`, the shared-fact answer `Lantern Hall`) all change the view. Requests: the page, `style.css`, `walkthrough.js`, `data/evidence.json`, and Chrome's automatic `/favicon.ico`, which returns 404 and logs one console error (the site has no favicon) |
+| `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)` | 16 of 16 OK |
+| `.venv/bin/python -m unittest discover -s tests` | `Ran 91 tests` … `OK` |
+| `python3.12 -m unittest discover -s tests` | `Ran 91 tests` … `OK (skipped=6)` (the 6 SDK telemetry tests) |
+| `python3.12 -m ghostcache evaluate --mode fixture --output <new scratch path outside results/>` | exit 0, `passed: true`, 10/10 checks |
+
+**Recorded earlier by the user (screenshots, not rerun here):** switching between all three recorded runs, the source-only, leak, cleanup and verification views, the preserved garden answer, the public `/data/evidence.json` and a Not Found page for `/api`. Index: [screenshots/README.md](screenshots/README.md). Screenshot 15's URL has extra characters after `/api/state`, so it is not evidence of the clean `/api/state` check; the 404 above comes from `curl`.
+
+**Not verified:** phone usability on the deployed site, other browsers, assistive technology, and every combination of run, stage and question (each button was clicked once). No live Gemma evaluation was run.
+
 ## Public recorded walkthrough T-E2 (October 28, 2026)
 
-The static walkthrough in `site/`, its export script and the Render Blueprint (DECISIONS.md D-13). Everything below was run on October 28, 2026; the site was **not deployed**.
+The static walkthrough in `site/`, its export script and the Render Blueprint (DECISIONS.md D-13). Everything below was run on October 28, 2026; the site was **not deployed** at that point. *(Deployed later the same day; see "Render deployment T-E3" above.)*
 
 | Command or check | Result |
 | --- | --- |
@@ -68,7 +90,7 @@ The static walkthrough in `site/`, its export script and the Render Blueprint (D
 - **Public safety:** the public data matches none of the export's `FORBIDDEN` patterns, and `render()` refuses four examples (a home-directory database path, a Sentry DSN, the local Ollama URL and an email address). The patterns are a selected, additional safeguard, not comprehensive secret detection, so they do not prove the data holds no other private string; `site/` holds exactly four files; local asset paths are relative and exist, and external links go only to the GitHub repository; the script's only `fetch` is `data/evidence.json`, with no `/api/`, Ollama port, localhost, storage, `innerHTML` or `eval`.
 - **Blueprint:** one static site publishing `./site`, with no start command, plan, environment variables or database, and a CSP whose `connect-src` is `'self'`.
 
-**Not verified:** a real Render deployment (T-E3), the Blueprint being accepted by Render, the headers on a deployed site, other browsers, and assistive technology.
+**Not verified:** a real Render deployment (T-E3), the Blueprint being accepted by Render, the headers on a deployed site, other browsers, and assistive technology. *(The deployment, the Blueprint and the deployed headers were verified later on October 28; see "Render deployment T-E3". Other browsers and assistive technology remain unverified.)*
 
 ## Real Sentry traces T-D3 (October 28, 2026)
 

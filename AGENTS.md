@@ -18,7 +18,8 @@ ghostcache/            # application root = Git repository root (bipul724/GhostC
 ├── results/           # saved evidence: do not overwrite
 ├── site/              # public static recorded walkthrough (D-13); data/evidence.json is generated
 ├── scripts/           # export_site_data.py: results/*.json → site/data/evidence.json
-├── render.yaml        # Render static-site Blueprint for site/ (prepared, not deployed)
+├── screenshots/       # Render deployment and walkthrough screenshots (evidence: do not edit)
+├── render.yaml        # Render static-site Blueprint for site/ (deployed October 28, 2026)
 ├── .github/workflows/checks.yml
 └── .local/            # disposable UI database (git-ignored)
 ```

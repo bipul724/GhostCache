@@ -28,10 +28,10 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Saved evaluations | One fixture report and **three** live Gemma reports (October 27, and cold and warm runs on October 28), each 10/10 checks ([results/](results/)) |
 | GitHub Actions workflow | **Passed on GitHub:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) on October 28, 2026 (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) (push of `172ccb4`) also passed, and its uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. |
 | Sentry Agent Tracing | **Implemented** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **Real traces captured on October 28, 2026** from one fixture and two live evaluations, with two findings; see [What the real traces showed](#what-the-real-traces-showed). Sent from a 14-day Sentry Business trial with no payment method; the runs used 120 of its 100M spans. |
-| Public recorded walkthrough | **Implemented and tested locally; Render configuration prepared ([render.yaml](render.yaml)); not deployed yet.** A static page in [site/](site/) built from the recorded live reports, with no inference. See [Public recorded walkthrough](#public-recorded-walkthrough). Render is used only to host it; it is not a submission category. |
+| Public recorded walkthrough | **Deployed on Render on October 28, 2026:** <https://ghostcache-walkthrough.onrender.com/> (Blueprint-managed static site from [render.yaml](render.yaml), commit `8013d01`; see [Deployment record](#deployment-record-t-e3-october-28-2026)). A static page in [site/](site/) built from the recorded live reports, with no inference. See [Public recorded walkthrough](#public-recorded-walkthrough). Render is used only to host it; it is not a submission category. |
 | Prize categories | **Entering three:** Gemma, GitHub (through Actions) and Sentry Agent Tracing. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire categories were dropped on October 28, 2026 and are not entered ([DECISIONS.md](DECISIONS.md) D-14). |
 | Public repository | **Created:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache) (public, MIT) |
-| Deployment, video, DEV submission | **Not created** (the walkthrough's Render deployment is prepared but not done) |
+| Video, DEV submission | **Not created.** (The walkthrough's Render deployment is done; see above.) |
 
 ## What is implemented
 
@@ -169,6 +169,8 @@ More screenshots: [the memory search that returned `c-vault`](results/sentry-c-v
 
 ## Public recorded walkthrough
 
+**Live at <https://ghostcache-walkthrough.onrender.com/>** (deployed October 28, 2026; see the [deployment record](#deployment-record-t-e3-october-28-2026)).
+
 [site/](site/) is a static, read-only walkthrough of the **recorded** live Gemma runs, for people who can't run the app. It says so at the top: *"Recorded local Gemma evaluation — no live inference."* It makes no model call and no `/api/*` request, stores nothing, and deletes nothing. Its only data request is `data/evidence.json` from the same site.
 
 Visitors can:
@@ -195,7 +197,7 @@ python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
 
 Then open <http://127.0.0.1:8790>.
 
-**Deploy on Render (static site).** The Blueprint [render.yaml](render.yaml) defines one static site and nothing else: no server, database, worker, model, environment variable or secret. Render publishes only `site/`. Steps for the account owner:
+**Deploy on Render (static site).** The Blueprint [render.yaml](render.yaml) defines one static site and nothing else: no server, database, worker, model, environment variable or secret. Render publishes only `site/`. Steps for the account owner (followed for the October 28, 2026 deployment below; use them again to recreate the site):
 
 1. Push `main` so that `render.yaml` and `site/` are on GitHub.
 2. In the Render Dashboard choose **New → Blueprint**, connect `bipul724/GhostCache`, branch `main`, and apply the `render.yaml` it finds. It creates the static site `ghostcache-walkthrough`.
@@ -206,9 +208,21 @@ Then open <http://127.0.0.1:8790>.
    - the browser's network panel shows only `style.css`, `walkthrough.js` and `data/evidence.json`;
    - `curl -sI <url>` shows the `Content-Security-Policy` header (Blueprint deploys);
    - `<url>/api/state` returns 404.
-5. Record the real URL here and in [tasks.md](tasks.md) (T-E3) only after those checks pass.
+5. Record the real URL here and in [tasks.md](tasks.md) (T-E3) only after those checks pass. (Done for the first deployment; see below.)
 
 Render's documentation describes static sites as free to deploy; bandwidth and build minutes count against the workspace's plan. That was read from the documentation on October 28, 2026, not checked against an account.
+
+#### Deployment record (T-E3, October 28, 2026)
+
+- **URL:** <https://ghostcache-walkthrough.onrender.com/>
+- **Service:** `ghostcache-walkthrough`, a Blueprint-managed Render static site, live from `main` at commit `8013d01` as shown in the Render dashboard ([screenshot 00](screenshots/00-render-dashboard-live-8013d01.png)). Deployed and first verified by the user on October 28, 2026.
+- **Fresh read-only checks (October 28, 2026, about 21:00 IST, during the documentation update):**
+  - `curl`: `/` returned 200 (`text/html`), `/data/evidence.json` 200 (`application/json`) and the exact `/api/state` path 404.
+  - Response headers included `Content-Security-Policy` (identical to [render.yaml](render.yaml)), `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer` and `X-Frame-Options: DENY`; `/data/evidence.json` also had `Cache-Control: no-cache`.
+  - The deployed `index.html`, `style.css`, `walkthrough.js` and `data/evidence.json` were byte-identical (SHA-256) to `site/` at commit `8013d01`.
+  - A headless Chrome click-through at 1280×900 found the banner "Recorded local Gemma evaluation — no live inference"; all three run buttons (each showing 10/10 checks), all five stage buttons and all six question buttons changed the view. The page requested only `style.css`, `walkthrough.js` and `data/evidence.json`, plus Chrome's automatic `/favicon.ico` request, which returns 404 and logs one console error because the site has no favicon.
+- **Earlier browser checks by the user (screenshots, October 28, 2026):** switching between the three recorded runs ([01](screenshots/01-walkthrough-cold-run-overview.png), [02](screenshots/02-walkthrough-warm-run-overview.png), [03](screenshots/03-walkthrough-october-27-run-overview.png)); the source-only, leak, cleanup and verification views ([04](screenshots/04-source-only-deletion-stale-memory.png), [05](screenshots/05-leaked-answer-and-supplied-context.png), [06](screenshots/06-provenance-cleanup-and-rebuilt-summary.png), [07](screenshots/07-recorded-verification-ten-checks.png)); and the preserved garden answer ([11](screenshots/11-after-cleanup-garden-fact-preserved.png)). All 16 screenshots are indexed in [screenshots/README.md](screenshots/README.md), with hashes in [screenshots/SHA256SUMS.txt](screenshots/SHA256SUMS.txt). Screenshots 09 and 10 are identical copies. Screenshot 15 shows a URL with extra characters after `/api/state`, so it is not evidence of the clean `/api/state` check; that comes from `curl`.
+- **Not shown:** phone usability on the deployed site, other browsers, assistive technology, or every combination of run, stage and question. The site performs **no live inference**: it shows recorded reports, and the Python backend and Ollama stay on the laptop. No new Gemma evaluation was run for the deployment.
 
 ## Demonstration workflow (browser)
 
@@ -278,10 +292,10 @@ This shows readiness **for each category, not entries made**. The submission wil
 
 | Target | Status |
 | --- | --- |
-| Best Use of Gemma | **Implemented**, three live 10/10 runs saved; a recorded walkthrough of them is prepared for public hosting |
+| Best Use of Gemma | **Implemented**, three live 10/10 runs saved; a [recorded walkthrough](https://ghostcache-walkthrough.onrender.com/) of them is public (no live inference) |
 | Best Use of GitHub Copilot (the official description includes GitHub Actions) | **Hosted run exists:** [Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026. Do not claim Copilot wrote this code. |
 | Best Use of Sentry Agent Tracing | **Real traces captured** on October 28, 2026, with two explained findings ([details](#what-the-real-traces-showed)). |
-| Best Use of Render | **Not entered.** Render may host the public walkthrough (prepared, not deployed); entering the category is a separate decision. |
+| Best Use of Render | **Not entered.** Render hosts the public walkthrough (deployed October 28, 2026); entering the category is a separate decision. |
 | Best Use of a .tech Domain, Backboard, Browserbase, ElevenLabs, Entire | **Dropped** on October 28, 2026; not entered |
 
 ## Documentation
@@ -296,6 +310,7 @@ This shows readiness **for each category, not entries made**. The submission wil
 - [CATEGORIES.md](CATEGORIES.md): category plan, free-tier limits and evidence needed
 - [.env.example](.env.example): the supported environment variables
 - [render.yaml](render.yaml) and [site/](site/): the public recorded walkthrough and its Render static-site Blueprint (see [above](#public-recorded-walkthrough))
+- [screenshots/README.md](screenshots/README.md): index of the Render deployment and walkthrough screenshots (October 28, 2026)
 
 The detailed project handoff (`context.md`) sits in the parent workspace, outside this application directory.
 

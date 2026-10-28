@@ -173,7 +173,7 @@ The evidence for each record is code, tests, saved results or the workspace hand
 
 ## D-13. Public demo design
 
-- **Status:** Accepted (implemented October 28, 2026; deployment not yet done)
+- **Status:** Accepted (implemented October 28, 2026; deployment not yet done at that point; **deployed later on October 28, 2026**, T-E3, see the resolution note below)
 - **Context:** The current server needs `/api/*`, keeps one shared resettable state, and cannot reach a laptop model from the cloud. Free Render cannot run the 4.3 GB model.
 - **Options recorded in `context.md` §25E:**
   - **A.** A clearly labelled recorded replay or synthetic simulation, with local live Gemma shown through instructions and video.
@@ -189,7 +189,8 @@ The evidence for each record is code, tests, saved results or the workspace hand
   - The public evidence keeps the fictional marker, as all saved reports do (D-11).
   - `site/data/evidence.json` must be regenerated and committed when the selected reports change; `scripts/export_site_data.py --check` and `tests/test_site.py` fail if it is out of date.
   - Render hosts the page but is not entered as a category (D-14). The deployment itself needs the user's Render account and is not done yet (T-E3).
-- **Evidence:** `site/`, `scripts/export_site_data.py`, `render.yaml`, `tests/test_site.py` (20 tests); TESTING.md, "Public recorded walkthrough T-E2 (October 28, 2026)".
+  - *Resolution (October 28, 2026): the user deployed it from `render.yaml` as the Blueprint-managed static site `ghostcache-walkthrough`, live at <https://ghostcache-walkthrough.onrender.com/> from commit `8013d01`. The page, `/data/evidence.json` and the Blueprint's security headers are served, and `/api/state` returns 404. It still runs no inference, and Render is still hosting only (D-14).*
+- **Evidence:** `site/`, `scripts/export_site_data.py`, `render.yaml`, `tests/test_site.py` (20 tests); TESTING.md, "Public recorded walkthrough T-E2 (October 28, 2026)" and "Render deployment T-E3 (October 28, 2026)"; [screenshots/README.md](screenshots/README.md).
 
 ## D-14. Category expansion only through useful, evidenced integrations
 
