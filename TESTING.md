@@ -44,6 +44,57 @@ python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
 
+## Narrow-screen overflow fix T-E7 (October 28, 2026, about 22:30 IST)
+
+**Status: fixed and verified locally; not yet deployed.** The deployed site still serves the old `site/style.css` until the fix is pushed and Render rebuilds it (see [DEPLOYMENT.md](DEPLOYMENT.md)).
+
+**Cause, confirmed before editing.** Below 980 px, `.explainers` used `grid-template-columns:1fr`. A `1fr` track's minimum is `auto`, so the grid items could not shrink below their content's minimum width, and the `white-space:pre` command block in "Run it yourself" set that minimum. Its own `overflow-x:auto` did not help, because its ancestor grew instead. A scratch copy of `site/` with only that track changed to `minmax(0,1fr)` removed the overflow at 360–414 px. At 320 px it exposed a second, smaller offender: the answer card's `.tiny-label` "After source-only deletion · reworded question" is `white-space:nowrap` and 285 px wide in a 224 px card.
+
+**Change (`site/style.css`, two rules inside existing media queries; nothing else):**
+- `@media(max-width:980px)`: `.explainers{grid-template-columns:1fr}` → `.explainers{grid-template-columns:minmax(0,1fr)}`, the same track sizing the desktop layout already uses.
+- `@media(max-width:650px)`: added `.tiny-label{white-space:normal}`, so a section label longer than its container wraps; shorter labels look the same.
+
+No page-level `overflow-x:hidden`, clipping, zoom or font-size change. `site/style.css` SHA-256 changed from `86b48762…100b0927` to `035e46ec…bc488027`; `index.html`, `walkthrough.js` and `data/evidence.json` are unchanged.
+
+**Method.** `site/` was served locally with `python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site` and loaded in headless Chrome over the Chrome DevTools Protocol, with `Emulation.setDeviceMetricsOverride` (mobile mode at 414 px and below; desktop mode at 768 px and above, plus a desktop-mode 375 px row). For each viewport the harness walked all 33 view states (3 runs × 5 stages, then 3 runs × 6 questions), recorded `document.documentElement.clientWidth` and `scrollWidth` in every state, and listed any element extending past `clientWidth`, ignoring content inside the two intentional scroll containers (`.table-wrap` and `pre.command`). In this headless build `clientWidth` equalled the emulated width in both modes (no classic scrollbar was subtracted); overflow was judged as `scrollWidth > clientWidth`, not against the requested width. Raw results and screenshots: [screenshots/mobile-overflow-fix/](screenshots/mobile-overflow-fix/README.md).
+
+| Viewport | Mode | Before: clientWidth / scrollWidth | After: clientWidth / scrollWidth | After: explainer width; command block client / scroll |
+| --- | --- | --- | --- | --- |
+| 320 × 720 | mobile | 320 / **573** | 320 / 320 | 288; 286 / 555 |
+| 360 × 780 | mobile | 360 / **573** | 360 / 360 | 328; 326 / 555 |
+| 375 × 812 | mobile | 375 / **573** | 375 / 375 | 343; 341 / 555 |
+| 390 × 844 | mobile | 390 / **573** | 390 / 390 | 358; 356 / 555 |
+| 414 × 896 | mobile | 414 / **573** | 414 / 414 | 382; 380 / 555 |
+| 375 × 812 | desktop | 375 / **573** | 375 / 375 | 343; 341 / 555 |
+| 768 × 1024 | desktop | 768 / 768 | 768 / 768 | 688; 686 / 686 (fits) |
+| 980 × 900 | desktop | 980 / 980 | 980 / 980 | 900; 898 / 898 (fits) |
+| 981 × 900 | desktop | 981 / 981 | 981 / 981 | 286 (three columns); 284 / 555 |
+| 1280 × 900 | desktop | 1280 / 1280 | 1280 / 1280 | 372 (three columns); 370 / 555 |
+
+The maximum `scrollWidth` over all 33 states equalled the initial value in every row, before and after. Element counts are a separate measurement: the number of elements extending past the viewport, not counting content inside the two scroll containers. Before the fix, in the initial view state, 15 elements did so at 360–414 px and in the desktop-mode 375 px row, and 16 at 320 px; the maximum across all tested states was the same, except at 320 px, where it was 17. After the fix, no element extended past the viewport in any tested state or viewport.
+
+**Other checks after the fix, at every tested viewport:**
+- **Command block:** where it is narrower than its 555 px content, setting its `scrollLeft` to 60 scrolled it to 60, and the page did not move. The full command text is still in the `<pre>`, so it can be selected and copied.
+- **Timing table:** still scrolls inside `.table-wrap` where it is narrower than the table's 520 px minimum (256–350 px wide at 320–414; `scrollLeft` 60 reached).
+- **Selectors:** every run, stage and question button set `aria-pressed="true"` when clicked, in all 33 states.
+- **Readability:** the recorded-mode banner lies within the viewport; the memory-trail cards lie within the viewport; the explainer text stays 14 px.
+- **Desktop unchanged:** the 768 × 1024 and 1280 × 900 captures are byte-identical before and after.
+- **Console:** no new messages. The only one in either run was the browser's `/favicon.ico` 404 on the first page load (T-E8).
+
+| Command | Result |
+| --- | --- |
+| `.venv/bin/python -B -m unittest discover -s tests` | `Ran 91 tests in 1.129s` … `OK` |
+| `python3.12 -B -m unittest discover -s tests` | `Ran 91 tests in 0.766s` … `OK (skipped=6)` (the SDK telemetry tests) |
+| `python3.12 -B -m unittest tests.test_site` | `Ran 20 tests` … `OK` |
+| `python3.12 -B scripts/export_site_data.py --check` | `site/data/evidence.json matches the selected reports.`, exit 0 |
+| `python3.12 -B -m ghostcache evaluate --mode fixture --output <new scratch path outside results/>` | exit 0, `passed: true`, 10/10 |
+| `node --check` on `site/walkthrough.js`, `web/app.js`, `tests/ui/app_contract.js` | all pass |
+| `git diff --check` | no output |
+| `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)` | 16 of 16 OK (original manifest unchanged) |
+| `(cd screenshots/mobile-overflow-fix && shasum -a 256 -c SHA256SUMS.txt)` | 15 of 15 OK |
+
+**Not verified:** the deployed site (pending push and rebuild), a real phone, browsers other than Chrome, and assistive technology (T-E6). No test was added that searches the CSS for a declaration; the check is browser geometry, and the harness lives outside the repository.
+
 ## Documentation audit (October 28, 2026, about 22:00 IST)
 
 A documentation-only audit of every Markdown file against the code, saved evidence and the public site. No application code, tests, deployment configuration, generated data, reports, screenshots or checksum manifests were changed. No live model was run, no dependency was installed, and nothing was deployed.
@@ -62,7 +113,7 @@ A documentation-only audit of every Markdown file against the code, saved eviden
 | `curl` on the public site | `/`, `/index.html`, `/style.css`, `/walkthrough.js`, `/data/evidence.json`: 200. Exact `/api/state`, `/api` and `/favicon.ico`: 404. Headers on `/` and `/data/evidence.json`: the `render.yaml` CSP, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `X-Frame-Options: DENY`; `/data/evidence.json` also `Cache-Control: no-cache`. `Last-Modified` October 28, 14:02:51 UTC |
 | SHA-256 of the four deployed files against `site/` at `26a1c3e` | identical (`site/` is unchanged since `8013d01`) |
 | Headless Chrome at 1280×900, temporary profile, Chrome DevTools Protocol | Banner correct, no load error; 3 run buttons (each "10 / 10 checks passed"), 5 stage buttons, 6 question buttons all change the view; requests: the page, `style.css`, `walkthrough.js`, `data/evidence.json` and the browser's `/favicon.ico` (404, one console error) |
-| The same page with an emulated 375×812 viewport (`Emulation.setDeviceMetricsOverride`, mobile and desktop modes) | **Horizontal overflow.** At the tested 375 px viewport, the document's scrollWidth was 573 px, while the layout viewport stayed 375 px (mobile mode; desktop mode reported 360 px after its scrollbar). The three explainer articles were 557 px wide: below 980 px, `.explainers` uses `grid-template-columns:1fr`, and the `white-space:pre` command block sets the column's minimum width. Controls still worked. This is headless Chrome emulation; the exact width at which overflow starts can vary with browser and font metrics, and no real phone was tested (T-E7) |
+| The same page with an emulated 375×812 viewport (`Emulation.setDeviceMetricsOverride`, mobile and desktop modes) | **Horizontal overflow.** At the tested 375 px viewport, the document's scrollWidth was 573 px, while the layout viewport stayed 375 px (mobile mode; desktop mode reported 360 px after its scrollbar). The three explainer articles were 557 px wide: below 980 px, `.explainers` uses `grid-template-columns:1fr`, and the `white-space:pre` command block sets the column's minimum width. Controls still worked. This is headless Chrome emulation; the exact width at which overflow starts can vary with browser and font metrics, and no real phone was tested (T-E7). *Fixed locally later the same day; see "Narrow-screen overflow fix T-E7" above* |
 | Relative links and heading anchors in every Markdown file in the repository (scripted, after the edits) | 148 relative links checked, including the workspace handoff; 0 broken; every repository link resolves to a file inside the repository, so it also works on GitHub |
 | The verification block in [DEPLOYMENT.md](DEPLOYMENT.md), run as written from the repository root | 200, 200, 404; the four headers; the served and local `site/data/evidence.json` have the same SHA-256 |
 
