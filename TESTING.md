@@ -38,6 +38,71 @@ node tests/ui/app_contract.js context_from_parent_ids
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
 
+## Real Sentry traces T-D3 (October 28, 2026)
+
+All times in this section are IST on October 28, 2026. The user created a Sentry project and ran these commands from `ghostcache/` with `GHOSTCACHE_SENTRY_DSN` exported from the git-ignored `.env`. The DSN was never printed, pasted or committed. The planner read the values below from the user's Sentry screenshots and cross-checked them against the reports; this documentation pass rechecked the reports.
+
+| Report written | Command | Result | Sentry trace |
+| --- | --- | --- | --- |
+| 09:10:11 | `.venv/bin/python -m ghostcache evaluate --mode fixture --output ../runs/sentry-fixture.json` | passed, 10/10 | a fixture conversation, 0.15 ms, no model calls |
+| 09:18:11 | `.venv/bin/python -m ghostcache evaluate --mode live --output ../runs/sentry-live-cold.json` | passed, 10/10, `gemma4:e2b-it-qat` | `dd21f76b3293450b84b0ad5ca45961dd` |
+| 09:19:33 | `.venv/bin/python -m ghostcache evaluate --mode live --output ../runs/sentry-live-warm.json` | passed, 10/10, `gemma4:e2b-it-qat` | `fb1530272ecd481399aa77f95d505dfa` |
+
+**Failed attempts, and what "cold" means.** At 09:16, three earlier live attempts failed with `Ollama is unavailable (connection failed)` because the Ollama server was not running. Each exited 1 with no fixture fallback, and each sent a short failed `evaluate live` trace. No report from them is kept in `runs/`. The user then started `ollama serve`. The 09:18 run was therefore the first evaluation after a fresh Ollama server start ("cold"). The 09:19 run followed straight afterwards, with the model still loaded ("warm"). `ollama stop` was not used.
+
+**What Sentry showed.**
+
+- **Agents view** (`results/sentry-agents-overview.jpg`): three conversations of 11 messages each, with timespans of 1.02 min (cold), 21.00 s (warm) and 0.15 ms (fixture); agents `ghostcache-assistant` and `ghostcache-summarizer`; 0 errors. Sentry shows its own banner: "These conversations' inputs and outputs weren't captured". Estimated cost shows no data (a local model has no pricing).
+- **Both live traces** (`results/sentry-cold-trace.jpg`, `results/sentry-warm-trace.jpg`): root `ghostcache.evaluate` "evaluate live", release `0.1.0`, environment `local-live`, 39 spans, 0 issues. Every span's `domain` is `ghostcache-local`.
+- **Cold against warm:**
+
+  | Span | Cold `dd21f76b3293450b84b0ad5ca45961dd` | Warm `fb1530272ecd481399aa77f95d505dfa` |
+  | --- | ---: | ---: |
+  | First `chat gemma4:e2b-it-qat` (summarizer, during reset) | 40.45 s | 2.28 s |
+  | `ghostcache.reset` | 48.20 s | 9.58 s |
+  | `ghostcache.verify` | 4.99 s | 4.51 s |
+  | Root `ghostcache.evaluate` | 1.03 min | 22.40 s |
+
+  Every later chat span takes about 1–3 s in both traces. The warm first chat span (`results/sentry-warm-chat-tokens.jpg`) used 181 input + 55 output = 236 tokens.
+- **The leak, in the cold trace** (`results/sentry-source-only-leak.jpg`, `results/sentry-c-vault-search.jpg`): after the source-only `delete_memory` (11.86 ms), the `invoke_agent ghostcache-assistant` span (2.77 s; `duration 2770.708`) has `ghostcache.stage: source_only`, `ghostcache.question_kind: paraphrase`, `ghostcache.answer_contains_marker: true` and `status: ok`. Its `search_memory` child (0.23 ms, memory store `ghostcache-sqlite`, 6 records) has `ghostcache.context_ids` = `c-vault, s-mixed, s-handoff, s-vault, conversation-ac1ed7b44098484690552c629a0b637a, d-garden`.
+
+**Cross-check against the reports.**
+
+- `answers.<key>.trace.duration_ms`: cold `source_only` 2770 ms (span 2.77 s), cold `before` 2887 ms (span 2.89 s), warm `source_only` 2845 ms.
+- Per-call `duration_ms` in the `events` list: cold first call 40,407 ms, the other ten 1,116–2,887 ms, 61,325 ms in total. Warm first call 2,278 ms, the other ten 1,042–2,845 ms, 22,078 ms in total. The first call is about 38.1 s of the 39.2 s difference in summed call time. Input tokens per run: 3,198 cold and 3,190 warm.
+- In both reports, the marker appears in the `before` and `source_only` answers only. It is in none of `secret`, `paraphrase`, `retained` or `shared` (the answers after cascade deletion).
+- Cold `source_only` citations: `c-vault, s-mixed, s-handoff, s-vault, conversation-ac1ed7b44098484690552c629a0b637a`. `d-garden` was supplied as context but not cited.
+- Both reports show the same stage counts as `results/fixture.json` and `results/live-gemma.json` (14/14/0/6, then 14/13/5/5, then 15/9/0/0).
+- The October 27 run in `results/live-gemma.json` has the same shape: first call 81,246 ms, then 2,389–6,776 ms per call.
+
+**Findings.**
+
+1. In the cold run, the first model call took 40.45 s against 2.28 s warm. That one call accounts for most of the 1.03 min against 22.40 s difference; every later call is 1–3 s in both. This is consistent with Ollama loading the model on the first request after a server start. GhostCache does not record Ollama's `load_duration`, so the cause is **inferred, not measured**. The pass/fail result (10/10 in both runs) does not show this. The report's per-call `duration_ms` events do record it, but the trace places the call inside `ghostcache.reset` next to every other span.
+2. The trace makes the source-only leak visible without exporting any content: `answer_contains_marker: true` and the synthetic `context_ids` show that the deleted document's chunk, three summaries and an earlier saved answer were still retrieved and sent to Gemma.
+
+**Evidence files** (copied or converted on October 28, 2026). The JSON reports are byte-for-byte copies. The screenshots were converted from the user's PNGs with `sips -s format jpeg -s formatOptions 80 -Z 1800`, and each was checked: it is legible and shows no DSN, Sentry URL, email address, home path or hostname.
+
+| File | Bytes | SHA-256 |
+| --- | ---: | --- |
+| `results/sentry-live-cold.json` | 13,238 | `d46bd854eecb72ee578c4a5135c8afaeb98cd98a42231333736fc1729c819c05` |
+| `results/sentry-live-warm.json` | 13,237 | `828c5e498fac97992a142086cb135917e9783492934d8ff470edd100825853c0` |
+| `results/sentry-agents-overview.jpg` (1800×981) | 207,511 | `0200fd5fca76786dd3dc8ba026289a17ff1fa08ddb2dca998712e6d262bacb79` |
+| `results/sentry-cold-trace.jpg` (1800×978) | 236,946 | `0fed579298db44b758572b9a04cd2f466c4e35ad192c8f51ee5ae6b3a3aa1c77` |
+| `results/sentry-source-only-leak.jpg` (1800×977) | 284,583 | `2e69935c729720bc0ee3ef5e79ba3ef67769ead0857cebea3ba8224907533e43` |
+| `results/sentry-c-vault-search.jpg` (1800×979) | 255,933 | `a87e803ce2b791ffb0206747052c6acf41a0b96aa3730f983d94fb5c4ea93e39` |
+| `results/sentry-warm-trace.jpg` (1800×982) | 244,400 | `e78d8a1b4705e0527864bbbefd9f4700c90ddb399bcb02195a9e074fd0abb438` |
+| `results/sentry-warm-chat-tokens.jpg` (1800×984) | 271,669 | `219e6fe15ecf7204165ebdeb1656cb890d312619bfc9624eea3b0f53635e79e4` |
+
+The fixture report stays outside the repository: `../runs/sentry-fixture.json`, SHA-256 `7e2fc0cc6ace4ae8d1e59c9640b46cf96017e9733ef92e91bf714dd3cd105270`.
+
+**Not verified.**
+
+- The cause of the slow first call. Model loading is inferred; no `load_duration`, memory or Ollama log was recorded (T-C2 stays open).
+- The Sentry plan name and monthly span quota (T-D1 stays open).
+- The traces of the three failed 09:16 attempts were not inspected.
+- No screenshot of the fixture trace itself was saved; it is seen only as a conversation in the Agents view.
+- These traces come from the user's manual runs. No automated test or CI step sends anything to Sentry.
+
 ## Sentry tracing T-D2 (October 28, 2026)
 
 **Change.** New `ghostcache/telemetry.py` adds optional, metadata-only Sentry tracing, off unless `GHOSTCACHE_SENTRY_DSN` is set. `app.py` and `__main__.py` are instrumented and wired; `providers.py` gains `error_category` and names its fixed `temperature` and `max_tokens`. No return value, report field, ledger entry, HTTP response or exit code changes. `pyproject.toml` adds the optional `sentry` extra; `dependencies = []` is unchanged. The SDK was installed only into `.venv` (`sentry-sdk 2.72.0`, which brought its own dependencies `urllib3 2.8.0` and `certifi 2026.10.23`).
@@ -63,6 +128,8 @@ Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders
 
 **Not done.** No real Sentry account, DSN, network call or trace (T-D1, T-D3). No live Gemma run: the live path was tested with mocked Ollama. The new CI step has not run on GitHub yet.
 
+*Update, later on October 28, 2026:* the CI step has now run on GitHub: [run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599) succeeded (see "Hosted CI run #5" below). Real traces and two live runs are recorded in "Real Sentry traces T-D3" above. T-D1 is still open.
+
 ## Hosted CI run #1 (October 28, 2026)
 
 - **Repository:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache): public, MIT, default branch `main`, with `ghostcache/` as the repository root. 25 commits; HEAD `6e767ee`. `git ls-files` lists 32 files, with no `__pycache__`, `.local/`, `.env` or `.DS_Store`.
@@ -83,6 +150,12 @@ Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders
 - **Run #2** (same commit, created in the same second) was cancelled before any step by the workflow's `cancel-in-progress` concurrency setting. It was a duplicate push event, not a failure.
 - **Run #3's report, downloaded and inspected by the planner on October 28, 2026.** The `ghostcache-synthetic-evaluation` zip is 2,106 bytes (SHA-256 `1170be7817b55f64fa8533aa8fbc57f66dd79e170eb948659b10c5ba1426f281`). It contains one file, `ghostcache-fixture.json`: 13,531 bytes, SHA-256 `cf68765a7cd229ad54274e2457e163e09cec5b83d9eb4625c40b984724490bc7`.
 - Contents: mode `fixture`, `passed: true`, model "Deterministic fixture — no AI call", 10 of 10 checks passed. It has the same top-level keys and the same 10 check names, in the same order, as `results/fixture.json`. Its fresh marker differs from the saved report's, so it is a new synthetic case. No runner paths or credentials appear in it. The file was not added to the repository.
+
+### Hosted CI run #5 (October 28, 2026)
+
+- **Run:** [run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599) (job 122604231695), triggered by the push of `7abcc11` ("Add optional metadata-only Sentry agent tracing") at 02:57 UTC (08:27 IST). Conclusion: **success**.
+- **Steps:** all seven steps succeeded, including step 7, "Check telemetry privacy with the optional Sentry SDK", on its first hosted run.
+- **Evidence limits:** the step results were read through GitHub's public API. The log text was not read, so the hosted test counts for this run are not recorded. Run #4 (push of `7602577`, a docs-only commit) also succeeded according to the same API.
 
 ## UI fixes T-A2, T-A3 and T-A4 (October 27, 2026)
 
@@ -337,14 +410,14 @@ The top-level keys are `project`, `mode`, `model`, `passed`, `checks[]`, `oracle
 - **Triggers and runner:** push, pull request or manual dispatch, on `ubuntu-latest` with Python 3.12 and a 5-minute timeout.
 - **Steps:** runs the unit suite, then a fresh fixture evaluation into `$RUNNER_TEMP`, and uploads only that JSON (`ghostcache-synthetic-evaluation`, kept 3 days).
 - **The evaluation still runs if the tests fail**, as long as Python setup succeeded.
-- **Telemetry step (added October 28, 2026; not yet run on GitHub):** after the steps above, "Check telemetry privacy with the optional Sentry SDK" installs `sentry-sdk==2.72.0` and runs `python -m unittest tests.test_telemetry -v`. The earlier steps run without the SDK, so its 6 tests skip there. No DSN or secret is used, and nothing contacts Sentry.
+- **Telemetry step (added October 28, 2026; first ran on GitHub in [run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599), which succeeded):** after the steps above, "Check telemetry privacy with the optional Sentry SDK" installs `sentry-sdk==2.72.0` and runs `python -m unittest tests.test_telemetry -v`. The earlier steps run without the SDK, so its 6 tests skip there. No DSN or secret is used, and nothing contacts Sentry.
 - **UI contract tests:** they run inside the same `unittest` command, so they need `node` on the runner's PATH. Otherwise they are skipped and the job still passes. Hosted run #1 confirmed that the runner provides Node: all 7 UI tests ran and passed. The workflow was not changed.
 - **Security settings:** read-only contents, no persisted credentials, actions pinned to commit SHAs, no secrets, no model and no live inference.
 
 **Status:**
 
 - The commands were verified locally.
-- **Done:** hosted [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026 (see "Hosted CI run #1" above).
+- **Done:** hosted [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026 (see "Hosted CI run #1" above). [Run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599) passed the same day with the telemetry step (see "Hosted CI run #5").
 - `ghostcache/` is the repository root, so the workflow was discovered.
 - Evidence: the run URLs are recorded. Run #1's report was not downloaded; run #3's report was downloaded and inspected (10 of 10 checks, `passed: true`; see "Hosted CI runs #2 and #3" above).
 
@@ -371,7 +444,7 @@ The current tests do **not** cover:
 - Python 3.15;
 - package installation through the console script;
 - `serve` startup failure other than live transport errors and the missing-SDK check (the `evaluate` success path, exit 0, is now covered by `tests/test_telemetry.py`);
-- real Sentry ingestion: no real DSN, project or trace has been used, and the SDK's network transport is never exercised;
+- real Sentry ingestion: the tests use an in-memory transport, so the SDK's network transport is exercised only by the user's manual traced runs of October 28, 2026 (see "Real Sentry traces T-D3"), not by any automated test or CI step;
 - the `summary.rebuild_failed` path;
 - crash safety or durability of reset publication (process kill or power loss mid-copy), concurrent writers from other processes, and Windows;
 - the UI's handling of `storage_failed` (see architecture.md known discrepancy 4);

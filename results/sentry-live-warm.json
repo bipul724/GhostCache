@@ -1,0 +1,501 @@
+{
+  "project": "GhostCache",
+  "mode": "live",
+  "model": "gemma4:e2b-it-qat",
+  "passed": true,
+  "checks": [
+    {
+      "name": "Source-only control exposes residual stored copies",
+      "passed": true,
+      "detail": "5 managed rows retained the marker."
+    },
+    {
+      "name": "Source-only control answer exposes fresh marker",
+      "passed": true,
+      "detail": "The observatory vault passphrase is MOTH-5598BE141381."
+    },
+    {
+      "name": "Pre-deletion model answer exposed the fresh marker",
+      "passed": true,
+      "detail": "Required baseline; fixture and live results are separate."
+    },
+    {
+      "name": "Target source and all descendants have cleared content",
+      "passed": true,
+      "detail": "Inspected 6 source/descendant rows, including mixed summaries and conversations."
+    },
+    {
+      "name": "Fresh marker absent from every managed title and body",
+      "passed": true,
+      "detail": "0 rows contain it. Evaluator oracle/results are explicitly outside the assistant store."
+    },
+    {
+      "name": "Marker absent from all defined retrieval probes",
+      "passed": true,
+      "detail": "Inspected 4 lexical retrieval queries, including a paraphrase."
+    },
+    {
+      "name": "Assistant does not reveal marker on either secret question",
+      "passed": true,
+      "detail": "Behavioral probes are bounded evidence, not a universal forgetting guarantee."
+    },
+    {
+      "name": "Unrelated roof garden schedule remains answerable",
+      "passed": true,
+      "detail": "The roof garden opens at 07:40. Visitors enter through the east stairwell."
+    },
+    {
+      "name": "Shared fact remains supported by an independent source",
+      "passed": true,
+      "detail": "The archive reading room is called Lantern Hall."
+    },
+    {
+      "name": "No active artifact depends on a withdrawn root",
+      "passed": true,
+      "detail": "0 stale active artifacts."
+    }
+  ],
+  "oracle": {
+    "canary": "MOTH-5598BE141381",
+    "source_id": "d-vault",
+    "shared_source_id": "d-archive",
+    "questions": {
+      "secret": "What is the observatory vault passphrase?",
+      "paraphrase": "Which access phrase opens the observatory vault?",
+      "retained": "When does the roof garden open?",
+      "shared": "What is the archive reading room called?"
+    },
+    "oracle_note": "Evaluator reference only; never injected into model context after deletion."
+  },
+  "stages": {
+    "initial_audit": {
+      "total_artifacts": 14,
+      "active_artifacts": 14,
+      "active_ids": [
+        "d-vault",
+        "c-vault",
+        "d-garden",
+        "c-garden",
+        "d-archive",
+        "c-archive",
+        "d-maintenance",
+        "c-maintenance",
+        "d-shuttle",
+        "c-shuttle",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ],
+      "deleted_artifacts": 0,
+      "invalidated_artifacts": 0,
+      "stale_descendants": 0,
+      "stale_ids": [],
+      "matched_canary": 6,
+      "matched_canary_ids": [
+        "d-vault",
+        "c-vault",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ],
+      "scope": "Managed artifact body and title fields only; not secure disk erasure or model unlearning."
+    },
+    "source_only_audit": {
+      "total_artifacts": 14,
+      "active_artifacts": 13,
+      "active_ids": [
+        "c-vault",
+        "d-garden",
+        "c-garden",
+        "d-archive",
+        "c-archive",
+        "d-maintenance",
+        "c-maintenance",
+        "d-shuttle",
+        "c-shuttle",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ],
+      "deleted_artifacts": 1,
+      "invalidated_artifacts": 0,
+      "stale_descendants": 5,
+      "stale_ids": [
+        "c-vault",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ],
+      "matched_canary": 5,
+      "matched_canary_ids": [
+        "c-vault",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ],
+      "scope": "Managed artifact body and title fields only; not secure disk erasure or model unlearning."
+    },
+    "cleaned_audit": {
+      "total_artifacts": 15,
+      "active_artifacts": 9,
+      "active_ids": [
+        "d-garden",
+        "c-garden",
+        "d-archive",
+        "c-archive",
+        "d-maintenance",
+        "c-maintenance",
+        "d-shuttle",
+        "c-shuttle",
+        "s-rebuilt-1-9"
+      ],
+      "deleted_artifacts": 1,
+      "invalidated_artifacts": 5,
+      "stale_descendants": 0,
+      "stale_ids": [],
+      "matched_canary": 0,
+      "matched_canary_ids": [],
+      "scope": "Managed artifact body and title fields only; not secure disk erasure or model unlearning."
+    }
+  },
+  "answers": {
+    "before": {
+      "answer": "The observatory vault passphrase is MOTH-5598BE141381.",
+      "citations": [
+        "d-vault",
+        "c-vault",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ],
+      "provider": "gemma4:e2b-it-qat",
+      "mode": "live",
+      "trace": {
+        "parent_ids": [
+          "d-vault",
+          "c-vault",
+          "s-vault",
+          "s-mixed",
+          "s-handoff",
+          "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+        ],
+        "context_fingerprint": "7e0cc49385dc5d3f",
+        "duration_ms": 2720,
+        "input_tokens": 447,
+        "output_tokens": 84
+      }
+    },
+    "source_only": {
+      "answer": "The observatory vault passphrase is MOTH-5598BE141381.",
+      "citations": [
+        "c-vault",
+        "s-mixed",
+        "s-handoff",
+        "s-vault",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ],
+      "provider": "gemma4:e2b-it-qat",
+      "mode": "live",
+      "trace": {
+        "parent_ids": [
+          "c-vault",
+          "s-mixed",
+          "s-handoff",
+          "s-vault",
+          "conversation-aa34077f9cef4a9684ddac08ca1f286b",
+          "d-garden"
+        ],
+        "context_fingerprint": "b4de5ad6bf3a2be3",
+        "duration_ms": 2845,
+        "input_tokens": 437,
+        "output_tokens": 79
+      }
+    },
+    "secret": {
+      "answer": "I do not know the observatory vault passphrase.",
+      "citations": [],
+      "provider": "gemma4:e2b-it-qat",
+      "mode": "live",
+      "trace": {
+        "parent_ids": [
+          "d-shuttle",
+          "c-shuttle",
+          "s-rebuilt-1-9"
+        ],
+        "context_fingerprint": "35b7dc0f213d25f0",
+        "duration_ms": 1111,
+        "input_tokens": 261,
+        "output_tokens": 19
+      }
+    },
+    "paraphrase": {
+      "answer": "I do not know which access phrase opens the observatory vault.",
+      "citations": [],
+      "provider": "gemma4:e2b-it-qat",
+      "mode": "live",
+      "trace": {
+        "parent_ids": [
+          "s-rebuilt-1-9",
+          "d-garden",
+          "c-garden",
+          "d-shuttle",
+          "c-shuttle"
+        ],
+        "context_fingerprint": "350c29fc08101075",
+        "duration_ms": 1177,
+        "input_tokens": 326,
+        "output_tokens": 22
+      }
+    },
+    "retained": {
+      "answer": "The roof garden opens at 07:40. Visitors enter through the east stairwell.",
+      "citations": [
+        "d-garden",
+        "c-garden",
+        "s-rebuilt-1-9"
+      ],
+      "provider": "gemma4:e2b-it-qat",
+      "mode": "live",
+      "trace": {
+        "parent_ids": [
+          "d-garden",
+          "c-garden",
+          "s-rebuilt-1-9"
+        ],
+        "context_fingerprint": "12aa1354ad1fb58d",
+        "duration_ms": 1157,
+        "input_tokens": 259,
+        "output_tokens": 48
+      }
+    },
+    "shared": {
+      "answer": "The archive reading room is called Lantern Hall.",
+      "citations": [
+        "d-archive",
+        "c-archive"
+      ],
+      "provider": "gemma4:e2b-it-qat",
+      "mode": "live",
+      "trace": {
+        "parent_ids": [
+          "d-archive",
+          "c-archive"
+        ],
+        "context_fingerprint": "39b096f65ceced5f",
+        "duration_ms": 1042,
+        "input_tokens": 177,
+        "output_tokens": 27
+      }
+    }
+  },
+  "events": [
+    {
+      "name": "summary.generated",
+      "time": "09:19:13",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 2278,
+      "input_tokens": 181,
+      "output_tokens": 55,
+      "artifact_id": "s-vault",
+      "parent_ids": [
+        "c-vault"
+      ]
+    },
+    {
+      "name": "summary.generated",
+      "time": "09:19:16",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 2319,
+      "input_tokens": 211,
+      "output_tokens": 82,
+      "artifact_id": "s-mixed",
+      "parent_ids": [
+        "s-vault",
+        "c-garden"
+      ]
+    },
+    {
+      "name": "summary.generated",
+      "time": "09:19:18",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 2773,
+      "input_tokens": 232,
+      "output_tokens": 102,
+      "artifact_id": "s-handoff",
+      "parent_ids": [
+        "s-mixed",
+        "c-maintenance"
+      ]
+    },
+    {
+      "name": "answer.generated",
+      "time": "09:19:21",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 2174,
+      "input_tokens": 423,
+      "output_tokens": 54,
+      "parent_ids": [
+        "d-vault",
+        "c-vault",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "d-shuttle"
+      ],
+      "context_fingerprint": "b7a9feaadca1ec8c"
+    },
+    {
+      "name": "experiment.seeded",
+      "time": "09:19:21",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "documents": 5,
+      "baseline_exposed": true
+    },
+    {
+      "name": "answer.generated",
+      "time": "09:19:23",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 2720,
+      "input_tokens": 447,
+      "output_tokens": 84,
+      "parent_ids": [
+        "d-vault",
+        "c-vault",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ],
+      "context_fingerprint": "7e0cc49385dc5d3f"
+    },
+    {
+      "name": "delete.source_only",
+      "time": "09:19:23",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "affected_ids": [
+        "d-vault"
+      ]
+    },
+    {
+      "name": "answer.generated",
+      "time": "09:19:26",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 2845,
+      "input_tokens": 437,
+      "output_tokens": 79,
+      "parent_ids": [
+        "c-vault",
+        "s-mixed",
+        "s-handoff",
+        "s-vault",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b",
+        "d-garden"
+      ],
+      "context_fingerprint": "b4de5ad6bf3a2be3"
+    },
+    {
+      "name": "delete.propagated",
+      "time": "09:19:26",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "affected_ids": [
+        "c-vault",
+        "s-vault",
+        "s-mixed",
+        "s-handoff",
+        "conversation-aa34077f9cef4a9684ddac08ca1f286b"
+      ]
+    },
+    {
+      "name": "summary.generated",
+      "time": "09:19:29",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 2482,
+      "input_tokens": 236,
+      "output_tokens": 99,
+      "artifact_id": "s-rebuilt-1-9",
+      "parent_ids": [
+        "d-garden",
+        "d-maintenance",
+        "d-shuttle"
+      ]
+    },
+    {
+      "name": "answer.generated",
+      "time": "09:19:30",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 1111,
+      "input_tokens": 261,
+      "output_tokens": 19,
+      "parent_ids": [
+        "d-shuttle",
+        "c-shuttle",
+        "s-rebuilt-1-9"
+      ],
+      "context_fingerprint": "35b7dc0f213d25f0"
+    },
+    {
+      "name": "answer.generated",
+      "time": "09:19:31",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 1177,
+      "input_tokens": 326,
+      "output_tokens": 22,
+      "parent_ids": [
+        "s-rebuilt-1-9",
+        "d-garden",
+        "c-garden",
+        "d-shuttle",
+        "c-shuttle"
+      ],
+      "context_fingerprint": "350c29fc08101075"
+    },
+    {
+      "name": "answer.generated",
+      "time": "09:19:32",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 1157,
+      "input_tokens": 259,
+      "output_tokens": 48,
+      "parent_ids": [
+        "d-garden",
+        "c-garden",
+        "s-rebuilt-1-9"
+      ],
+      "context_fingerprint": "12aa1354ad1fb58d"
+    },
+    {
+      "name": "answer.generated",
+      "time": "09:19:33",
+      "mode": "live",
+      "provider": "gemma4:e2b-it-qat",
+      "duration_ms": 1042,
+      "input_tokens": 177,
+      "output_tokens": 27,
+      "parent_ids": [
+        "d-archive",
+        "c-archive"
+      ],
+      "context_fingerprint": "39b096f65ceced5f"
+    }
+  ],
+  "scope": "Managed SQLite title/body fields, captured provenance and four lexical retrieval probes. Excludes evaluator artifacts, physical disk erasure, model weights, backups and external logs."
+}

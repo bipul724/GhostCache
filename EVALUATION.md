@@ -37,8 +37,11 @@ Random markers change on every run. The detailed JSON is the record of the actua
 | Python automated suite after Sentry tracing (T-D2) | 71 tests passed with `sentry-sdk` 2.72.0 in `.venv`; with plain `python3.12` the 6 SDK tests skip | same command, and `.venv/bin/python -m unittest discover -s tests -v`; see [TESTING.md](TESTING.md) |
 | Controlled fixture evaluation | 10 of 10 checks passed | [results/fixture.json](results/fixture.json) |
 | Live local Gemma evaluation | 10 of 10 checks passed | [results/live-gemma.json](results/live-gemma.json), model `gemma4:e2b-it-qat` |
+| Traced fixture evaluation, Sentry on (October 28, 2026, 09:10 IST) | 10 of 10 checks passed | Report kept outside the repository (`../runs/sentry-fixture.json`); Sentry Agents view in [results/sentry-agents-overview.jpg](results/sentry-agents-overview.jpg) |
+| Traced live evaluation, first after an Ollama server start ("cold", October 28, 2026, 09:18 IST) | 10 of 10 checks passed; 11 model calls, 61,325 ms summed call time, first call 40,407 ms | [results/sentry-live-cold.json](results/sentry-live-cold.json), model `gemma4:e2b-it-qat`; Sentry trace `dd21f76b3293450b84b0ad5ca45961dd` ([results/sentry-cold-trace.jpg](results/sentry-cold-trace.jpg)) |
+| Traced live evaluation, straight afterwards ("warm", October 28, 2026, 09:19 IST) | 10 of 10 checks passed; 11 model calls, 22,078 ms summed call time, first call 2,278 ms | [results/sentry-live-warm.json](results/sentry-live-warm.json), model `gemma4:e2b-it-qat`; Sentry trace `fb1530272ecd481399aa77f95d505dfa` ([results/sentry-warm-trace.jpg](results/sentry-warm-trace.jpg)) |
 
-These are completed checks, not projected results. The live evidence is a single synthetic-corpus run. Re-running with a fresh marker can produce different model behavior; report subsequent failures as well as passes.
+These are completed checks, not projected results. The live evidence is three synthetic-corpus runs with one model on one laptop (one on October 27 and two traced runs on October 28), not a success rate. The traced runs' timings and findings are in [TESTING.md](TESTING.md), "Real Sentry traces T-D3". Re-running with a fresh marker can produce different model behavior; report subsequent failures as well as passes.
 
 ## Controlled corpus
 

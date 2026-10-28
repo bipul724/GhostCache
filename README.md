@@ -27,7 +27,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Automated tests | **71 tests pass** under Python 3.12.6 with Node 22 on PATH (rerun on October 28, 2026 after Sentry tracing, T-D2). 7 are UI contract tests, 6 of which skip without Node. 9 are telemetry tests, 6 of which skip without the optional `sentry-sdk`; all 71 ran with it in `.venv`. See [TESTING.md](TESTING.md) |
 | Saved evaluations | One fixture report and **one** live Gemma report, each 10/10 checks ([results/](results/)) |
 | GitHub Actions workflow | **Passed on GitHub:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) on October 28, 2026 (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) (push of `172ccb4`) also passed, and its uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. |
-| Sentry Agent Tracing | **Implemented locally** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **No real Sentry traces yet.** |
+| Sentry Agent Tracing | **Implemented** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **Real traces captured on October 28, 2026** from one fixture and two live evaluations, with two findings; see [What the real traces showed](#what-the-real-traces-showed). The Sentry plan and span quota are not yet recorded (T-D1). |
 | Render, .tech domain, Backboard, Browserbase | **Planned, not implemented** |
 | ElevenLabs, Entire | **Optional, not started** |
 | Public repository | **Created:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache) (public, MIT) |
@@ -128,7 +128,40 @@ export GHOSTCACHE_SENTRY_DSN="https://<public-key>@<org>.ingest.sentry.io/<proje
 - **Traces.** One root transaction per `POST /api/*` request (`GET /api/state` is not traced) and one per `evaluate` run. Inside them: the assistant (`invoke_agent ghostcache-assistant`) with memory search, model call (`chat <model>`) and memory write; the summarizer; reset; deletion (`delete_memory`, with rebuilds nested); and verification.
 - **Sent:** operation and span names (fixed strings), the provider and model name, token counts, durations, record counts, synthetic artifact IDs (`d-vault`, `c-vault`, …), the stage and mode, a question kind (`secret`, `paraphrase`, `retained`, `shared` or `custom`), booleans such as `answer_contains_marker`, check counts, and an error's class name and fixed category. A random conversation ID per reset groups an experiment's spans.
 - **Never sent:** document text or titles, questions, answers, prompts, the marker, request bodies, the Ollama URL, the machine's hostname or file paths. Every attribute must be in `ALLOWED_KEYS` in [ghostcache/telemetry.py](ghostcache/telemetry.py), and `telemetry.set` rejects anything else. Error events are dropped (traces only), default integrations (automatic HTTP spans, logging, excepthook) are off, and `server_name` is `ghostcache-local`.
-- **Verified offline only.** `tests/test_telemetry.py` captures envelopes in memory and asserts that no marker, question, document title or body, answer, hostname, home path or Ollama URL appears in them. No real Sentry project, DSN or trace has been used yet (T-D3).
+- **Verified offline, then with real traces.** `tests/test_telemetry.py` captures envelopes in memory and asserts that no marker, question, document title or body, answer, hostname, home path or Ollama URL appears in them. On October 28, 2026 the user then sent real traces to their own Sentry project (below). Sentry's Agents view reported that the conversations' inputs and outputs weren't captured.
+
+### What the real traces showed
+
+On October 28, 2026 (times IST) the user ran three traced evaluations with `GHOSTCACHE_SENTRY_DSN` set from the git-ignored `.env`. All three passed 10/10 checks.
+
+| Report written | Run | Report | Sentry trace |
+| --- | --- | --- | --- |
+| 09:10 | fixture | kept outside the repository | a 0.15 ms conversation, no model calls |
+| 09:18 | live, `gemma4:e2b-it-qat`; the first evaluation after `ollama serve` was started (**cold**) | [results/sentry-live-cold.json](results/sentry-live-cold.json) | `dd21f76b3293450b84b0ad5ca45961dd` |
+| 09:19 | live, same model, straight afterwards with the model still loaded (**warm**) | [results/sentry-live-warm.json](results/sentry-live-warm.json) | `fb1530272ecd481399aa77f95d505dfa` |
+
+Each live trace has the root `ghostcache.evaluate` "evaluate live", 39 spans, release `0.1.0`, environment `local-live` and 0 issues.
+
+![Sentry Agents view: three conversations of 11 messages each, with Sentry's note that inputs and outputs weren't captured](results/sentry-agents-overview.jpg)
+
+**Finding 1: one model call explains most of the cold run's extra time.**
+
+| Span | Cold | Warm |
+| --- | ---: | ---: |
+| First `chat gemma4:e2b-it-qat` (summarizer, during reset) | 40.45 s | 2.28 s |
+| `ghostcache.reset` | 48.20 s | 9.58 s |
+| `ghostcache.verify` | 4.99 s | 4.51 s |
+| Root `ghostcache.evaluate` | 1.03 min | 22.40 s |
+
+Every later chat span took about 1–3 s in both traces, so that first call accounts for most of the 1.03 min against 22.40 s. This is consistent with Ollama loading the model on the first request after a server start. GhostCache does not record Ollama's `load_duration`, though, so the cause is **inferred, not measured**. Both runs passed 10/10, so the pass/fail result does not show any of this; the trace does.
+
+![Cold trace waterfall: the first summarizer chat span takes 40.45 s of a 1.03 min run](results/sentry-cold-trace.jpg)
+
+**Finding 2: the trace shows the source-only leak without exporting content.** In the cold trace, the `invoke_agent ghostcache-assistant` span after the source-only `delete_memory` has `ghostcache.stage: source_only`, `ghostcache.question_kind: paraphrase` and `ghostcache.answer_contains_marker: true`. Its `search_memory` child lists `ghostcache.context_ids`: `c-vault, s-mixed, s-handoff, s-vault, conversation-ac1ed7b44098484690552c629a0b637a, d-garden`. So after the source document was deleted, its derived chunk, three summaries and an earlier saved answer were still retrieved and sent to Gemma. Sentry received only synthetic IDs and a boolean, never the marker or the answer.
+
+![Source-only assistant span in the cold trace, with answer_contains_marker true](results/sentry-source-only-leak.jpg)
+
+More screenshots: [the memory search that returned `c-vault`](results/sentry-c-vault-search.jpg), [the warm trace](results/sentry-warm-trace.jpg) and [the warm first model call, 181 input + 55 output tokens](results/sentry-warm-chat-tokens.jpg). Method, cross-checks and what was not verified: [TESTING.md](TESTING.md), "Real Sentry traces T-D3".
 
 ## Demonstration workflow (browser)
 
@@ -160,8 +193,10 @@ Each evaluation uses a fresh in-memory database, separate from the UI database. 
 | [results/fixture.json](results/fixture.json) | Fixture run, 10/10 checks. Deterministic, no model call. |
 | [results/live-gemma.json](results/live-gemma.json) | One live run with `gemma4:e2b-it-qat`, 10/10 checks. 11 model calls, 130,650 ms summed call time, 3,209 input and 677 output tokens. |
 | [results/ghostcache-ui-desktop.jpg](results/ghostcache-ui-desktop.jpg), [results/ghostcache-ui-mobile.jpg](results/ghostcache-ui-mobile.jpg) | Screenshots from a fixture-mode browser session, taken at different moments. Not a Browserbase run. |
+| [results/sentry-live-cold.json](results/sentry-live-cold.json), [results/sentry-live-warm.json](results/sentry-live-warm.json) | Two traced live runs with `gemma4:e2b-it-qat` on October 28, 2026, 10/10 checks each. 11 model calls each: 61,325 ms summed call time cold, 22,078 ms warm. |
+| Six `results/sentry-*.jpg` screenshots | Sentry's Agents view and the two live traces. See [What the real traces showed](#what-the-real-traces-showed). |
 
-Both reports show the same stage pattern:
+All four reports show the same stage pattern:
 
 | Stage | Rows | Active | Stale active | Rows with marker |
 | --- | ---: | ---: | ---: | ---: |
@@ -198,7 +233,7 @@ This shows readiness **for each category, not entries made**. Only list a catego
 | --- | --- |
 | Best Use of Gemma | **Implemented**, one live 10/10 run saved |
 | Best Use of GitHub Copilot (the official description includes GitHub Actions) | **Hosted run exists:** [Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026. Do not claim Copilot wrote this code. |
-| Best Use of Sentry Agent Tracing | Implemented locally; no real Sentry traces yet |
+| Best Use of Sentry Agent Tracing | **Real traces captured** on October 28, 2026, with two explained findings ([details](#what-the-real-traces-showed)). The Sentry quota is not yet recorded (T-D1). |
 | Best Use of Render | Planned |
 | Best Use of a .tech Domain | Planned; whether the domain qualifies under the Hacktoberfest promo is **unverified** |
 | Best Use of Backboard | Planned |
