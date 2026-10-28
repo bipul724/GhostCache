@@ -25,7 +25,7 @@ If the live model fails while an experiment is being seeded, that reset publishe
 
 Random markers change on every run. The detailed JSON is the record of the actual run, not a byte-identical golden output. Record model identity and the execution environment when comparing live results; one run is not an estimated general success rate.
 
-### Recorded verification — October 27, 2026
+### Recorded verification — October 27 and 28, 2026
 
 | Verification | Recorded result | Evidence |
 | --- | --- | --- |
@@ -40,8 +40,10 @@ Random markers change on every run. The detailed JSON is the record of the actua
 | Traced fixture evaluation, Sentry on (October 28, 2026, 09:10 IST) | 10 of 10 checks passed | Report kept outside the repository (`../runs/sentry-fixture.json`); Sentry Agents view in [results/sentry-agents-overview.jpg](results/sentry-agents-overview.jpg) |
 | Traced live evaluation, first after an Ollama server start ("cold", October 28, 2026, 09:18 IST) | 10 of 10 checks passed; 11 model calls, 61,325 ms summed call time, first call 40,407 ms | [results/sentry-live-cold.json](results/sentry-live-cold.json), model `gemma4:e2b-it-qat`; Sentry trace `dd21f76b3293450b84b0ad5ca45961dd` ([results/sentry-cold-trace.jpg](results/sentry-cold-trace.jpg)) |
 | Traced live evaluation, straight afterwards ("warm", October 28, 2026, 09:19 IST) | 10 of 10 checks passed; 11 model calls, 22,078 ms summed call time, first call 2,278 ms | [results/sentry-live-warm.json](results/sentry-live-warm.json), model `gemma4:e2b-it-qat`; Sentry trace `fb1530272ecd481399aa77f95d505dfa` ([results/sentry-warm-trace.jpg](results/sentry-warm-trace.jpg)) |
+| Python automated suite after the public walkthrough (T-E2), rerun in the documentation audit (October 28, 2026) | 91 tests: `OK` with `sentry-sdk` in `.venv`; `OK (skipped=6)` with plain `python3.12` | see [TESTING.md](TESTING.md), "Documentation audit" |
+| Fresh fixture evaluation in the documentation audit (October 28, 2026) | 10 of 10 checks passed | written to a scratch path outside the repository, not kept |
 
-These are completed checks, not projected results. The live evidence is three synthetic-corpus runs with one model on one laptop (one on October 27 and two traced runs on October 28), not a success rate. The traced runs' timings and findings are in [TESTING.md](TESTING.md), "Real Sentry traces T-D3". Re-running with a fresh marker can produce different model behavior; report subsequent failures as well as passes.
+These are completed checks, not projected results. The live evidence is three synthetic-corpus runs with one model on one laptop (one on October 27 and two traced runs on October 28), not a success rate. The "summed call time" is the total of the per-call `duration_ms` values, not the run's wall-clock time; the Sentry root spans (1.03 min cold, 22.40 s warm) measure the whole evaluation. The traced runs' timings and findings are in [TESTING.md](TESTING.md), "Real Sentry traces T-D3". Re-running with a fresh marker can produce different model behavior; report subsequent failures as well as passes.
 
 ## Controlled corpus
 
@@ -116,4 +118,6 @@ Passing this suite supports only this corpus, this implementation, the managed t
 
 Provenance must capture every artifact actually supplied as context. An undeclared copy outside this store is outside the graph and cannot be discovered by graph traversal alone. The synthetic marker is an exact-match oracle; its absence cannot establish removal of every paraphrase or inference. Likewise, a fact that survives in a legitimate independent source is not a source-withdrawal failure.
 
-No general model-unlearning, compliance, universal forgetting, third-party vulnerability, or performance claim follows from a fixture pass or a single live evaluation.
+No general model-unlearning, compliance, universal forgetting, third-party vulnerability, or performance claim follows from a fixture pass or from the three saved live evaluations.
+
+The public recorded walkthrough (<https://ghostcache-walkthrough.onrender.com/>, [DEPLOYMENT.md](DEPLOYMENT.md)) replays three of these saved live reports. It is not an evaluation: it runs no model, cannot answer new questions and adds no evidence beyond the reports it displays.

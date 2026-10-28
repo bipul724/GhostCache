@@ -24,19 +24,19 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Area | Status |
 | --- | --- |
 | Local fixture and live-Gemma experiment, browser UI, provenance cleanup | **Implemented** |
-| Automated tests | **91 tests pass** under Python 3.12.6 with Node 22 on PATH (rerun on October 28, 2026 after adding the public walkthrough, T-E2). 7 are UI contract tests, 6 of which skip without Node. 9 are telemetry tests, 6 of which skip without the optional `sentry-sdk`; all 91 ran with it in `.venv`. 20 are walkthrough tests, 1 of which skips without Node. See [TESTING.md](TESTING.md) |
+| Automated tests | **91 tests** under Python 3.12.6 with Node v22.23.4 on PATH, rerun in the documentation audit on October 28, 2026: `Ran 91 tests … OK` with the optional `sentry-sdk` in `.venv`, and `Ran 91 tests … OK (skipped=6)` with plain `python3.12` (the 6 skips are the SDK telemetry tests). Node is needed by 6 of the 7 UI contract tests (the seventh, `test_paraphrase_fallback_matches_backend_question`, is pure Python) and by 1 walkthrough syntax test; those 7 skip without Node. See [TESTING.md](TESTING.md) |
 | Saved evaluations | One fixture report and **three** live Gemma reports (October 27, and cold and warm runs on October 28), each 10/10 checks ([results/](results/)) |
-| GitHub Actions workflow | **Passed on GitHub:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) on October 28, 2026 (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) (push of `172ccb4`) also passed, and its uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. |
+| GitHub Actions workflow | **Passing on GitHub.** [Run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485)'s uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. Ten runs exist as of October 28, 2026: nine succeeded, including [run #10](https://github.com/bipul724/GhostCache/actions/runs/40725375114) on the current `main` (`26a1c3e`), and run #2 was a cancelled duplicate. Runs after #1 were checked through GitHub's public API (step results only; their logs were not read). See [TESTING.md](TESTING.md#ci-github-actions) |
 | Sentry Agent Tracing | **Implemented** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **Real traces captured on October 28, 2026** from one fixture and two live evaluations, with two findings; see [What the real traces showed](#what-the-real-traces-showed). Sent from a 14-day Sentry Business trial with no payment method; the runs used 120 of its 100M spans. |
-| Public recorded walkthrough | **Deployed on Render on October 28, 2026:** <https://ghostcache-walkthrough.onrender.com/> (Blueprint-managed static site from [render.yaml](render.yaml), commit `8013d01`; see [Deployment record](#deployment-record-t-e3-october-28-2026)). A static page in [site/](site/) built from the recorded live reports, with no inference. See [Public recorded walkthrough](#public-recorded-walkthrough). Render is used only to host it; it is not a submission category. |
+| Public recorded walkthrough | **Deployed on Render on October 28, 2026:** <https://ghostcache-walkthrough.onrender.com/> (Blueprint-managed static site from [render.yaml](render.yaml); initial deployment from commit `8013d01`). A static page in [site/](site/) built from the recorded live reports, with no inference. See [Public recorded walkthrough](#public-recorded-walkthrough) and [DEPLOYMENT.md](DEPLOYMENT.md). Known issues: horizontal overflow on narrow screens (in headless Chrome emulation at a 375 px viewport, the document's scrollWidth was 573 px; no real phone tested), and no favicon. Render is used only to host it; it is not a submission category. |
 | Prize categories | **Entering three:** Gemma, GitHub (through Actions) and Sentry Agent Tracing. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire categories were dropped on October 28, 2026 and are not entered ([DECISIONS.md](DECISIONS.md) D-14). |
 | Public repository | **Created:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache) (public, MIT) |
-| Video, DEV submission | **Not created.** (The walkthrough's Render deployment is done; see above.) |
+| Video, DEV submission | **Not created.** No category entry has been submitted yet; see [Open work](#open-work). |
 
 ## What is implemented
 
 - **Five-document fictional corpus.** Each reset generates a fresh `MOTH-…` passphrase (from `secrets.token_hex(6)`) and builds 14 artifacts: 5 documents, 5 chunks, 3 summaries and 1 saved answer.
-- **SQLite provenance DAG.** Every generated artifact records *every* artifact given to it as context as a parent. Original source IDs come from those parents and are never supplied by the caller.
+- **SQLite provenance DAG.** Every generated artifact records *every* artifact given to it as context as a parent, not just the ones the model cites. Model citations are shown to the user but never define lineage. Original source IDs come from those parents and are never supplied by the caller.
 - **Two deletion policies:**
   - **Source-only (broken control).** Empties the document body, replaces its title with `Withdrawn document` and leaves its derived copies active.
   - **Cascade cleanup.** In one transaction, empties the bodies of the source and every descendant. Titles are replaced with `Withdrawn document` or `Purged <kind>`, and content-free tombstones and edges are kept. It then rebuilds one summary from the surviving original documents.
@@ -46,6 +46,9 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
   - **Live mode:** local Gemma (`gemma4:e2b-it-qat` by default) through Ollama at `http://127.0.0.1:11434`.
   - Live mode never silently falls back to fixture output.
 - **Checks:** an eight-check interactive verification in the UI, and a ten-check end-to-end CLI evaluation that saves a JSON report.
+- **Storage:** the local server keeps its experiment in a disposable SQLite file (default `.local/assistant.sqlite`); each CLI evaluation uses a fresh in-memory SQLite database and never touches that file.
+- **Optional Sentry tracing** (metadata only) and a **GitHub Actions** workflow; see below.
+- **A static recorded walkthrough** of three live runs, published on Render; see below.
 - **Single-page browser UI** with these parts:
   - the five guided steps,
   - a provenance graph,
@@ -60,7 +63,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 - **Application-managed memory only.** Cleanup covers GhostCache's own SQLite title/body fields, the provenance it recorded, and its retrieval and answer paths. It is **not** model-weight unlearning, and it does not securely erase SQLite pages, journals, disk blocks or backups.
 - **The evaluator keeps the marker on purpose.** The expected marker stays in `Experiment.scenario`. It is returned by `GET /api/state` (as `scenario.canary`) even after cleanup, and appears in saved reports and screenshots. Do not say the secret disappears from the whole app, API, browser or disk.
 - **Bounded, exact-match checks.** The checks look for one literal marker across four fixed questions. They do not prove that every paraphrase or inference is gone.
-- **One live run is not a rate.** The single saved live run does not establish how often Gemma (or any model) succeeds.
+- **Three live runs are not a rate.** The three saved live runs (one model, one laptop, two days) do not establish how often Gemma, or any model, succeeds.
 - **The summary prompt keeps the secret on purpose.** It explicitly asks the model to preserve the passphrase, which builds a known propagation path. GhostCache does not measure natural leakage.
 - **Fictional data only.** It has no document upload, no connector for other RAG systems, and has not been tested with real sensitive documents.
 - **Local only.** The server is single-user and localhost-only. It must not be exposed unchanged as a shared public service (see [architecture.md](architecture.md#security-boundaries)). The public walkthrough is a separate static page of recorded results: it runs no model and cannot answer new questions.
@@ -74,7 +77,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Python packages | None required. The core uses only the standard library (`sqlite3`, `http.server`, `urllib`, `unittest`). The optional `sentry` extra (`sentry-sdk==2.72.0`) is needed only for tracing; install it into `.venv`, never the system Python. |
 | Front end | Plain HTML, CSS and JavaScript in `web/`. No build step or npm install. |
 | Live mode only | [Ollama](https://ollama.com) running locally, with the model pulled (`ollama list` should show `gemma4:e2b-it-qat`, about 4.3 GB). |
-| Optional | Node.js, only for the UI contract tests and the syntax checks of `web/app.js` and `site/walkthrough.js`; those tests skip without it. |
+| Optional | Node.js (verified with v22.23.4; no npm packages), only for 6 of the 7 UI contract tests and the syntax checks of `web/app.js` and `site/walkthrough.js`; those tests skip without it. |
 
 ## Run it (fixture mode)
 
@@ -108,7 +111,7 @@ python3.12 -m ghostcache serve --port 8765 --mode live --model gemma4:e2b-it-qat
 
 You can also switch to live mode from the page's **Run mode** menu once the model shows as available. Changing mode starts a fresh experiment.
 
-Live seeding makes four model calls (three summaries and the saved baseline answer). The first call took about 81 s in the saved run; the cause of that delay has not been separately measured.
+Live seeding makes four model calls (three summaries and the saved baseline answer). The first call is slow when the model is not yet loaded: 81.2 s in the October 27 run and 40.4 s in the October 28 run that followed an Ollama server start, against 2.3 s in the run straight afterwards (see [What the real traces showed](#what-the-real-traces-showed)). Model loading is the likely cause, but it has not been measured.
 
 To use a different installed model, pass `--model` or set `GHOSTCACHE_MODEL` (see [.env.example](.env.example)). If Ollama is missing, the model errors, or its response is malformed (not a JSON object with `text` and supplied-context `citations`), live mode reports the error: HTTP 502 in the UI, or a failed report with exit status `1` from the CLI. It never substitutes fixture text. Connection problems are reported only as a fixed category, such as "Local model call failed (connection failed)." The underlying error text is never shown.
 
@@ -153,7 +156,7 @@ Each live trace has the root `ghostcache.evaluate` "evaluate live", 39 spans, re
 | `ghostcache.verify` | 4.99 s | 4.51 s |
 | Root `ghostcache.evaluate` | 1.03 min | 22.40 s |
 
-Every later chat span took about 1–3 s in both traces, so that first call accounts for most of the 1.03 min against 22.40 s. This is consistent with Ollama loading the model on the first request after a server start. GhostCache does not record Ollama's `load_duration`, though, so the cause is **inferred, not measured**. Both runs passed 10/10, so the pass/fail result does not show any of this; the trace does.
+Every later chat span took about 1–3 s in both traces, so that first call accounts for most of the 1.03 min against 22.40 s. Two kinds of number are involved, and they should not be mixed. The table above shows **Sentry span durations**: the root span is the whole evaluation, including SQLite work and verification. The reports record **per-model-call durations** (`duration_ms`): the first call took 40,407 ms cold and 2,278 ms warm, and all 11 calls together took 61,325 ms and 22,078 ms. That sum is time spent in model calls, not the evaluation's wall-clock time. This is consistent with Ollama loading the model on the first request after a server start. GhostCache does not record Ollama's `load_duration`, though, so the cause is **inferred, not measured**. Both runs passed 10/10, so the pass/fail result does not show any of this; the trace does.
 
 ![Cold trace waterfall: the first summarizer chat span takes 40.45 s of a 1.03 min run](results/sentry-cold-trace.jpg)
 
@@ -169,7 +172,7 @@ More screenshots: [the memory search that returned `c-vault`](results/sentry-c-v
 
 ## Public recorded walkthrough
 
-**Live at <https://ghostcache-walkthrough.onrender.com/>** (deployed October 28, 2026; see the [deployment record](#deployment-record-t-e3-october-28-2026)).
+**Live at <https://ghostcache-walkthrough.onrender.com/>** (deployed October 28, 2026; deployment record, verification and known issues in [DEPLOYMENT.md](DEPLOYMENT.md)).
 
 [site/](site/) is a static, read-only walkthrough of the **recorded** live Gemma runs, for people who can't run the app. It says so at the top: *"Recorded local Gemma evaluation — no live inference."* It makes no model call and no `/api/*` request, stores nothing, and deletes nothing. Its only data request is `data/evidence.json` from the same site.
 
@@ -189,40 +192,9 @@ python3.12 scripts/export_site_data.py          # rewrite site/data/evidence.jso
 python3.12 scripts/export_site_data.py --check  # exit 1 if it is out of date (also a unit test)
 ```
 
-**Preview locally.** Pick a free port (check with `lsof -nP -iTCP:8790 -sTCP:LISTEN`); this does not touch the app, its database or Ollama:
+**Preview, deploy and verify.** Local preview, the Render Blueprint, deployment steps, the verification commands and the full deployment record are in [DEPLOYMENT.md](DEPLOYMENT.md). In short: [render.yaml](render.yaml) defines one Render static site that publishes only `site/`, with security headers and no server, database, model, environment variable or secret. The owner deployed it on October 28, 2026 (initial deployment from commit `8013d01`, [dashboard screenshot](screenshots/00-render-dashboard-live-8013d01.png)). Read-only checks found the page and `/data/evidence.json` returning 200, the exact `/api/state` returning 404, the Blueprint's headers present, and every run, stage and question button working in desktop Chrome. Screenshots of the deployed page are indexed in [screenshots/README.md](screenshots/README.md).
 
-```sh
-python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
-```
-
-Then open <http://127.0.0.1:8790>.
-
-**Deploy on Render (static site).** The Blueprint [render.yaml](render.yaml) defines one static site and nothing else: no server, database, worker, model, environment variable or secret. Render publishes only `site/`. Steps for the account owner (followed for the October 28, 2026 deployment below; use them again to recreate the site):
-
-1. Push `main` so that `render.yaml` and `site/` are on GitHub.
-2. In the Render Dashboard choose **New → Blueprint**, connect `bipul724/GhostCache`, branch `main`, and apply the `render.yaml` it finds. It creates the static site `ghostcache-walkthrough`.
-3. Or create it by hand with **New → Static Site**: repository `bipul724/GhostCache`, branch `main`, root directory blank (the repository root), build command `echo "No build step; site/ is committed static files"`, publish directory `site`. A hand-made site does not get the Blueprint's security headers; add them under the site's **Headers** settings, copying `render.yaml`.
-4. After the first deploy, open the `onrender.com` URL Render shows and check:
-   - the banner reads "Recorded local Gemma evaluation — no live inference";
-   - the run buttons, the five stage buttons and the six question buttons all work;
-   - the browser's network panel shows only `style.css`, `walkthrough.js` and `data/evidence.json`;
-   - `curl -sI <url>` shows the `Content-Security-Policy` header (Blueprint deploys);
-   - `<url>/api/state` returns 404.
-5. Record the real URL here and in [tasks.md](tasks.md) (T-E3) only after those checks pass. (Done for the first deployment; see below.)
-
-Render's documentation describes static sites as free to deploy; bandwidth and build minutes count against the workspace's plan. That was read from the documentation on October 28, 2026, not checked against an account.
-
-#### Deployment record (T-E3, October 28, 2026)
-
-- **URL:** <https://ghostcache-walkthrough.onrender.com/>
-- **Service:** `ghostcache-walkthrough`, a Blueprint-managed Render static site, live from `main` at commit `8013d01` as shown in the Render dashboard ([screenshot 00](screenshots/00-render-dashboard-live-8013d01.png)). Deployed and first verified by the user on October 28, 2026.
-- **Fresh read-only checks (October 28, 2026, about 21:00 IST, during the documentation update):**
-  - `curl`: `/` returned 200 (`text/html`), `/data/evidence.json` 200 (`application/json`) and the exact `/api/state` path 404.
-  - Response headers included `Content-Security-Policy` (identical to [render.yaml](render.yaml)), `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer` and `X-Frame-Options: DENY`; `/data/evidence.json` also had `Cache-Control: no-cache`.
-  - The deployed `index.html`, `style.css`, `walkthrough.js` and `data/evidence.json` were byte-identical (SHA-256) to `site/` at commit `8013d01`.
-  - A headless Chrome click-through at 1280×900 found the banner "Recorded local Gemma evaluation — no live inference"; all three run buttons (each showing 10/10 checks), all five stage buttons and all six question buttons changed the view. The page requested only `style.css`, `walkthrough.js` and `data/evidence.json`, plus Chrome's automatic `/favicon.ico` request, which returns 404 and logs one console error because the site has no favicon.
-- **Earlier browser checks by the user (screenshots, October 28, 2026):** switching between the three recorded runs ([01](screenshots/01-walkthrough-cold-run-overview.png), [02](screenshots/02-walkthrough-warm-run-overview.png), [03](screenshots/03-walkthrough-october-27-run-overview.png)); the source-only, leak, cleanup and verification views ([04](screenshots/04-source-only-deletion-stale-memory.png), [05](screenshots/05-leaked-answer-and-supplied-context.png), [06](screenshots/06-provenance-cleanup-and-rebuilt-summary.png), [07](screenshots/07-recorded-verification-ten-checks.png)); and the preserved garden answer ([11](screenshots/11-after-cleanup-garden-fact-preserved.png)). All 16 screenshots are indexed in [screenshots/README.md](screenshots/README.md), with hashes in [screenshots/SHA256SUMS.txt](screenshots/SHA256SUMS.txt). Screenshots 09 and 10 are identical copies. Screenshot 15 shows a URL with extra characters after `/api/state`, so it is not evidence of the clean `/api/state` check; that comes from `curl`.
-- **Not shown:** phone usability on the deployed site, other browsers, assistive technology, or every combination of run, stage and question. The site performs **no live inference**: it shows recorded reports, and the Python backend and Ollama stay on the laptop. No new Gemma evaluation was run for the deployment.
+**Not shown, and known issues.** No real phone, other browser or assistive-technology check has been done. In an emulated 375 px viewport the page overflows horizontally (the "Run it yourself" command block holds a one-column grid at about 557 px), and the site has no favicon, so browsers log one 404. Both are open tasks. The site performs **no live inference**; the Python backend and Ollama stay on the laptop.
 
 ## Demonstration workflow (browser)
 
@@ -237,12 +209,16 @@ The inspector shows each artifact's body, status, parents and original roots. Th
 
 ## Reproduce the tests and evaluations
 
-Write new reports to **new filenames**. Do not overwrite the recorded evidence in `results/fixture.json` and `results/live-gemma.json`.
+Write new reports to **new filenames**. Never overwrite or edit anything already in `results/` or `screenshots/`; they are recorded evidence.
 
 ```sh
-python3.12 -m unittest discover -s tests -v
+python3.12 -m unittest discover -s tests -v              # core suite; the 6 SDK telemetry tests skip
+.venv/bin/python -m unittest discover -s tests -v        # every test, with the optional sentry-sdk in .venv
 python3.12 -m ghostcache evaluate --mode fixture --output results/fixture-new-run.json
 python3.12 -m ghostcache evaluate --mode live --model gemma4:e2b-it-qat --output results/live-gemma-new-run.json
+python3.12 scripts/export_site_data.py --check           # walkthrough data matches the selected reports
+node --check web/app.js && node --check site/walkthrough.js   # optional, needs Node
+(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)      # deployment screenshots unchanged
 ```
 
 Each evaluation uses a fresh in-memory database, separate from the UI database. It prints a short JSON summary and exits `0` only if all ten checks pass, otherwise `1`. A saved report contains the evaluator marker, stage audits, every answer and the event timings. See [TESTING.md](TESTING.md) and [EVALUATION.md](EVALUATION.md).
@@ -253,9 +229,10 @@ Each evaluation uses a fresh in-memory database, separate from the UI database. 
 | --- | --- |
 | [results/fixture.json](results/fixture.json) | Fixture run, 10/10 checks. Deterministic, no model call. |
 | [results/live-gemma.json](results/live-gemma.json) | The first live run (October 27, 2026) with `gemma4:e2b-it-qat`, 10/10 checks. 11 model calls, 130,650 ms summed call time, 3,209 input and 677 output tokens. |
-| [results/ghostcache-ui-desktop.jpg](results/ghostcache-ui-desktop.jpg), [results/ghostcache-ui-mobile.jpg](results/ghostcache-ui-mobile.jpg) | Screenshots from a fixture-mode browser session, taken at different moments. Not a Browserbase run. |
+| [results/ghostcache-ui-desktop.jpg](results/ghostcache-ui-desktop.jpg), [results/ghostcache-ui-mobile.jpg](results/ghostcache-ui-mobile.jpg) | Screenshots of the local app from a fixture-mode browser session (October 27), taken at different moments and **before** the October 27 UI wording fixes, so they show the old banner and trace. Not a Browserbase run. |
 | [results/sentry-live-cold.json](results/sentry-live-cold.json), [results/sentry-live-warm.json](results/sentry-live-warm.json) | Two traced live runs with `gemma4:e2b-it-qat` on October 28, 2026, 10/10 checks each. 11 model calls each: 61,325 ms summed call time cold, 22,078 ms warm. |
 | Seven `results/sentry-*.jpg` screenshots | Sentry's Agents view, the two live traces and one failed live attempt ([results/sentry-failed-run.jpg](results/sentry-failed-run.jpg)). See [What the real traces showed](#what-the-real-traces-showed). |
+| [screenshots/](screenshots/README.md) (16 PNGs, hashes in [SHA256SUMS.txt](screenshots/SHA256SUMS.txt)) | The Render dashboard and the deployed walkthrough, October 28, 2026. They show what the browser displayed, not HTTP status codes, phone usability or a new live evaluation. See [DEPLOYMENT.md](DEPLOYMENT.md#verification-record). |
 
 All four reports show the same stage pattern:
 
@@ -288,12 +265,12 @@ For full details see [architecture.md](architecture.md).
 
 ## Prize-category readiness (DEV Hacktoberfest Week 4)
 
-This shows readiness **for each category, not entries made**. The submission will enter **three** categories: Gemma, GitHub (through Actions) and Sentry. Only list a category in the submission after real use and evidence exist. One person can win at most one prize in this challenge. Full plan: [CATEGORIES.md](CATEGORIES.md). Task list: [tasks.md](tasks.md).
+This shows readiness **for each category, not entries made**. No DEV post exists on DEV yet, as a draft or published, so no category has been entered. The submission will enter **three** categories: Gemma, GitHub (through Actions) and Sentry. Only list a category in the submission after real use and evidence exist. One person can win at most one prize in this challenge. Full plan: [CATEGORIES.md](CATEGORIES.md). Task list: [tasks.md](tasks.md).
 
 | Target | Status |
 | --- | --- |
 | Best Use of Gemma | **Implemented**, three live 10/10 runs saved; a [recorded walkthrough](https://ghostcache-walkthrough.onrender.com/) of them is public (no live inference) |
-| Best Use of GitHub Copilot (the official description includes GitHub Actions) | **Hosted run exists:** [Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026. Do not claim Copilot wrote this code. |
+| Best Use of GitHub Copilot (the official description includes GitHub Actions) | **Hosted runs exist:** [Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026, run #3's report was inspected, and every later run through #10 succeeded. The category is targeted through GitHub Actions; do not claim Copilot wrote this code. |
 | Best Use of Sentry Agent Tracing | **Real traces captured** on October 28, 2026, with two explained findings ([details](#what-the-real-traces-showed)). |
 | Best Use of Render | **Not entered.** Render hosts the public walkthrough (deployed October 28, 2026); entering the category is a separate decision. |
 | Best Use of a .tech Domain, Backboard, Browserbase, ElevenLabs, Entire | **Dropped** on October 28, 2026; not entered |
@@ -309,10 +286,19 @@ This shows readiness **for each category, not entries made**. The submission wil
 - [AGENTS.md](AGENTS.md): instructions for coding agents
 - [CATEGORIES.md](CATEGORIES.md): category plan, free-tier limits and evidence needed
 - [.env.example](.env.example): the supported environment variables
+- [DEPLOYMENT.md](DEPLOYMENT.md): the Render deployment of the public walkthrough: Blueprint, steps, verification and known issues
 - [render.yaml](render.yaml) and [site/](site/): the public recorded walkthrough and its Render static-site Blueprint (see [above](#public-recorded-walkthrough))
 - [screenshots/README.md](screenshots/README.md): index of the Render deployment and walkthrough screenshots (October 28, 2026)
 
-The detailed project handoff (`context.md`) sits in the parent workspace, outside this application directory.
+A longer project handoff (`context.md`) is kept in the author's workspace, outside this repository. Everything needed to understand, run and verify GhostCache is in the files above.
+
+## Open work
+
+The full list, with acceptance criteria, is in [tasks.md](tasks.md). As of October 28, 2026:
+
+- **Submission:** confirm the deadline (the written rules and the DEV API disagree), record a short demo video, write the DEV draft, run the final verification, and publish only after the author approves (T-I0 to T-I4).
+- **Public walkthrough:** fix the narrow-screen overflow, check a real phone, other browsers and assistive technology, and optionally add a favicon (T-E6 to T-E8).
+- **Evidence and hardening:** run metadata in new reports (T-A8), repeated live runs including failures (T-C1), a load-time and memory measurement (T-C2), an evaluator-retention note in the UI (T-A7), new local-UI screenshots (T-A9), and a dedicated UI state for `storage_failed`.
 
 ## Prior work
 

@@ -18,7 +18,7 @@ ghostcache/            # application root = Git repository root (bipul724/GhostC
 ├── results/           # saved evidence: do not overwrite
 ├── site/              # public static recorded walkthrough (D-13); data/evidence.json is generated
 ├── scripts/           # export_site_data.py: results/*.json → site/data/evidence.json
-├── screenshots/       # Render deployment and walkthrough screenshots (evidence: do not edit)
+├── screenshots/       # Render deployment and walkthrough screenshots (evidence: do not edit); SHA256SUMS.txt
 ├── render.yaml        # Render static-site Blueprint for site/ (deployed October 28, 2026)
 ├── .github/workflows/checks.yml
 └── .local/            # disposable UI database (git-ignored)
@@ -36,6 +36,7 @@ python3.12 -m ghostcache serve --port 8765 --mode live # needs Ollama + gemma4:e
 node --check web/app.js                                # optional JS syntax check
 python3.12 scripts/export_site_data.py --check         # public walkthrough data is up to date
 .venv/bin/python -m unittest discover -s tests -v      # with the optional sentry-sdk in .venv
+(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)    # screenshot evidence unchanged (run inside screenshots/)
 ```
 
 - **Do not start a server on a port that is already in use.** Check first.
@@ -87,9 +88,10 @@ python3.12 scripts/export_site_data.py --check         # public walkthrough data
 
 ## Evidence
 
-- Never overwrite or edit `results/fixture.json`, `results/live-gemma.json` or the screenshots. Write new runs to new filenames.
+- Never overwrite or edit anything in `results/` or `screenshots/`, including `screenshots/SHA256SUMS.txt`. Write new runs to new filenames.
 - Keep failed reports. Never report only the passing runs.
 - Do not claim an integration, deployment, hosted CI run, category entry or benchmark without the evidence listed in [tasks.md](tasks.md). Writing configuration alone does not count.
+- The walkthrough's evidenced initial deployment is commit `8013d01` ([DEPLOYMENT.md](DEPLOYMENT.md)). Do not assume the current `HEAD` is what Render serves; check the dashboard or compare the served files.
 - Do not say GitHub Copilot wrote existing code. The GitHub category is targeted through GitHub Actions.
 - The submission enters three categories: Gemma, GitHub (through Actions) and Sentry. Render only hosts the walkthrough; do not add it, or any dropped category, to the submission without a new decision (DECISIONS.md D-14 amendment).
 
@@ -104,6 +106,7 @@ python3.12 scripts/export_site_data.py --check         # public walkthrough data
 When you change behaviour, update the docs it affects in the same change:
 
 - README (status, workflow, limits),
+- DEPLOYMENT.md (when `site/`, `render.yaml` or the deployment changes),
 - architecture.md (and its "Known discrepancies" table),
 - TESTING.md (the inventory and counts),
 - tasks.md (move completed tasks, with their evidence),

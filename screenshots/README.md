@@ -4,7 +4,7 @@ Copied from 16 user-provided screenshots on October 28, 2026. The original files
 
 Public walkthrough: https://ghostcache-walkthrough.onrender.com/
 
-These images show a static recorded walkthrough, a Render deployment dashboard, and browser endpoint checks. They are not new live model evaluations or proof of phone usability. A displayed Not Found message alone does not establish an HTTP status code.
+These images show a static recorded walkthrough, a Render deployment dashboard, and browser endpoint checks. They are not new live model evaluations or proof of phone usability. A displayed Not Found message alone does not establish an HTTP status code. The status codes, headers and other checks are recorded separately in [../DEPLOYMENT.md](../DEPLOYMENT.md) and [../TESTING.md](../TESTING.md).
 
 | Screenshot | Contents | Dimensions |
 | --- | --- | --- |
@@ -30,7 +30,9 @@ These images show a static recorded walkthrough, a Render deployment dashboard, 
 - Screenshot 10 is byte-for-byte identical to screenshot 09. Both were retained.
 - Screenshot 15 includes two literal asterisks after `state` and a query string. Do not describe it as a clean `/api/state` test.
 - This set does not include a separate selected view for the reworded secret question after cleanup.
-- Full SHA-256 hashes for every PNG are in [SHA256SUMS.txt](SHA256SUMS.txt). Each copied PNG was compared with its original after copying.
+- Full SHA-256 hashes for every PNG are in [SHA256SUMS.txt](SHA256SUMS.txt). Each copied PNG was compared with its original after copying. To check them from the repository root, run `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)`; the manifest holds bare file names, so it must run inside this folder. All 16 passed in the documentation audit of October 28, 2026.
+- Screenshot 14 shows the `/api` path, not `/api/state`.
+- Screenshots 01 to 03 are full-page captures saved at 632–672 px wide, but they show the desktop layout (three explainer columns side by side), so they were taken in a wider window and scaled. They say nothing about phone layouts; an emulated 375 px viewport overflows horizontally (DEPLOYMENT.md, "Known issues and gaps").
 
 ## Original attachment names
 

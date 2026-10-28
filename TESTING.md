@@ -9,7 +9,7 @@ This file covers what to run, what each result shows, what has actually been ver
 - No packages are needed for the core suite. The 6 SDK-dependent tests in `tests/test_telemetry.py` need the optional `sentry-sdk==2.72.0`, installed only into a virtualenv: `python3.12 -m venv .venv && .venv/bin/python -m pip install "sentry-sdk==2.72.0"`. Without it they are **skipped** with the reason "sentry-sdk not installed; optional extra".
 - Run every command from the application directory (the one containing `pyproject.toml`). The tests import `ghostcache` from the current directory.
 - Live evaluation also needs Ollama running locally, with `gemma4:e2b-it-qat` (or your `--model`) pulled.
-- **Node.js is optional.** The UI contract tests in `tests/test_ui.py` call `node`. If `node` is not on PATH, those six tests (and the walkthrough syntax test in `tests/test_site.py`) are **skipped** with the reason "Node.js is not on PATH", and the suite still passes. Verified with Node v22.23.4; no npm packages are used.
+- **Node.js is optional.** Six of the seven UI contract tests in `tests/test_ui.py` call `node`; the seventh, `test_paraphrase_fallback_matches_backend_question`, is pure Python. If `node` is not on PATH, those six tests (and the walkthrough syntax test in `tests/test_site.py`) are **skipped** with the reason "Node.js is not on PATH", and the suite still passes. Verified with Node v22.23.4; no npm packages are used.
 
 ## Commands
 
@@ -43,6 +43,30 @@ python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
 ```
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
+
+## Documentation audit (October 28, 2026, about 22:00 IST)
+
+A documentation-only audit of every Markdown file against the code, saved evidence and the public site. No application code, tests, deployment configuration, generated data, reports, screenshots or checksum manifests were changed. No live model was run, no dependency was installed, and nothing was deployed.
+
+| Command or check | Result |
+| --- | --- |
+| `.venv/bin/python -B -m unittest discover -s tests` (Python 3.12.6, `sentry-sdk` 2.72.0, Node v22.23.4 on PATH) | `Ran 91 tests in 1.245s` … `OK`, none skipped |
+| `python3.12 -B -m unittest discover -s tests` (no `sentry-sdk`) | `Ran 91 tests in 3.135s` … `OK (skipped=6)`; all 6 skips are "sentry-sdk not installed; optional extra" |
+| Per-module count from the verbose run | store 11, controller 23, HTTP 9, providers/CLI 12, UI 7, telemetry 9, walkthrough 20 |
+| `python3.12 -B -m ghostcache evaluate --mode fixture --output <new scratch path outside the repo>` | exit 0; mode `fixture`, model "Deterministic fixture — no AI call", `passed: true`, 10/10 checks |
+| `python3.12 -B scripts/export_site_data.py --check` | `site/data/evidence.json matches the selected reports.`, exit 0 |
+| `node --check` on `web/app.js`, `site/walkthrough.js`, `tests/ui/app_contract.js` | all pass |
+| `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)` | 16 of 16 OK |
+| The four saved reports, recomputed from `results/*.json` | All `passed: true`, 10/10, same stage pattern (14/14/0/6 → 14/13/5/5 → 15/9/0/0). Live model-call sums: 130,650 ms (October 27), 61,325 ms (cold), 22,078 ms (warm); first calls 81,246, 40,407 and 2,278 ms; input/output tokens 3,209/677, 3,198/679 and 3,190/671. These match the figures quoted in the docs |
+| GitHub's public API, `GET /repos/bipul724/GhostCache/actions/runs` and the jobs of run #10 | 10 runs. #1 and #3–#10 succeeded; #2 was cancelled (duplicate of #3's push). Run #10 (`26a1c3e`, the current `main`) had all seven steps succeed, and its 2,110-byte report artifact exists. Test counts are in the logs, which need authentication and were not read |
+| `curl` on the public site | `/`, `/index.html`, `/style.css`, `/walkthrough.js`, `/data/evidence.json`: 200. Exact `/api/state`, `/api` and `/favicon.ico`: 404. Headers on `/` and `/data/evidence.json`: the `render.yaml` CSP, `X-Content-Type-Options: nosniff`, `Referrer-Policy: no-referrer`, `X-Frame-Options: DENY`; `/data/evidence.json` also `Cache-Control: no-cache`. `Last-Modified` October 28, 14:02:51 UTC |
+| SHA-256 of the four deployed files against `site/` at `26a1c3e` | identical (`site/` is unchanged since `8013d01`) |
+| Headless Chrome at 1280×900, temporary profile, Chrome DevTools Protocol | Banner correct, no load error; 3 run buttons (each "10 / 10 checks passed"), 5 stage buttons, 6 question buttons all change the view; requests: the page, `style.css`, `walkthrough.js`, `data/evidence.json` and the browser's `/favicon.ico` (404, one console error) |
+| The same page with an emulated 375×812 viewport (`Emulation.setDeviceMetricsOverride`, mobile and desktop modes) | **Horizontal overflow.** At the tested 375 px viewport, the document's scrollWidth was 573 px, while the layout viewport stayed 375 px (mobile mode; desktop mode reported 360 px after its scrollbar). The three explainer articles were 557 px wide: below 980 px, `.explainers` uses `grid-template-columns:1fr`, and the `white-space:pre` command block sets the column's minimum width. Controls still worked. This is headless Chrome emulation; the exact width at which overflow starts can vary with browser and font metrics, and no real phone was tested (T-E7) |
+| Relative links and heading anchors in every Markdown file in the repository (scripted, after the edits) | 148 relative links checked, including the workspace handoff; 0 broken; every repository link resolves to a file inside the repository, so it also works on GitHub |
+| The verification block in [DEPLOYMENT.md](DEPLOYMENT.md), run as written from the repository root | 200, 200, 404; the four headers; the served and local `site/data/evidence.json` have the same SHA-256 |
+
+**Contradiction found.** The T-E2 record below says the in-app browser's 375×812 phone preset showed no horizontal overflow. The CSS rule above was the same then, and the emulated check reproduces the overflow, so that earlier result is not relied on. Phone usability remains unverified (T-E6).
 
 ## Render deployment T-E3 (October 28, 2026)
 
@@ -90,7 +114,7 @@ The static walkthrough in `site/`, its export script and the Render Blueprint (D
 - **Public safety:** the public data matches none of the export's `FORBIDDEN` patterns, and `render()` refuses four examples (a home-directory database path, a Sentry DSN, the local Ollama URL and an email address). The patterns are a selected, additional safeguard, not comprehensive secret detection, so they do not prove the data holds no other private string; `site/` holds exactly four files; local asset paths are relative and exist, and external links go only to the GitHub repository; the script's only `fetch` is `data/evidence.json`, with no `/api/`, Ollama port, localhost, storage, `innerHTML` or `eval`.
 - **Blueprint:** one static site publishing `./site`, with no start command, plan, environment variables or database, and a CSP whose `connect-src` is `'self'`.
 
-**Not verified:** a real Render deployment (T-E3), the Blueprint being accepted by Render, the headers on a deployed site, other browsers, and assistive technology. *(The deployment, the Blueprint and the deployed headers were verified later on October 28; see "Render deployment T-E3". Other browsers and assistive technology remain unverified.)*
+**Not verified:** a real Render deployment (T-E3), the Blueprint being accepted by Render, the headers on a deployed site, other browsers, and assistive technology. *(The deployment, the Blueprint and the deployed headers were verified later on October 28; see "Render deployment T-E3". Other browsers and assistive technology remain unverified.)* *(Correction, documentation audit: the "no horizontal page overflow at phone width" result in the table above was not reproduced; in headless Chrome emulation at the tested 375 px viewport, the document's scrollWidth was 573 px. See "Documentation audit" above and T-E7.)*
 
 ## Real Sentry traces T-D3 (October 28, 2026)
 
@@ -436,7 +460,7 @@ The top-level keys are `project`, `mode`, `model`, `passed`, `checks[]`, `oracle
 - **Retained-fact checks.** A live failure on `07:40` or `Lantern Hall` can be a model answer failure even though the surviving content is intact. Look at the answer text and the stored artifacts before deciding which it is. A correct answer that withholds the marker does **not** excuse marker rows left in storage.
 - **Provider errors**, including malformed model output, make the CLI write `{"passed": false, "error": …, "note": "No silent switch to fixture mode."}` and exit 1. That is a failed run, never a "no leak" result.
 - **Unexpected exceptions** are treated as programming defects. They are deliberately not caught: they crash with a traceback, exit non-zero and write no report. Record them anyway, and fix the defect rather than widening the catch.
-- **Timing.** Events have time-of-day stamps only. In the saved live run the first call took 81,246 ms, probably model load (an inference that has not been measured), and the other 10 calls took 2.4–6.8 s each.
+- **Timing.** Events have time-of-day stamps only. Each event's `duration_ms` is one model call (or fixture operation), not wall-clock time for the run. In the October 27 live run the first call took 81,246 ms and the other 10 took 2.4–6.8 s each; in the October 28 cold and warm runs the first call took 40,407 ms and 2,278 ms (see "Real Sentry traces T-D3"). Model loading is the likely cause of a slow first call, but it has not been measured.
 
 ## Browser verification
 
@@ -454,6 +478,8 @@ The top-level keys are `project`, `mode`, `model`, `passed`, `checks[]`, `oracle
 - This was **not** Browserbase.
 
 **Not performed:** browser QA in live mode, assistive-technology testing, and cross-browser testing.
+
+The public walkthrough (`site/`) is a separate page; its browser checks are recorded above in "Public recorded walkthrough T-E2", "Render deployment T-E3" and "Documentation audit", and in [DEPLOYMENT.md](DEPLOYMENT.md).
 
 **Manual checklist for a new browser pass:**
 
@@ -476,19 +502,20 @@ The top-level keys are `project`, `mode`, `model`, `passed`, `checks[]`, `oracle
 - **Steps:** runs the unit suite, then a fresh fixture evaluation into `$RUNNER_TEMP`, and uploads only that JSON (`ghostcache-synthetic-evaluation`, kept 3 days).
 - **The evaluation still runs if the tests fail**, as long as Python setup succeeded.
 - **Telemetry step (added October 28, 2026; first ran on GitHub in [run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599), which succeeded):** after the steps above, "Check telemetry privacy with the optional Sentry SDK" installs `sentry-sdk==2.72.0` and runs `python -m unittest tests.test_telemetry -v`. The earlier steps run without the SDK, so its 6 tests skip there. No DSN or secret is used, and nothing contacts Sentry.
-- **UI contract tests:** they run inside the same `unittest` command, so they need `node` on the runner's PATH. Otherwise they are skipped and the job still passes. Hosted run #1 confirmed that the runner provides Node: all 7 UI tests ran and passed. The workflow was not changed.
+- **UI contract tests:** they run inside the same `unittest` command, so six of the seven need `node` on the runner's PATH (the seventh is pure Python). Otherwise those six are skipped and the job still passes. Hosted run #1 confirmed that the runner provides Node: all 7 UI tests ran and passed. The workflow was not changed.
 - **Security settings:** read-only contents, no persisted credentials, actions pinned to commit SHAs, no secrets, no model and no live inference.
 
 **Status:**
 
 - The commands were verified locally.
 - **Done:** hosted [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026 (see "Hosted CI run #1" above). [Run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599) passed the same day with the telemetry step (see "Hosted CI run #5").
+- **Later runs (checked in the documentation audit through GitHub's public API):** runs #6 to #10 also succeeded, the latest being [run #10](https://github.com/bipul724/GhostCache/actions/runs/40725375114) on `26a1c3e` with all seven steps successful. Of the ten runs, only #2 did not succeed; it was a cancelled duplicate. The logs were not read, so hosted test counts are recorded only for runs #1 and #3 (62 tests each).
 - `ghostcache/` is the repository root, so the workflow was discovered.
 - Evidence: the run URLs are recorded. Run #1's report was not downloaded; run #3's report was downloaded and inspected (10 of 10 checks, `passed: true`; see "Hosted CI runs #2 and #3" above).
 
 ## Collecting new evidence without overwriting the old
 
-- Keep `results/fixture.json`, `results/live-gemma.json` and the screenshots byte-for-byte. Check them with `shasum -a 256 results/*.json`.
+- Keep everything in `results/` and `screenshots/` byte-for-byte. Check the reports with `shasum -a 256 results/*.json` against the hashes recorded in this file, and the deployment screenshots with `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)` (run inside `screenshots/`, because the manifest holds bare file names).
 - Write new runs to new paths, e.g. `results/live/2026-10-28-run-01.json`. `--output` creates missing folders.
 - Save **failed** reports as well, and summarise every run you did, not just the passing ones.
 - Record outside the report (until T-A8 adds metadata):
@@ -511,6 +538,7 @@ The current tests do **not** cover:
 - `serve` startup failure other than live transport errors and the missing-SDK check (the `evaluate` success path, exit 0, is now covered by `tests/test_telemetry.py`);
 - real Sentry ingestion: the tests use an in-memory transport, so the SDK's network transport is exercised only by the user's manual traced runs of October 28, 2026 (see "Real Sentry traces T-D3"), not by any automated test or CI step;
 - the `summary.rebuild_failed` path;
+- the deployed walkthrough: `tests/test_site.py` checks `site/` and `render.yaml` offline, but no automated test or CI step requests the public URL, its headers or its layout (the deployment checks above were manual, read-only runs);
 - crash safety or durability of reset publication (process kill or power loss mid-copy), concurrent writers from other processes, and Windows;
 - the UI's handling of `storage_failed` (see architecture.md known discrepancy 4);
 - large or real corpora.

@@ -33,7 +33,7 @@ The evidence for each record is code, tests, saved results or the workspace hand
 - **Consequences:**
   - No install step, and the CI job is simple.
   - It has fewer features than a framework, such as no auth or sessions.
-  - Future Sentry, Backboard or Stagehand work will add the first dependencies and must be optional.
+  - Future Sentry, Backboard or Stagehand work will add the first dependencies and must be optional. *(Outcome, October 28, 2026: Sentry added the only one so far, `sentry-sdk==2.72.0`, as the optional `sentry` extra (D-17). `dependencies = []` is unchanged; Backboard and Stagehand were dropped.)*
   - *Inferred tradeoff:* a smaller attack and supply-chain surface, at the cost of hand-written HTTP handling.
 - **Evidence:** `pyproject.toml`; the imports in `ghostcache/`.
 
@@ -55,7 +55,7 @@ The evidence for each record is code, tests, saved results or the workspace hand
   - Requests: stateless, temperature 0, with a JSON schema for `{text, citations}`.
 - **Consequences:**
   - No hosted inference cost.
-  - Speed depends on the laptop (the first call took about 81 s in the saved run).
+  - Speed depends on the laptop (the first call took about 81 s in the saved run). *(Later runs, October 28: 40.4 s for the first call after an Ollama server start, 2.3 s with the model already loaded; the cause is inferred, not measured. TESTING.md, "Real Sentry traces T-D3".)*
   - A public cloud host cannot reach this model.
   - Gemma's weights are open-weight under their own terms, not MIT.
 - **Evidence:** `providers.py`; `results/live-gemma.json`.
@@ -206,7 +206,7 @@ The evidence for each record is code, tests, saved results or the workspace hand
   - One person can still win at most one prize, so more categories are not independent chances.
   - Writing quality carries the most weight in judging.
 - **Evidence:** [CATEGORIES.md](CATEGORIES.md); [tasks.md](tasks.md).
-- **Amendment (October 28, 2026): three categories.** The submission enters only the three categories with working use and evidence: Gemma, GitHub (through Actions) and Sentry Agent Tracing. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire targets are dropped, and none of them has code or evidence. Render hosts the public walkthrough (D-13) but is not added to the category list; that would need a separate decision after a verified deployment. The original seven-target text above is kept as history.
+- **Amendment (October 28, 2026): three categories.** The submission enters only the three categories with working use and evidence: Gemma, GitHub (through Actions) and Sentry Agent Tracing. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire targets are dropped, and none of them has code or evidence. Render hosts the public walkthrough (D-13) but is not added to the category list; that would need a separate decision after a verified deployment. The original seven-target text above is kept as history. *(Update, October 28, 2026: the deployment was verified (T-E3), and no decision to add Render was made, so it remains hosting only.)*
 
 ## D-15. Publish `ghostcache/` itself as the repository root
 
@@ -234,7 +234,7 @@ The evidence for each record is code, tests, saved results or the workspace hand
 
 ## D-18. The Backboard comparison is stateless and optional
 
-- **Status:** Proposed
+- **Status:** Proposed; **not pursued**: the Backboard target was dropped on October 28, 2026 (D-14 amendment). The record is kept as history
 - **Context:** Comparing models through Backboard must not bring opaque provider memory into the deletion claim.
 - **Decision:** An optional provider used only by a comparison command. Requests are stateless and carry only the supplied synthetic context, with caps on requests, tokens and cost. Ollama stays the local path.
 - **Consequences:** Results report each model's run and are not an "unlearning leaderboard".

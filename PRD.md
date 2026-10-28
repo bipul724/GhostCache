@@ -3,8 +3,8 @@
 | Field | Value |
 | --- | --- |
 | Version | 0.1.0 (the `pyproject.toml` and `ghostcache/__init__.py` version) |
-| Document date | October 27, 2026 |
-| Status | The MVP below is implemented. Category and public-demo requirements are not. |
+| Document date | October 27, 2026; status reviewed in the documentation audit of October 28, 2026 |
+| Status | The MVP below is implemented. The public demo is deployed as a static recorded walkthrough (D-13, T-E3). The three chosen categories (Gemma, GitHub through Actions, Sentry) have working use and evidence, but no DEV post exists yet, as a draft or published (T-I2, T-I4). |
 | Source of truth | The code in `ghostcache/`, `web/` and `tests/` defines what is implemented. The workspace handoff `context.md` records intent and history. Where they differ, this document follows the code and says so. |
 
 ## 1. Problem
@@ -93,7 +93,7 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 | FR-13 | No silent fallback | An unavailable model, provider error or malformed response never produces fixture output in live mode. | Done (`test_live_request_never_silently_uses_fixture`, `test_malformed_live_output_is_a_502_without_fixture_fallback`, the missing-model 502 test) |
 | FR-14 | Interactive verification | `POST /api/verify` returns 8 checks: the baseline exposure plus 7 cleanup and preservation checks. | Done |
 | FR-15 | End-to-end CLI evaluation | `evaluate` runs baseline, source-only, reworded leak, cascade and verify, giving **10** checks. It writes an optional JSON report and exits 0 or 1. | Done (saved reports; `test_malformed_model_output_exits_1_with_failed_report`). Provider errors, including malformed output, give a failed report and exit 1. Other exceptions are treated as defects and deliberately propagate with a traceback. |
-| FR-16 | Browser UI | Guided steps, graph, inspector, question box and shortcuts, citations, trace, checks, ledger, mode banner, busy state, responsive layout. | Done for the listed parts (T-A2 to T-A4, October 27): the trace shows the supplied context from `parent_ids`, the echo step uses the reworded question, and the fixture banner says "Deterministic rules. No model inference." Checked by offline contract tests (`tests/test_ui.py`); no new browser QA. Open: no dedicated UI state for `storage_failed` (architecture.md discrepancy 4). |
+| FR-16 | Browser UI | Guided steps, graph, inspector, question box and shortcuts, citations, trace, checks, ledger, mode banner, busy state, responsive layout. | Done for the listed parts (T-A2 to T-A4, October 27): the trace shows the supplied context from `parent_ids`, the echo step uses the reworded question, and the fixture banner says "Deterministic rules. No model inference." Checked by offline contract tests (`tests/test_ui.py`) and a one-off manual browser check on October 27/28 (TESTING.md, UI fixes section). Open: no dedicated UI state for `storage_failed` (architecture.md discrepancy 4, T-A10); `results/*.jpg` still show the pre-fix wording (T-A9). |
 | FR-17 | Mode visibility | Every answer and the banner show fixture vs live, and having a model installed is shown separately from the active mode. | Done (UI and `state.provider`) |
 | FR-18 | Reset | A successful reset replaces the demo database's contents in place and all run state (store, scenario, provider, events, stage, `seed_checks`, generation). A failed reset publishes nothing: the previous experiment and its checks stay current, and the database stays writable. An existing file, including an unrelated SQLite or non-database file, keeps its bytes when the failure happens before or during the copy. The one exception is a write check that fails after a completed first copy (D-20). No new file is left behind, and no unrelated file is deleted. | Done (T-A6, reopened and completed October 27 by D-20; `ResetFailureTests` and `PublicationTests` in `tests/test_app.py`) |
 | FR-19 | Storage failure is explicit | If the database cannot be verified after a failed reset (lineage unchanged and still writable), the controller does not claim restoration. It enters `storage_failed` with an empty experiment, returns HTTP 503 "Experiment storage could not be restored; reset to recover.", refuses `ask`, `delete` and `verify`, and recovers on the next reset. | Done (D-20; `test_unverifiable_restore_enters_storage_failed_then_recovers`, `test_unrestorable_storage_is_a_503_and_the_next_reset_recovers`) |
@@ -106,9 +106,9 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 | NFR-02 | Offline unit tests (no network or model) | Met: provider status is mocked in tests |
 | NFR-03 | Localhost-only server with Host and Origin checks, JSON-only POST, size limits and security headers | Met for the local prototype |
 | NFR-04 | No raw content in server logs | Met: the access log records method, path and status, and unexpected errors record only the exception class |
-| NFR-05 | Deterministic fixture evaluation suitable for CI | Met locally and on GitHub ([Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382), October 28, 2026). |
+| NFR-05 | Deterministic fixture evaluation suitable for CI | Met locally and on GitHub ([Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382), October 28, 2026; every later run through #10 succeeded except a cancelled duplicate). |
 | NFR-06 | Concurrency safety for one local user | Controller and store `RLock`s plus SQLite transactions. Not a multi-user or distributed guarantee. |
-| NFR-07 | Accessibility basics | Labels, `aria-*`, `role=status/alert`, reduced-motion styles. No formal audit has been done. |
+| NFR-07 | Accessibility basics | Labels, `aria-*`, `role=status/alert`, reduced-motion styles. No formal audit has been done, of the local UI or of the public walkthrough (T-E6). |
 | NFR-08 | Honest labelling | Fixture vs live, broken control, and the scope text in reports and the UI |
 
 ## 10. Privacy and data boundaries
@@ -124,7 +124,7 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 
 | Implemented MVP | Future (not implemented) |
 | --- | --- |
-| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 91 tests (7 UI contract tests and 1 walkthrough syntax test need Node; 6 telemetry tests need the optional `sentry-sdk`), optional metadata-only Sentry tracing with real traces from one fixture and two live runs (October 28, 2026), CI workflow file, a public repository with successful hosted Actions runs (October 28, 2026), a static recorded walkthrough of the live runs with a Render Blueprint (implemented and tested locally, and deployed on Render at <https://ghostcache-walkthrough.onrender.com/>, October 28, 2026; recorded runs only, no live inference) | Open consistency fixes (T-A7, T-A8, the rest of T-A9), repeated live evaluations with metadata, the demo video and the DEV submission (T-I1 to T-I4). Dropped on October 28, 2026: the .tech domain, a Backboard comparison, a Browserbase run, ElevenLabs narration and Entire checkpoints |
+| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 91 tests (6 of the 7 UI contract tests and 1 walkthrough syntax test need Node, while the seventh UI test is pure Python; 6 telemetry tests need the optional `sentry-sdk`), optional metadata-only Sentry tracing with real traces from one fixture and two live runs (October 28, 2026), CI workflow file, a public repository with successful hosted Actions runs (October 28, 2026), a static recorded walkthrough of the live runs with a Render Blueprint (implemented and tested locally, and deployed on Render at <https://ghostcache-walkthrough.onrender.com/>, October 28, 2026; recorded runs only, no live inference) | Open consistency fixes (T-A7, T-A8, the rest of T-A9, T-A10), repeated live evaluations with metadata, the walkthrough's narrow-screen fix and device checks (T-E6 to T-E8), the demo video and the DEV submission (T-I0 to T-I4). Dropped on October 28, 2026: the .tech domain, a Backboard comparison, a Browserbase run, ElevenLabs narration and Entire checkpoints |
 
 ## 12. Success measures
 
@@ -148,7 +148,7 @@ A fixture pass supports the software invariants only. A live pass supports only 
 - Python 3.12+ standard library and SQLite.
 - Optional: `sentry-sdk==2.72.0` (the `sentry` extra), only for tracing.
 - Ollama with `gemma4:e2b-it-qat` (about 4.3 GB) for live mode, on the user's laptop.
-- GitHub (repository and Actions) for CI evidence. Set up: [bipul724/GhostCache](https://github.com/bipul724/GhostCache), with one successful hosted run (October 28, 2026).
+- GitHub (repository and Actions) for CI evidence. Set up: [bipul724/GhostCache](https://github.com/bipul724/GhostCache), with successful hosted runs from October 28, 2026 (run #1, and every later run through #10 except a cancelled duplicate).
 - External services in use: Sentry (implemented; real traces from a 14-day Business trial, October 28, 2026). Hosting: Render, for a static site only (`render.yaml`; deployed October 28, 2026). Dropped on October 28, 2026: a .tech domain registrar and its DNS, Backboard, Browserbase, ElevenLabs, Entire. *(Originally listed as planned on October 27, 2026; kept as history.)*
 
 ## 14. Risks
@@ -157,8 +157,8 @@ A fixture pass supports the software invariants only. A live pass supports only 
 | --- | --- |
 | Seen as an obvious bug in a Halloween costume | Present the provenance DAG, the preservation controls, the bounded claims and the prior art honestly |
 | Overclaiming (unlearning, global deletion, categories entered without evidence; the submission enters three) | Status labels everywhere; the rules in [AGENTS.md](AGENTS.md) |
-| One live run is weak evidence | Repeated live runs with saved failures (T-C1) |
-| A public demo exposes a single shared, resettable state | Decided (D-13): a static recorded walkthrough in `site/`, never the current server (T-E2, done locally) |
+| Three live runs are weak evidence | Repeated live runs with saved failures (T-C1) |
+| A public demo exposes a single shared, resettable state | Decided (D-13): a static recorded walkthrough in `site/`, never the current server (T-E2; deployed on Render, T-E3) |
 | Free tiers change or are already used up | Recheck before each integration; keep fixture and local paths working |
 | Laptop memory and latency in live mode | Measure (T-C2); fixture mode for CI and demos |
 | Conflicting deadline timestamps | Internal target October 30, 23:00 IST (see §16) |
@@ -169,7 +169,7 @@ A fixture pass supports the software invariants only. A live pass supports only 
 - ~~Q2. Public demo design: recorded replay or simulation, or a redesigned hosted service with per-session isolation?~~ Resolved October 28, 2026: a static recorded walkthrough (D-13, T-E2).
 - ~~Q3.~~ *(Dropped October 28, 2026 with the .tech category.)* Was `bipulchamoli.tech` claimed through the qualifying Hacktoberfest promo? This is unverified. Which subdomain should be used (`ghostcache.bipulchamoli.tech` has been suggested), and where is DNS actually managed?
 - ~~Q4. Do the user's Sentry, Backboard and Browserbase accounts still have the free allowances?~~ Sentry recorded October 28, 2026 (T-D1); Backboard and Browserbase dropped.
-- Q5. Should `context.md` (or a cleaned copy) be published inside the repository?
+- Q5. Should `context.md` (or a cleaned copy) be published inside the repository? (Still open: D-16, T-B3. The repository documentation is written to stand on its own without it.)
 - ~~Q6. Should reset be made atomic, or should a failure be shown as a distinct "failed seed" state?~~ Resolved: a failed reset keeps the previous experiment (D-19, superseded by D-20's in-place backup publication). A distinct `storage_failed` state exists only for the case where the restored database cannot be verified.
 
 ## 16. Category-related requirements (not MVP)
@@ -194,7 +194,7 @@ These apply only if the category is entered. **As of October 28, 2026 the submis
   - A new project.
   - Meaningful open AI.
   - A DEV post using the template and the tags `devchallenge` and `hf26challenge`.
-  - A demo: a deployed link or a video.
+  - A demo: a deployed link or a video. *(A deployed link now exists: the recorded walkthrough, which must be labelled as recorded, not live. The video is not made yet, T-I1.)*
   - A link to the code repository.
   - The "Why does open innovation matter?" section.
   - Every category that was genuinely used, listed in the post.
