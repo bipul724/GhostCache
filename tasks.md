@@ -1,6 +1,6 @@
 # GhostCache tasks
 
-Last updated October 27, 2026. The list is ordered: work top to bottom unless a dependency says otherwise.
+Last updated October 28, 2026 (public walkthrough and the three-category scope). The list is ordered: work top to bottom unless a dependency says otherwise.
 
 **Priority:**
 
@@ -46,6 +46,8 @@ Last updated October 27, 2026. The list is ordered: work top to bottom unless a 
 | T-D2: optional, metadata-only Sentry tracing, off unless `GHOSTCACHE_SENTRY_DSN` is set (October 28) | `ghostcache/telemetry.py` (`ALLOWED_KEYS`); spans in `app.py` and `__main__.py`; `tests/test_telemetry.py` (9 tests: 3 always run, 6 need `sentry-sdk`), including a privacy test over the serialized envelopes; all 6 SDK tests fail with the instrumentation removed; `.env.example` and DECISIONS.md D-17 updated. Suite `Ran 71 tests … OK`. Done before T-D1 because it needs no account. Its CI step first ran on GitHub in [run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599) (push of `7abcc11`), which succeeded. Real traces: see T-D3. |
 | T-D3: real Sentry traces and one explained finding (October 28, IST) | Traced evaluations by the user: fixture at 09:10 (10/10), live cold at 09:18 (10/10, trace `dd21f76b3293450b84b0ad5ca45961dd`), live warm at 09:19 (10/10, trace `fb1530272ecd481399aa77f95d505dfa`); three 09:16 attempts failed first because Ollama was not running. Files: `results/sentry-live-cold.json`, `results/sentry-live-warm.json` and seven `results/sentry-*.jpg` screenshots, including `sentry-failed-run.jpg`: one failed attempt's trace `7e075ad683f247d687b59dddbb038ce5`, a single root span with `internal_error` and `error.type: ProviderError`. **Finding:** the first model call after an Ollama server start took 40.45 s cold against 2.28 s warm and accounts for most of the 1.03 min against 22.40 s; later calls are 1–3 s in both. Model loading is the likely cause but is **inferred, not measured** (no `load_duration` recorded). Second finding: the source-only leak is visible through `answer_contains_marker: true` and the synthetic `context_ids`, with no content exported. Done a few hours before T-D1 (the plan and usage were recorded the same day). See README.md, "What the real traces showed", and TESTING.md, "Real Sentry traces T-D3". |
 | T-D1: Sentry plan and span usage recorded (October 28) | Read from the user's Sentry screenshots (Subscription overview; Stats & Usage, Errors, last 14 days): **Business Plan Trial** ("Trial plan"), 14 days left on October 28, 2026; no billing details and no payment method on file. Usage period Oct 28 – Nov 10, 2026: **120 of 100M spans** used, 0 of 1M errors, every other feature 0. Stats & Usage: 0 errors accepted, filtered, rate-limited or invalid, as expected because `telemetry.py` drops every error event. 120 spans is consistent with three completed evaluations at 39 spans each (117) plus one root span from each of the three failed 09:16 IST attempts (3); the failed-attempt traces were not inspected individually. Not the free Developer plan the original plan targeted; that plan's limits and what happens when the trial ends were not checked. See TESTING.md, "Sentry plan and usage T-D1". |
+| T-E1: public demo design chosen (October 28) | DECISIONS.md D-13 accepted: option A, a static walkthrough of recorded live runs; the localhost app is still never exposed. |
+| T-E2: public recorded walkthrough implemented and tested locally (October 28) | `site/` (static HTML, CSS, JS) labelled "Recorded local Gemma evaluation — no live inference"; `site/data/evidence.json` exported by `scripts/export_site_data.py` from `results/sentry-live-cold.json`, `results/sentry-live-warm.json` and `results/live-gemma.json` (allowlisted fields, source SHA-256s, fixture reports refused); `render.yaml` static-site Blueprint publishing `./site`. `tests/test_site.py` (20 tests). Suite `Ran 91 tests … OK` with `.venv`, `OK (skipped=6)` with plain Python 3.12. Checked in the in-app browser at desktop and phone widths: all controls work, no console errors, and only `style.css`, `walkthrough.js` and `data/evidence.json` load. **Not deployed** (T-E3). |
 | T-A1: reconciled evaluation instructions and title cleanup wording (October 27 review) | `EVALUATION.md` uses Python 3.12 and fresh report names; describes neutral replacement titles, evaluator retention, eight versus ten checks and the known parsing gap |
 
 ## A. Consistency and hardening
@@ -74,17 +76,15 @@ Last updated October 27, 2026. The list is ordered: work top to bottom unless a 
 
 No open tasks. T-D1, T-D2 and T-D3 are done (October 28, 2026); see "Completed, with evidence".
 
-## E. Public demo: Render and a .tech domain (targets)
+## E. Public demo hosting (Render; not an entered category)
 
 | ID | Pri | Task | Depends on | Acceptance criteria | Evidence required |
 | --- | --- | --- | --- | --- | --- |
-| T-E1 | P0 | Choose the public design: recorded replay or simulation, versus a redesigned per-session service. The current server must **not** be exposed unchanged. | User decision | Decision recorded (DECISIONS.md D-13) | Decision record |
-| T-E2 | P1 | Implement the chosen design, with "recorded run", "simulation" or "live" clearly labelled | T-E1 | Works without the laptop; never implies a new Gemma call when replaying | Tests and screenshot |
-| T-E3 | P1 | Deploy on the Render free tier | T-E2, T-B1 | Reachable HTTPS Render URL; behaviour on cold start documented | URL and Render dashboard screenshot |
-| T-E4 | P1 | Verify that `bipulchamoli.tech` was claimed through the qualifying Hacktoberfest promo, and where its DNS is actually hosted | none | Promo or registration evidence in hand | Screenshot or email (kept private if needed) |
-| T-E5 | P1 | Point a subdomain (suggested `ghostcache.bipulchamoli.tech`) at the Render service, leaving the existing apex and `www` untouched | T-E3, T-E4 | HTTPS loads the demo; the apex is unchanged | URL; DNS record screenshot |
+| T-E3 | P1 | Deploy the static walkthrough on Render from `render.yaml` (**needs the user's Render account**; push `main` first). Steps: README, "Public recorded walkthrough" | T-E2 (done) | Reachable HTTPS `onrender.com` URL; banner, controls and headers checked as listed in the README; `/api/state` returns 404 | URL and a screenshot of the deployed page |
+| ~~T-E4~~ | — | **Dropped October 28, 2026** (three-category scope, D-14): verify the `bipulchamoli.tech` promo claim and DNS host | — | — | — |
+| ~~T-E5~~ | — | **Dropped October 28, 2026:** point a `.tech` subdomain at the Render site | — | — | — |
 
-## F. Backboard comparison (target)
+## F. Backboard comparison — dropped October 28, 2026 (three-category scope, D-14); kept as history
 
 | ID | Pri | Task | Depends on | Acceptance criteria | Evidence required |
 | --- | --- | --- | --- | --- | --- |
@@ -92,14 +92,14 @@ No open tasks. T-D1, T-D2 and T-D3 are done (October 28, 2026); see "Completed, 
 | T-F2 | P1 | Add an optional provider used only by a comparison command, with stateless calls, request, token and cost caps, and synthetic data | T-F1, T-A5 | Ollama path unchanged; no provider-side memory; tests with mocks | Tests |
 | T-F3 | P1 | Run 2–3 models on the same corpus and checks; report disclosure in the broken control, cleanup, retained facts, latency, tokens and cost, and failures | T-F2 | One report per model; not described as an "unlearning leaderboard" | Reports and a summary table |
 
-## G. Browserbase (stretch target)
+## G. Browserbase — dropped October 28, 2026 (three-category scope, D-14); kept as history
 
 | ID | Pri | Task | Depends on | Acceptance criteria | Evidence required |
 | --- | --- | --- | --- | --- | --- |
 | T-G1 | P2 | Check the Browserbase $0-plan allowances on the user's account | none | Allowances noted | Note |
 | T-G2 | P2 | Stagehand script drives seed → ask → source-only → echo → cascade → verify on the public demo, asserting what the UI shows | T-E3, T-G1 | Asserts marker shown, then echoed, then gone; retained facts present; labelled replay or live | Session recording or ID; script output |
 
-## H. Optional: ElevenLabs and Entire
+## H. ElevenLabs and Entire — dropped October 28, 2026 (three-category scope, D-14); kept as history
 
 | ID | Pri | Task | Depends on | Acceptance criteria | Evidence required |
 | --- | --- | --- | --- | --- | --- |
@@ -112,6 +112,6 @@ No open tasks. T-D1, T-D2 and T-D3 are done (October 28, 2026); see "Completed, 
 | --- | --- | --- | --- | --- | --- |
 | T-I0 | P0 | Confirm the real deadline with the organizers or platform | none | One authoritative timestamp recorded | Link or message |
 | T-I1 | P0 | Record a short demo video: failure → lineage → cleanup → retained answers, with the mode stated | T-A2, T-A3, T-A4 | Under about 3 minutes; mode visible; no real data | Video link |
-| T-I2 | P0 | Write a DEV draft using the official template (What I Built, Demo, Code, How I Built It, Why Does Open Innovation Matter?, optional My Agent Session and The Spirit of It, Prize Categories), tagged `devchallenge` and `hf26challenge` | T-B1, T-I1 | Includes the broken-control disclosure, prior art, scope limits and real numbers; lists **only** completed categories, each with one evidence item; accurate AI-assistance disclosure | Draft URL (unpublished) |
+| T-I2 | P0 | Write a DEV draft using the official template (What I Built, Demo, Code, How I Built It, Why Does Open Innovation Matter?, optional My Agent Session and The Spirit of It, Prize Categories), tagged `devchallenge` and `hf26challenge` | T-B1, T-I1 | Includes the broken-control disclosure, prior art, scope limits and real numbers; lists **only** the three entered categories (Gemma, GitHub through Actions, Sentry), each with one evidence item; links the walkthrough only if T-E3 is done, labelled as recorded; accurate AI-assistance disclosure | Draft URL (unpublished) |
 | T-I3 | P0 | Final verification: rerun the tests and fixture evaluation, check every link, and check category claims against this file | T-I2 | All pass; no category listed without evidence | Command output and checklist |
 | T-I4 | P0 | Publish, **only after the user authorizes it** | T-I3, T-I0 | Published before the confirmed deadline | Post URL |

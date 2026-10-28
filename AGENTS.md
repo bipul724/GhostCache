@@ -13,9 +13,12 @@ ghostcache/            # application root = Git repository root (bipul724/GhostC
 │   ├── providers.py   # FixtureProvider, OllamaProvider, ProviderError
 │   └── telemetry.py   # optional metadata-only Sentry tracing (ALLOWED_KEYS)
 ├── web/               # index.html, app.js, style.css (no build step)
-├── tests/             # test_store.py, test_app.py, test_http.py, test_providers.py, test_ui.py, test_telemetry.py (unittest)
+├── tests/             # test_store.py, test_app.py, test_http.py, test_providers.py, test_ui.py, test_telemetry.py, test_site.py (unittest)
 │   └── ui/            # app_contract.js: web/app.js contract cases under node:vm (Node built-ins only)
 ├── results/           # saved evidence: do not overwrite
+├── site/              # public static recorded walkthrough (D-13); data/evidence.json is generated
+├── scripts/           # export_site_data.py: results/*.json → site/data/evidence.json
+├── render.yaml        # Render static-site Blueprint for site/ (prepared, not deployed)
 ├── .github/workflows/checks.yml
 └── .local/            # disposable UI database (git-ignored)
 ```
@@ -30,6 +33,7 @@ python3.12 -m ghostcache evaluate --mode fixture --output results/<new-name>.jso
 python3.12 -m ghostcache serve --port 8765             # fixture UI
 python3.12 -m ghostcache serve --port 8765 --mode live # needs Ollama + gemma4:e2b-it-qat
 node --check web/app.js                                # optional JS syntax check
+python3.12 scripts/export_site_data.py --check         # public walkthrough data is up to date
 .venv/bin/python -m unittest discover -s tests -v      # with the optional sentry-sdk in .venv
 ```
 
@@ -78,7 +82,7 @@ node --check web/app.js                                # optional JS syntax chec
 - Use fictional data only. Never add real personal documents to tests, fixtures or results.
 - Never commit secrets. `.env` is git-ignored, and nothing loads it automatically. Document only variables the code actually reads in [.env.example](.env.example).
 - Logs and telemetry may contain only metadata. Every Sentry span attribute must be a key in `ALLOWED_KEYS` in `ghostcache/telemetry.py` and be set through `telemetry.set`, which rejects anything else; Sentry does not filter manually set data. Never add `gen_ai.input.messages`, `gen_ai.output.messages`, `gen_ai.system_instructions`, `gen_ai.memory.query.text` or `gen_ai.memory.records`. Span names are fixed strings. Never send document bodies or titles, questions, answers or markers, and extend the privacy test in `tests/test_telemetry.py` when you add attributes. Keep request content out of URLs.
-- Keep the localhost bind, the Host and Origin checks, the JSON-only POST, the size limits and the security headers. Do not expose the current shared-state server publicly. A public demo needs the design decided in DECISIONS.md D-13.
+- Keep the localhost bind, the Host and Origin checks, the JSON-only POST, the size limits and the security headers. Do not expose the current shared-state server publicly. The public demo is the static recorded walkthrough in `site/` (DECISIONS.md D-13): it must never call `/api/*`, a model or any other service, must keep its "Recorded local Gemma evaluation — no live inference" label, and must show only data exported from recorded live reports by `scripts/export_site_data.py`. Never mix fixture output into it or invent text the reports don't contain. After changing a selected report or the export, rerun the script and commit `site/data/evidence.json`.
 
 ## Evidence
 
@@ -86,6 +90,7 @@ node --check web/app.js                                # optional JS syntax chec
 - Keep failed reports. Never report only the passing runs.
 - Do not claim an integration, deployment, hosted CI run, category entry or benchmark without the evidence listed in [tasks.md](tasks.md). Writing configuration alone does not count.
 - Do not say GitHub Copilot wrote existing code. The GitHub category is targeted through GitHub Actions.
+- The submission enters three categories: Gemma, GitHub (through Actions) and Sentry. Render only hosts the walkthrough; do not add it, or any dropped category, to the submission without a new decision (DECISIONS.md D-14 amendment).
 
 ## Tests
 

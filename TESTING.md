@@ -9,7 +9,7 @@ This file covers what to run, what each result shows, what has actually been ver
 - No packages are needed for the core suite. The 6 SDK-dependent tests in `tests/test_telemetry.py` need the optional `sentry-sdk==2.72.0`, installed only into a virtualenv: `python3.12 -m venv .venv && .venv/bin/python -m pip install "sentry-sdk==2.72.0"`. Without it they are **skipped** with the reason "sentry-sdk not installed; optional extra".
 - Run every command from the application directory (the one containing `pyproject.toml`). The tests import `ghostcache` from the current directory.
 - Live evaluation also needs Ollama running locally, with `gemma4:e2b-it-qat` (or your `--model`) pulled.
-- **Node.js is optional.** The UI contract tests in `tests/test_ui.py` call `node`. If `node` is not on PATH, those six tests are **skipped** with the reason "Node.js is not on PATH", and the suite still passes. Verified with Node v22.23.4; no npm packages are used.
+- **Node.js is optional.** The UI contract tests in `tests/test_ui.py` call `node`. If `node` is not on PATH, those six tests (and the walkthrough syntax test in `tests/test_site.py`) are **skipped** with the reason "Node.js is not on PATH", and the suite still passes. Verified with Node v22.23.4; no npm packages are used.
 
 ## Commands
 
@@ -34,9 +34,41 @@ node tests/ui/app_contract.js context_from_parent_ids
 
 # 6. Every test, including the 6 telemetry tests that need the optional sentry-sdk
 .venv/bin/python -m unittest discover -s tests -v
+
+# 7. Public walkthrough data is up to date with the selected reports (exit 1 if not)
+python3.12 scripts/export_site_data.py --check
+
+# 8. Preview the public walkthrough on a free port (static files only)
+python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
 ```
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
+
+## Public recorded walkthrough T-E2 (October 28, 2026)
+
+The static walkthrough in `site/`, its export script and the Render Blueprint (DECISIONS.md D-13). Everything below was run on October 28, 2026; the site was **not deployed**.
+
+| Command or check | Result |
+| --- | --- |
+| `python3.12 -m unittest discover -s tests` | `Ran 91 tests` … `OK (skipped=6)` (the 6 SDK telemetry tests) |
+| `.venv/bin/python -m unittest discover -s tests` | `Ran 91 tests` … `OK` |
+| `python3.12 -m unittest tests.test_site` | `Ran 20 tests` … `OK` |
+| `python3.12 -m ghostcache evaluate --mode fixture --output <scratch path outside the repo>` | `passed: true`, 10/10 checks |
+| `python3.12 scripts/export_site_data.py --check` | `site/data/evidence.json matches the selected reports.` |
+| `node --check site/walkthrough.js` and `node --check web/app.js` | no output, exit 0 |
+| Local static server (`python3.12 -m http.server 8791 --bind 127.0.0.1 --directory site`) | `/`, `/index.html`, `/style.css`, `/walkthrough.js` and `/data/evidence.json` return 200 with the right content types; `/api/state` returns 404 |
+| In-app browser, 1440×900 and the 375×812 phone preset | Banner shown; all three run buttons, five stage buttons and six question buttons work; stage text, counts, memory-trail statuses and answers match the cold report (for example, after cleanup: `d-vault` deleted, `c-vault`, `s-vault`, `s-mixed`, `s-handoff` and the saved answer purged, `s-rebuilt-1-9` rebuilt); no console messages; no horizontal page overflow at phone width; the only resources loaded were `style.css`, `walkthrough.js` and `data/evidence.json` |
+| Evidence integrity | All 13 files in `results/` kept their SHA-256 values; `.local/assistant.sqlite` was not touched (modified time still October 27, 16:44:23) |
+
+**What the walkthrough tests cover** (`tests/test_site.py`, 20 tests):
+
+- **Export:** the committed `site/data/evidence.json` equals a fresh export and `--check` passes; the export is deterministic; each run records its source file and SHA-256; cold stage counts (14/14/6, then 13 active with 5 stale and 5 marker rows, then 15/9/0 with 5 purged); every answer and citation list is copied exactly; cold and warm first-call and total timings (40,407 and 2,278 ms; 61,325 and 22,078 ms); every recorded answer event joins to a recorded answer (plus the seeding answer).
+- **Labels:** every run is `recorded`, `live` and `gemma4:e2b-it-qat`; the page carries the "Recorded local Gemma evaluation — no live inference" label; a fixture report is refused.
+- **Invalid evidence:** a missing file, invalid JSON, a non-object, a missing stage, inconsistent counts, a non-live answer and a missing answer each raise `EvidenceError` naming the file and the problem; the CLI prints "Evidence check failed: …" and exits 1.
+- **Public safety:** the public data matches none of the export's `FORBIDDEN` patterns, and `render()` refuses four examples (a home-directory database path, a Sentry DSN, the local Ollama URL and an email address). The patterns are a selected, additional safeguard, not comprehensive secret detection, so they do not prove the data holds no other private string; `site/` holds exactly four files; local asset paths are relative and exist, and external links go only to the GitHub repository; the script's only `fetch` is `data/evidence.json`, with no `/api/`, Ollama port, localhost, storage, `innerHTML` or `eval`.
+- **Blueprint:** one static site publishing `./site`, with no start command, plan, environment variables or database, and a CSP whose `connect-src` is `'self'`.
+
+**Not verified:** a real Render deployment (T-E3), the Blueprint being accepted by Render, the headers on a deployed site, other browsers, and assistive technology.
 
 ## Real Sentry traces T-D3 (October 28, 2026)
 
@@ -251,7 +283,7 @@ The last two rows below record the bugs as found. They were fixed afterwards (T-
 
 **Not run in this audit:** live Gemma evaluation (no model calls were made), browser QA, and GitHub Actions. The saved files in `results/` were not modified.
 
-## Test inventory (71)
+## Test inventory (91)
 
 **`tests/test_store.py`: 11 store tests** (9 in `StoreTests`, 2 in `PublicationPrimitiveTests`), using in-memory SQLite except for the reopen and publication-primitive tests:
 
@@ -353,6 +385,8 @@ The last two rows below record the bugs as found. They were fixed afterwards (T-
 | `test_chat_spans_carry_token_usage_and_errors_carry_only_a_category` | Live reset with mocked Ollama: 4 `chat mock-model` spans with integer tokens (120, 30, 150), the response model, temperature 0 and max tokens 420. Timeout, HTTP 503 and malformed output each give one error-status chat span with `error.type` `ProviderError` and the category ("timed out", "HTTP status 503", "invalid_output"); the sentinel in the exception text and the model's answer never appear |
 | `test_marker_flag_follows_source_only_and_cascade_deletion` | After source-only deletion the paraphrase span has `answer_contains_marker` true and its search context includes `c-vault`; after cascade it is false and `c-vault` is gone; both `delete_memory` spans name `d-vault` with the stage after the call |
 | `test_a_failing_sentry_transport_never_changes_results` | `capture_envelope` raises: `evaluate` and `POST /api/ask` give the same results as an untraced run (with a fixed marker; wall-clock times, random IDs and the fingerprint over them removed), and the exporter was really called twice |
+
+**`tests/test_site.py`: 20 public-walkthrough tests** (10 in `ExportTests`, 4 in `InvalidEvidenceTests`, 5 in `PublicSafetyTests`, 1 in `RenderBlueprintTests`). Offline; they read the selected reports and `site/`, and write only to a temporary directory. The syntax test skips without Node. See "Public recorded walkthrough T-E2" above for what each group covers.
 
 ## Fixture evaluation vs live evaluation
 

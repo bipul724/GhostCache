@@ -118,13 +118,13 @@ Status values: **Done** means implemented and covered by tests or saved evidence
 - **Evidence artifacts:** saved reports, screenshots and any future recording or narration. They are outside the cleanup claim and may contain the fictional marker.
 - **Event ledger:** stores operation names, time of day, mode and provider, durations, token counts, artifact and parent IDs, and context fingerprints. It does not store prompts or answers. Full answers do appear in API responses and reports.
 - **Live mode:** traffic goes only to `127.0.0.1:11434`. No hosted inference.
-- **Future cloud features** (Sentry, Render, Backboard, Browserbase, ElevenLabs) must use fictional data. Sentry may receive only deliberately chosen metadata. Local-mode privacy does not carry over to them automatically.
+- **Cloud features** (Sentry, now implemented; Render hosting for the static walkthrough, prepared) must use fictional data. The walkthrough publishes recorded reports that already use fictional data, and runs no model. Sentry may receive only deliberately chosen metadata. Local-mode privacy does not carry over to them automatically.
 
 ## 11. MVP and future scope
 
 | Implemented MVP | Future (not implemented) |
 | --- | --- |
-| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 71 tests (7 UI contract tests need Node; 6 telemetry tests need the optional `sentry-sdk`), optional metadata-only Sentry tracing with real traces from one fixture and two live runs (October 28, 2026), CI workflow file, a public repository with one successful hosted Actions run (October 28, 2026) | Open consistency fixes (T-A7, T-A8, the rest of T-A9), repeated live evaluations with metadata, a public demo on Render or .tech, a Backboard comparison, a Browserbase run, optional ElevenLabs narration and Entire checkpoints |
+| Fixture and live-Gemma experiment, provenance store, two deletion policies, rebuild, 8- and 10-check verification, local UI, 91 tests (7 UI contract tests and 1 walkthrough syntax test need Node; 6 telemetry tests need the optional `sentry-sdk`), optional metadata-only Sentry tracing with real traces from one fixture and two live runs (October 28, 2026), CI workflow file, a public repository with successful hosted Actions runs (October 28, 2026), a static recorded walkthrough of the live runs with a Render Blueprint (implemented and tested locally October 28, 2026; not deployed) | Open consistency fixes (T-A7, T-A8, the rest of T-A9), repeated live evaluations with metadata, deploying the walkthrough on Render (T-E3). Dropped on October 28, 2026: the .tech domain, a Backboard comparison, a Browserbase run, ElevenLabs narration and Entire checkpoints |
 
 ## 12. Success measures
 
@@ -149,16 +149,16 @@ A fixture pass supports the software invariants only. A live pass supports only 
 - Optional: `sentry-sdk==2.72.0` (the `sentry` extra), only for tracing.
 - Ollama with `gemma4:e2b-it-qat` (about 4.3 GB) for live mode, on the user's laptop.
 - GitHub (repository and Actions) for CI evidence. Set up: [bipul724/GhostCache](https://github.com/bipul724/GhostCache), with one successful hosted run (October 28, 2026).
-- Planned external services: Sentry, Render, a .tech domain registrar and its DNS, Backboard, Browserbase, ElevenLabs, Entire. Their pricing, free allowances and eligibility were checked on October 27, 2026 according to `context.md`, and **must be rechecked** before use.
+- External services in use: Sentry (implemented; real traces from a 14-day Business trial, October 28, 2026). Prepared: Render, for a static site only (`render.yaml`; not deployed). Dropped on October 28, 2026: a .tech domain registrar and its DNS, Backboard, Browserbase, ElevenLabs, Entire. *(Originally listed as planned on October 27, 2026; kept as history.)*
 
 ## 14. Risks
 
 | Risk | Mitigation |
 | --- | --- |
 | Seen as an obvious bug in a Halloween costume | Present the provenance DAG, the preservation controls, the bounded claims and the prior art honestly |
-| Overclaiming (unlearning, global deletion, seven categories entered) | Status labels everywhere; the rules in [AGENTS.md](AGENTS.md) |
+| Overclaiming (unlearning, global deletion, categories entered without evidence; the submission enters three) | Status labels everywhere; the rules in [AGENTS.md](AGENTS.md) |
 | One live run is weak evidence | Repeated live runs with saved failures (T-C1) |
-| A public demo exposes a single shared, resettable state | Use a replay or redesigned per-session service, never the current server unchanged (T-E1) |
+| A public demo exposes a single shared, resettable state | Decided (D-13): a static recorded walkthrough in `site/`, never the current server (T-E2, done locally) |
 | Free tiers change or are already used up | Recheck before each integration; keep fixture and local paths working |
 | Laptop memory and latency in live mode | Measure (T-C2); fixture mode for CI and demos |
 | Conflicting deadline timestamps | Internal target October 30, 23:00 IST (see §16) |
@@ -166,27 +166,27 @@ A fixture pass supports the software invariants only. A live pass supports only 
 ## 15. Open questions
 
 - ~~Q1. Should the UI echo step use the reworded question (as the CLI does)?~~ Resolved: yes (T-A3, October 27).
-- Q2. Public demo design: recorded replay or simulation, or a redesigned hosted service with per-session isolation?
-- Q3. Was `bipulchamoli.tech` claimed through the qualifying Hacktoberfest promo? This is unverified. Which subdomain should be used (`ghostcache.bipulchamoli.tech` has been suggested), and where is DNS actually managed?
-- Q4. Do the user's Sentry, Backboard and Browserbase accounts still have the free allowances?
+- ~~Q2. Public demo design: recorded replay or simulation, or a redesigned hosted service with per-session isolation?~~ Resolved October 28, 2026: a static recorded walkthrough (D-13, T-E2).
+- ~~Q3.~~ *(Dropped October 28, 2026 with the .tech category.)* Was `bipulchamoli.tech` claimed through the qualifying Hacktoberfest promo? This is unverified. Which subdomain should be used (`ghostcache.bipulchamoli.tech` has been suggested), and where is DNS actually managed?
+- ~~Q4. Do the user's Sentry, Backboard and Browserbase accounts still have the free allowances?~~ Sentry recorded October 28, 2026 (T-D1); Backboard and Browserbase dropped.
 - Q5. Should `context.md` (or a cleaned copy) be published inside the repository?
 - ~~Q6. Should reset be made atomic, or should a failure be shown as a distinct "failed seed" state?~~ Resolved: a failed reset keeps the previous experiment (D-19, superseded by D-20's in-place backup publication). A distinct `storage_failed` state exists only for the case where the restored database cannot be verified.
 
 ## 16. Category-related requirements (not MVP)
 
-These apply only if the category is entered. Each one requires **real use plus evidence**. Installing an SDK or adding a logo or placeholder does not count.
+These apply only if the category is entered. **As of October 28, 2026 the submission enters CAT-01, CAT-02 and CAT-03 only;** CAT-04 is not entered (Render only hosts the walkthrough) and CAT-05 to CAT-09 are dropped (D-14 amendment). Each one requires **real use plus evidence**. Installing an SDK or adding a logo or placeholder does not count.
 
 | ID | Category | Requirement for listing it in the submission |
 | --- | --- | --- |
 | CAT-01 | Gemma | Explain Gemma's role, the model ID and the saved live evidence, including any failures. *(Ready now.)* |
 | CAT-02 | GitHub Copilot (via Actions, which the official category description includes) | A public repository and a successful hosted workflow run whose fixture-report artifact can be inspected. Do not claim Copilot authorship. *(Repository and successful hosted runs exist: [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) and [run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485). Run #3's fixture-report artifact was downloaded and inspected: 10 of 10 checks passed.)* |
 | CAT-03 | Sentry Agent Tracing | Metadata-only spans for retrieval, generation, deletion, rebuild and verify, plus real trace screenshots and one explained finding *(The instrumentation is implemented with offline privacy tests (T-D2, October 28, 2026). Real traces were captured the same day: seven screenshots in `results/sentry-*.jpg` and two explained findings, in README.md, "What the real traces showed" (T-D3). They were sent from a 14-day Sentry Business trial with no payment method, using 120 of 100M spans (T-D1).)* |
-| CAT-04 | Render | A reachable Render-hosted frontend or demo, labelled replay, simulation or live |
-| CAT-05 | .tech domain | Evidence of the promo claim, plus a live HTTPS subdomain serving the project; the existing apex is preserved |
-| CAT-06 | Backboard | A comparison of 2–3 open-weight models on the same corpus and checks, with model IDs, token and cost figures, and failures reported |
-| CAT-07 | Browserbase (stretch) | A Stagehand or Browserbase session driving the workflow with assertions, plus session evidence |
-| CAT-08 | ElevenLabs (optional) | Real generated narration with a stock voice; promo claimed only with the user's choice |
-| CAT-09 | Entire (optional) | Real checkpoints of future work; nothing back-filled |
+| CAT-04 | Render | A reachable Render-hosted frontend or demo, labelled replay, simulation or live *(Not entered. The static recorded walkthrough and `render.yaml` are ready locally; not deployed.)* |
+| CAT-05 | .tech domain | Evidence of the promo claim, plus a live HTTPS subdomain serving the project; the existing apex is preserved *(Dropped October 28, 2026.)* |
+| CAT-06 | Backboard | A comparison of 2–3 open-weight models on the same corpus and checks, with model IDs, token and cost figures, and failures reported *(Dropped October 28, 2026.)* |
+| CAT-07 | Browserbase (stretch) | A Stagehand or Browserbase session driving the workflow with assertions, plus session evidence *(Dropped October 28, 2026.)* |
+| CAT-08 | ElevenLabs (optional) | Real generated narration with a stock voice; promo claimed only with the user's choice *(Dropped October 28, 2026.)* |
+| CAT-09 | Entire (optional) | Real checkpoints of future work; nothing back-filled *(Dropped October 28, 2026.)* |
 
 **Submission rules** recorded in `context.md` from the [Week 4 challenge](https://dev.to/challenges/hacktoberfest-week4-2026-10-26) and its [contest rules](https://dev.to/page/hacktoberfest-week4-2026-10-26-contest-rules) (recheck before publishing):
 

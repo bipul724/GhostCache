@@ -24,14 +24,14 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Area | Status |
 | --- | --- |
 | Local fixture and live-Gemma experiment, browser UI, provenance cleanup | **Implemented** |
-| Automated tests | **71 tests pass** under Python 3.12.6 with Node 22 on PATH (rerun on October 28, 2026 after Sentry tracing, T-D2). 7 are UI contract tests, 6 of which skip without Node. 9 are telemetry tests, 6 of which skip without the optional `sentry-sdk`; all 71 ran with it in `.venv`. See [TESTING.md](TESTING.md) |
-| Saved evaluations | One fixture report and **one** live Gemma report, each 10/10 checks ([results/](results/)) |
+| Automated tests | **91 tests pass** under Python 3.12.6 with Node 22 on PATH (rerun on October 28, 2026 after adding the public walkthrough, T-E2). 7 are UI contract tests, 6 of which skip without Node. 9 are telemetry tests, 6 of which skip without the optional `sentry-sdk`; all 91 ran with it in `.venv`. 20 are walkthrough tests, 1 of which skips without Node. See [TESTING.md](TESTING.md) |
+| Saved evaluations | One fixture report and **three** live Gemma reports (October 27, and cold and warm runs on October 28), each 10/10 checks ([results/](results/)) |
 | GitHub Actions workflow | **Passed on GitHub:** [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) on October 28, 2026 (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) (push of `172ccb4`) also passed, and its uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. |
 | Sentry Agent Tracing | **Implemented** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **Real traces captured on October 28, 2026** from one fixture and two live evaluations, with two findings; see [What the real traces showed](#what-the-real-traces-showed). Sent from a 14-day Sentry Business trial with no payment method; the runs used 120 of its 100M spans. |
-| Render, .tech domain, Backboard, Browserbase | **Planned, not implemented** |
-| ElevenLabs, Entire | **Optional, not started** |
+| Public recorded walkthrough | **Implemented and tested locally; Render configuration prepared ([render.yaml](render.yaml)); not deployed yet.** A static page in [site/](site/) built from the recorded live reports, with no inference. See [Public recorded walkthrough](#public-recorded-walkthrough). Render is used only to host it; it is not a submission category. |
+| Prize categories | **Entering three:** Gemma, GitHub (through Actions) and Sentry Agent Tracing. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire categories were dropped on October 28, 2026 and are not entered ([DECISIONS.md](DECISIONS.md) D-14). |
 | Public repository | **Created:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache) (public, MIT) |
-| Deployment, video, DEV submission | **Not created** |
+| Deployment, video, DEV submission | **Not created** (the walkthrough's Render deployment is prepared but not done) |
 
 ## What is implemented
 
@@ -63,7 +63,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 - **One live run is not a rate.** The single saved live run does not establish how often Gemma (or any model) succeeds.
 - **The summary prompt keeps the secret on purpose.** It explicitly asks the model to preserve the passphrase, which builds a known propagation path. GhostCache does not measure natural leakage.
 - **Fictional data only.** It has no document upload, no connector for other RAG systems, and has not been tested with real sensitive documents.
-- **Local only.** The server is single-user and localhost-only. It must not be exposed unchanged as a shared public service (see [architecture.md](architecture.md#security-boundaries)).
+- **Local only.** The server is single-user and localhost-only. It must not be exposed unchanged as a shared public service (see [architecture.md](architecture.md#security-boundaries)). The public walkthrough is a separate static page of recorded results: it runs no model and cannot answer new questions.
 - **Known UI and code inconsistencies** are listed in [architecture.md](architecture.md#known-discrepancies-between-code-ui-and-earlier-docs) and [tasks.md](tasks.md#a-consistency-and-hardening). Example: the UI has no dedicated display for the `storage_failed` stage.
 
 ## Stack and prerequisites
@@ -74,7 +74,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Python packages | None required. The core uses only the standard library (`sqlite3`, `http.server`, `urllib`, `unittest`). The optional `sentry` extra (`sentry-sdk==2.72.0`) is needed only for tracing; install it into `.venv`, never the system Python. |
 | Front end | Plain HTML, CSS and JavaScript in `web/`. No build step or npm install. |
 | Live mode only | [Ollama](https://ollama.com) running locally, with the model pulled (`ollama list` should show `gemma4:e2b-it-qat`, about 4.3 GB). |
-| Optional | Node.js, only used for `node --check web/app.js`. |
+| Optional | Node.js, only for the UI contract tests and the syntax checks of `web/app.js` and `site/walkthrough.js`; those tests skip without it. |
 
 ## Run it (fixture mode)
 
@@ -167,6 +167,49 @@ Every later chat span took about 1–3 s in both traces, so that first call acco
 
 More screenshots: [the memory search that returned `c-vault`](results/sentry-c-vault-search.jpg), [the warm trace](results/sentry-warm-trace.jpg) and [the warm first model call, 181 input + 55 output tokens](results/sentry-warm-chat-tokens.jpg). Method, cross-checks and what was not verified: [TESTING.md](TESTING.md), "Real Sentry traces T-D3".
 
+## Public recorded walkthrough
+
+[site/](site/) is a static, read-only walkthrough of the **recorded** live Gemma runs, for people who can't run the app. It says so at the top: *"Recorded local Gemma evaluation — no live inference."* It makes no model call and no `/api/*` request, stores nothing, and deletes nothing. Its only data request is `data/evidence.json` from the same site.
+
+Visitors can:
+
+- pick one of the three recorded live runs (October 28 cold, October 28 warm, October 27);
+- step through the five stages, each with the report's audit counts and a memory trail of artifact IDs: the seeded memory, the source-only deletion, the recorded answer that still reveals the marker, the provenance cleanup, and the recorded checks. The step buttons only change the view;
+- open the six preset questions and read Gemma's recorded answers, with the context IDs, citations, durations and tokens;
+- compare the cold and warm runs' recorded model-call durations.
+
+Everything shown comes from three saved reports: [results/sentry-live-cold.json](results/sentry-live-cold.json), [results/sentry-live-warm.json](results/sentry-live-warm.json) and [results/live-gemma.json](results/live-gemma.json). The reports hold artifact IDs, counts, answers, checks and event timings, not summary or document text, so the page shows no artifact bodies. "From" links are labelled by origin: **recorded** (summary parents in the report's event log), **seed design** (one chunk per document, fixed in `app.py`) or **inferred** (the saved answer's parents, from the order of recorded events). The fixture report is not used. The fictional marker stays visible because these reports are evaluator evidence (see [Important limitations](#important-limitations)).
+
+**Regenerating the data.** [scripts/export_site_data.py](scripts/export_site_data.py) (standard library only) reads exactly those three reports, validates their shape, keeps an allowlist of fields, records each source file's SHA-256, refuses fixture or non-Gemma reports, and writes `site/data/evidence.json` deterministically. As an additional safeguard on that allowlisted output, it refuses text matching selected patterns (certain machine paths, local endpoints such as `127.0.0.1` and the Ollama port, Sentry and credential-like strings, and email addresses). This pattern check is not comprehensive secret detection and does not replace reviewing the public data. It never runs a model.
+
+```sh
+python3.12 scripts/export_site_data.py          # rewrite site/data/evidence.json
+python3.12 scripts/export_site_data.py --check  # exit 1 if it is out of date (also a unit test)
+```
+
+**Preview locally.** Pick a free port (check with `lsof -nP -iTCP:8790 -sTCP:LISTEN`); this does not touch the app, its database or Ollama:
+
+```sh
+python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
+```
+
+Then open <http://127.0.0.1:8790>.
+
+**Deploy on Render (static site).** The Blueprint [render.yaml](render.yaml) defines one static site and nothing else: no server, database, worker, model, environment variable or secret. Render publishes only `site/`. Steps for the account owner:
+
+1. Push `main` so that `render.yaml` and `site/` are on GitHub.
+2. In the Render Dashboard choose **New → Blueprint**, connect `bipul724/GhostCache`, branch `main`, and apply the `render.yaml` it finds. It creates the static site `ghostcache-walkthrough`.
+3. Or create it by hand with **New → Static Site**: repository `bipul724/GhostCache`, branch `main`, root directory blank (the repository root), build command `echo "No build step; site/ is committed static files"`, publish directory `site`. A hand-made site does not get the Blueprint's security headers; add them under the site's **Headers** settings, copying `render.yaml`.
+4. After the first deploy, open the `onrender.com` URL Render shows and check:
+   - the banner reads "Recorded local Gemma evaluation — no live inference";
+   - the run buttons, the five stage buttons and the six question buttons all work;
+   - the browser's network panel shows only `style.css`, `walkthrough.js` and `data/evidence.json`;
+   - `curl -sI <url>` shows the `Content-Security-Policy` header (Blueprint deploys);
+   - `<url>/api/state` returns 404.
+5. Record the real URL here and in [tasks.md](tasks.md) (T-E3) only after those checks pass.
+
+Render's documentation describes static sites as free to deploy; bandwidth and build minutes count against the workspace's plan. That was read from the documentation on October 28, 2026, not checked against an account.
+
 ## Demonstration workflow (browser)
 
 1. **Seed the archive.** Builds the five documents, chunks, three summaries and one saved answer, with a new marker.
@@ -195,7 +238,7 @@ Each evaluation uses a fresh in-memory database, separate from the UI database. 
 | Evidence | What it shows |
 | --- | --- |
 | [results/fixture.json](results/fixture.json) | Fixture run, 10/10 checks. Deterministic, no model call. |
-| [results/live-gemma.json](results/live-gemma.json) | One live run with `gemma4:e2b-it-qat`, 10/10 checks. 11 model calls, 130,650 ms summed call time, 3,209 input and 677 output tokens. |
+| [results/live-gemma.json](results/live-gemma.json) | The first live run (October 27, 2026) with `gemma4:e2b-it-qat`, 10/10 checks. 11 model calls, 130,650 ms summed call time, 3,209 input and 677 output tokens. |
 | [results/ghostcache-ui-desktop.jpg](results/ghostcache-ui-desktop.jpg), [results/ghostcache-ui-mobile.jpg](results/ghostcache-ui-mobile.jpg) | Screenshots from a fixture-mode browser session, taken at different moments. Not a Browserbase run. |
 | [results/sentry-live-cold.json](results/sentry-live-cold.json), [results/sentry-live-warm.json](results/sentry-live-warm.json) | Two traced live runs with `gemma4:e2b-it-qat` on October 28, 2026, 10/10 checks each. 11 model calls each: 61,325 ms summed call time cold, 22,078 ms warm. |
 | Seven `results/sentry-*.jpg` screenshots | Sentry's Agents view, the two live traces and one failed live attempt ([results/sentry-failed-run.jpg](results/sentry-failed-run.jpg)). See [What the real traces showed](#what-the-real-traces-showed). |
@@ -231,18 +274,15 @@ For full details see [architecture.md](architecture.md).
 
 ## Prize-category readiness (DEV Hacktoberfest Week 4)
 
-This shows readiness **for each category, not entries made**. Only list a category in the submission after real use and evidence exist. One person can win at most one prize in this challenge. Full plan: [CATEGORIES.md](CATEGORIES.md). Task list: [tasks.md](tasks.md).
+This shows readiness **for each category, not entries made**. The submission will enter **three** categories: Gemma, GitHub (through Actions) and Sentry. Only list a category in the submission after real use and evidence exist. One person can win at most one prize in this challenge. Full plan: [CATEGORIES.md](CATEGORIES.md). Task list: [tasks.md](tasks.md).
 
 | Target | Status |
 | --- | --- |
-| Best Use of Gemma | **Implemented**, one live 10/10 run saved |
+| Best Use of Gemma | **Implemented**, three live 10/10 runs saved; a recorded walkthrough of them is prepared for public hosting |
 | Best Use of GitHub Copilot (the official description includes GitHub Actions) | **Hosted run exists:** [Actions run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026. Do not claim Copilot wrote this code. |
 | Best Use of Sentry Agent Tracing | **Real traces captured** on October 28, 2026, with two explained findings ([details](#what-the-real-traces-showed)). |
-| Best Use of Render | Planned |
-| Best Use of a .tech Domain | Planned; whether the domain qualifies under the Hacktoberfest promo is **unverified** |
-| Best Use of Backboard | Planned |
-| Best Use of Browserbase | Stretch goal |
-| ElevenLabs, Entire | Optional, not started |
+| Best Use of Render | **Not entered.** Render may host the public walkthrough (prepared, not deployed); entering the category is a separate decision. |
+| Best Use of a .tech Domain, Backboard, Browserbase, ElevenLabs, Entire | **Dropped** on October 28, 2026; not entered |
 
 ## Documentation
 
@@ -255,6 +295,7 @@ This shows readiness **for each category, not entries made**. Only list a catego
 - [AGENTS.md](AGENTS.md): instructions for coding agents
 - [CATEGORIES.md](CATEGORIES.md): category plan, free-tier limits and evidence needed
 - [.env.example](.env.example): the supported environment variables
+- [render.yaml](render.yaml) and [site/](site/): the public recorded walkthrough and its Render static-site Blueprint (see [above](#public-recorded-walkthrough))
 
 The detailed project handoff (`context.md`) sits in the parent workspace, outside this application directory.
 

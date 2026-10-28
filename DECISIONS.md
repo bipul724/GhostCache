@@ -173,17 +173,27 @@ The evidence for each record is code, tests, saved results or the workspace hand
 
 ## D-13. Public demo design
 
-- **Status:** Open
-- **Context:** Render and .tech are target categories. The current server needs `/api/*`, keeps one shared resettable state, and cannot reach a laptop model from the cloud. Free Render cannot run the 4.3 GB model.
+- **Status:** Accepted (implemented October 28, 2026; deployment not yet done)
+- **Context:** The current server needs `/api/*`, keeps one shared resettable state, and cannot reach a laptop model from the cloud. Free Render cannot run the 4.3 GB model.
 - **Options recorded in `context.md` §25E:**
   - **A.** A clearly labelled recorded replay or synthetic simulation, with local live Gemma shown through instructions and video.
   - **B.** A redesigned hosted service with session isolation, correct bind and Host handling, and controls on state and cost, with any remote inference explicitly identified.
-- **Decision:** Not yet made (T-E1).
-- **Consequences:** Render, .tech and Browserbase all wait on this decision.
+- **Decision (October 28, 2026): option A, as a static walkthrough of recorded live runs.**
+  - [site/](site/) is plain HTML, CSS and JavaScript. Its only data is `site/data/evidence.json`, exported by [scripts/export_site_data.py](scripts/export_site_data.py) from three selected live reports (`results/sentry-live-cold.json`, `results/sentry-live-warm.json`, `results/live-gemma.json`). Each run is exported separately with its source file's SHA-256; fixture reports are refused, so recorded model output is never mixed with fixture output.
+  - The page is labelled "Recorded local Gemma evaluation — no live inference". It makes no `/api/*` or model request, stores nothing, and its buttons only change the view. Questions are the six preset recorded ones.
+  - The page shows only what the reports contain: audit counts and IDs, answers, citations, context IDs, checks and event timings. No summary or document text is shown, because the reports do not hold it. Lineage links are labelled recorded, seed design or inferred, and the page says it is not a complete run-specific provenance graph.
+  - [render.yaml](render.yaml) defines one Render static site publishing `./site`, with a no-op build command and security headers (a restrictive CSP whose `connect-src` is `'self'`). No server, database, worker, model or secret.
+  - The localhost app is unchanged and is still never exposed publicly.
+- **Consequences:**
+  - Visitors see real recorded evidence without anything running on the laptop, and cannot get new AI answers.
+  - The public evidence keeps the fictional marker, as all saved reports do (D-11).
+  - `site/data/evidence.json` must be regenerated and committed when the selected reports change; `scripts/export_site_data.py --check` and `tests/test_site.py` fail if it is out of date.
+  - Render hosts the page but is not entered as a category (D-14). The deployment itself needs the user's Render account and is not done yet (T-E3).
+- **Evidence:** `site/`, `scripts/export_site_data.py`, `render.yaml`, `tests/test_site.py` (20 tests); TESTING.md, "Public recorded walkthrough T-E2 (October 28, 2026)".
 
 ## D-14. Category expansion only through useful, evidenced integrations
 
-- **Status:** Accepted as strategy; the integrations themselves are Proposed
+- **Status:** Accepted as strategy; amended October 28, 2026 to three entered categories (see the amendment)
 - **Context:** The user asked for more categories, and also for real, demonstrable integrations rather than a list of sponsor names (`context.md` §2).
 - **Decision:**
   - Seven targets: Gemma (implemented), GitHub Copilot via **GitHub Actions** (configured), Sentry, Render, .tech, Backboard, Browserbase.
@@ -195,6 +205,7 @@ The evidence for each record is code, tests, saved results or the workspace hand
   - One person can still win at most one prize, so more categories are not independent chances.
   - Writing quality carries the most weight in judging.
 - **Evidence:** [CATEGORIES.md](CATEGORIES.md); [tasks.md](tasks.md).
+- **Amendment (October 28, 2026): three categories.** The submission enters only the three categories with working use and evidence: Gemma, GitHub (through Actions) and Sentry Agent Tracing. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire targets are dropped, and none of them has code or evidence. Render hosts the public walkthrough (D-13) but is not added to the category list; that would need a separate decision after a verified deployment. The original seven-target text above is kept as history.
 
 ## D-15. Publish `ghostcache/` itself as the repository root
 
