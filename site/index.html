@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#141b1b">
+  <meta name="description" content="A recorded walkthrough of GhostCache: how a deleted document survives in an AI assistant's derived memory, and how provenance-aware cleanup removes it. Recorded local Gemma runs; no live inference.">
+  <title>GhostCache · Recorded walkthrough</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <a class="brand" href="./" aria-label="GhostCache recorded walkthrough">
+        <svg class="brand-ghost" viewBox="0 0 40 44" aria-hidden="true"><path d="M8 38V19a12 12 0 0 1 24 0v19l-6-4-6 4-6-4-6 4Z" fill="currentColor"/><path d="M15 20v4m10-4v4" stroke="#172020" stroke-width="3" stroke-linecap="round"/></svg>
+        <span>GhostCache<span class="brand-dot">.</span></span>
+      </a>
+      <span class="header-meta">GHOST IN THE MACHINE / 2026</span>
+      <a class="repo-link" href="https://github.com/bipul724/GhostCache">Source on GitHub <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <div class="recorded-banner" role="note">
+      <span class="banner-symbol" aria-hidden="true">◈</span>
+      <div>
+        <strong>Recorded local Gemma evaluation — no live inference</strong>
+        <span>Every answer, count, timing and check below is copied from a saved report written by GhostCache running <code>gemma4:e2b-it-qat</code> on a laptop through Ollama. This page runs no model, sends no questions and deletes nothing.</span>
+      </div>
+    </div>
+
+    <section class="intro">
+      <div>
+        <p class="eyebrow"><span class="small-star">✳</span> A field guide to things an agent remembers</p>
+        <h1>Gone from the source.<br><span>Still in the machine.</span></h1>
+      </div>
+      <div class="intro-note">
+        <p>AI assistants don’t only keep your documents. They cut them into search chunks, summarize them, merge summaries and save past answers. Delete the original and those copies can stay behind, still searchable, still quotable.</p>
+        <p>GhostCache plants a fictional secret in one document, deletes only the source, catches the model repeating the secret anyway, then removes everything derived from it by following recorded provenance, and checks what remains.</p>
+      </div>
+    </section>
+
+    <div id="load-error" class="load-error" role="alert" hidden>The recorded evidence could not be loaded. It lives in <code>data/evidence.json</code> beside this page.</div>
+
+    <section class="run-picker" aria-labelledby="run-heading">
+      <div class="section-heading"><p class="eyebrow" id="run-heading">RECORDED RUN</p><span id="run-result" class="tiny-label"></span></div>
+      <div id="run-buttons" class="run-buttons"></div>
+      <p id="run-source" class="run-source"></p>
+    </section>
+
+    <main class="walkthrough" aria-labelledby="walk-heading">
+      <aside class="steps-panel">
+        <p class="eyebrow" id="walk-heading">THE EXPERIMENT, AS RECORDED</p>
+        <h2>Follow one ghost.</h2>
+        <p class="panel-description">Choose a stage to see what the saved report recorded at that point. These buttons only change the view.</p>
+        <div id="step-buttons" class="step-buttons"></div>
+      </aside>
+
+      <section class="stage-panel">
+        <div class="stage-card">
+          <div class="section-heading"><p id="stage-eyebrow" class="eyebrow"></p><span id="stage-tag" class="tiny-label"></span></div>
+          <h2 id="stage-title"></h2>
+          <p id="stage-text" class="stage-text"></p>
+          <div id="stage-counts" class="counts"></div>
+          <div id="stage-answer" class="answer-card" hidden></div>
+          <div id="stage-checks" class="checks" hidden></div>
+        </div>
+
+        <div class="trail-card">
+          <div class="section-heading"><p class="eyebrow">THE MEMORY TRAIL</p><span id="trail-count" class="tiny-label"></span></div>
+          <div class="trail-key">
+            <span><i class="dot active"></i>Active</span><span><i class="dot marker"></i>Holds the marker</span>
+            <span><i class="dot stale"></i>Depends on a deleted source</span><span><i class="dot removed"></i>Deleted, or purged (ID kept, content emptied)</span><span><i class="dot rebuilt"></i>Rebuilt after cleanup</span>
+          </div>
+          <div id="trail" class="trail"></div>
+          <p class="trail-note">Statuses come from the report’s audits at each stage. “From” links are labelled by origin: <b>recorded</b> (in the report’s event log), <b>seed design</b> (the fixed seeding code, the same in every run) or <b>inferred</b> (from the order of recorded events). This is not a complete run-specific provenance graph.</p>
+        </div>
+      </section>
+    </main>
+
+    <section class="questions" aria-labelledby="questions-heading">
+      <div class="section-heading"><p class="eyebrow" id="questions-heading">RECORDED QUESTIONS</p><span class="tiny-label">PRESET · NO NEW ANSWERS</span></div>
+      <h2>What the model actually said.</h2>
+      <p class="panel-description">These are the six questions the evaluation asked, with Gemma’s recorded answers. You can’t ask new questions here: nothing on this page can reach a model.</p>
+      <div id="question-buttons" class="question-buttons"></div>
+      <div id="question-answer" class="answer-card"></div>
+    </section>
+
+    <section class="timing" aria-labelledby="timing-heading">
+      <div class="section-heading"><p class="eyebrow" id="timing-heading">COLD START VS WARM</p><span class="tiny-label">RECORDED MODEL-CALL DURATIONS</span></div>
+      <h2>One call explains most of the wait.</h2>
+      <p id="timing-text" class="panel-description"></p>
+      <div class="table-wrap"><table id="timing-table" class="timing-table"></table></div>
+      <p class="trail-note">The slow first call is consistent with Ollama loading the model into memory on its first request after starting, but GhostCache doesn’t record Ollama’s load time, so that cause is inferred, not measured. Both runs passed all checks; the timings, not the pass/fail result, show the difference.</p>
+    </section>
+
+    <section class="explainers">
+      <article>
+        <p class="eyebrow">WHY LOCAL, OPEN-WEIGHT AI</p>
+        <h2>The memory you can inspect.</h2>
+        <p>Running Gemma locally through Ollama lets this experiment generate and inspect its application-managed memory without a hosted model API, so no document is sent to a hosted model. GhostCache audits the synthetic artifact title and body fields it manages in SQLite, follows each managed artifact back to its source documents, and tests defined retrieval and answer paths. Model weights, runtime caches, backups and retained evidence remain outside that audit. Because the model is open-weight, anyone can rerun the experiment with the same model.</p>
+      </article>
+      <article>
+        <p class="eyebrow">WHAT THIS PAGE IS NOT</p>
+        <h2>Evidence keeps the ghost on purpose.</h2>
+        <p>The fictional marker (<code id="marker-inline">MOTH-…</code>) still appears on this page because the saved reports are the evaluator’s evidence, kept separate from the assistant’s memory. Cleanup applies to GhostCache’s managed memory store in the original local app: titles, bodies, provenance and retrieval. It does not cover this evidence page, model weights, backups, logs or secure disk erasure.</p>
+      </article>
+      <article>
+        <p class="eyebrow">RUN IT YOURSELF</p>
+        <h2>Live mode stays local.</h2>
+        <p>The interactive app and live Gemma runs only work on your own machine (Python 3.12; Ollama with <code>gemma4:e2b-it-qat</code> for live mode):</p>
+        <pre class="command">python3.12 -m ghostcache serve --port 8765
+python3.12 -m ghostcache evaluate --mode live --output results/my-run.json</pre>
+        <p><a href="https://github.com/bipul724/GhostCache#readme">Setup and local-run instructions</a> · <a href="https://github.com/bipul724/GhostCache/tree/main/results">All saved reports and screenshots</a></p>
+      </article>
+    </section>
+
+    <footer class="site-footer">
+      <span>GhostCache <span class="brand-dot">/</span> Recorded walkthrough. Static page, no inference, no storage.</span>
+      <span id="footer-source"></span>
+    </footer>
+  </div>
+  <script src="walkthrough.js" defer></script>
+</body>
+</html>
