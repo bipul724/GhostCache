@@ -44,9 +44,63 @@ python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
 
+## T-E7 deployed verification (October 28–29, 2026)
+
+**Status: resolved.** The narrow-screen fix is live on the public site, and T-E7 is complete. The record below adds the deployed checks; the original failure ("Documentation audit") and the local fix ("Narrow-screen overflow fix T-E7") are kept unchanged further down. Evidence: [screenshots/mobile-overflow-fix/deployed-2a1ffb0/](screenshots/mobile-overflow-fix/deployed-2a1ffb0/README.md).
+
+Three sources, kept separate:
+
+**1. Read-only checks by the coding agent (October 28, 18:45–18:48 UTC; October 29, 00:15–00:18 IST).** Only `curl` and Git; no browser was opened on the public site in this task, and no unit tests were rerun.
+
+| Command or check | Result |
+| --- | --- |
+| `git merge-base --is-ancestor 08e0524 2a1ffb0` | exit 0: the CSS fix commit `08e05246611d457e337792203e3de90638924387` is an ancestor of `2a1ffb04d57c01cc8f454ca6a1b147e4a30408de` |
+| `git log 08e0524..2a1ffb0 -- site render.yaml`; `git diff --quiet 08e0524 2a1ffb0 -- site/style.css` | no commits; no difference (the nine commits after the fix changed only documentation and screenshots) |
+| `git ls-remote origin refs/heads/main` (18:48:30 UTC) | `2a1ffb04d57c01cc8f454ca6a1b147e4a30408de` |
+| `curl https://ghostcache-walkthrough.onrender.com/style.css` (18:45:49 UTC) | 200; 9,935 bytes; `text/css; charset=utf-8`; `Last-Modified: Wed, 28 Oct 2026 17:21:42 UTC` (after the fix and `2a1ffb0` commits, 17:20–17:21 UTC) |
+| SHA-256 of the served `style.css` | `035e46ec0210e14951f1e0c8cda9748ded207f9d1cdd73ee7a65126bbc488027` |
+| SHA-256 of `site/style.css` at `2a1ffb0`, at `08e0524` and in the working tree | the same hash for all three; `cmp` byte-identical to the served file |
+| SHA-256 of `site/style.css` at `3cc0814` (the fix's parent, the old stylesheet) | `86b4876204f567996900d44154d86340d7deffa54517fd618d02a889100b0927`; differs from the served file |
+| Both fixed rules in the served file | `.explainers{grid-template-columns:minmax(0,1fr)}` (below 980 px) and `.tiny-label{white-space:normal}` (below 650 px) present |
+| `/`, `/index.html`, `/walkthrough.js`, `/data/evidence.json`, `/api/state` | 200, 200, 200, 200, 404; the four `render.yaml` security headers on `/` |
+| SHA-256 of the served `index.html`, `walkthrough.js`, `data/evidence.json` against `site/` at `2a1ffb0` | identical |
+
+Outcome: **pass.** The public site serves the fixed stylesheet, byte for byte, together with the same three other files that were measured locally. This proves which bytes were served at the check time; on its own it does not identify the commit Render built. Full record: [css-comparison.json](screenshots/mobile-overflow-fix/deployed-2a1ffb0/css-comparison.json).
+
+**2. Deployed commit, from the user's Render dashboard screenshots.** The user supplied Render dashboard and deployment-detail screenshots showing `2a1ffb0` as successfully deployed. Those source files no longer existed when copying was attempted, so they were not saved; the statement rests on the user's report, supported by the Git and hash checks above.
+
+**3. Manual public-site checks reported by the user.** Method: Chrome DevTools responsive device emulation, reported height 812 px. The user ran `scrollWidth > clientWidth` on `document.documentElement` in the console. These are the user's observations, not automated tests, and the agent did not reproduce them.
+
+| Width | Viewport width | Page width | Horizontal overflow |
+| --- | --- | --- | --- |
+| 320 | 320 | 320 | false |
+| 360 | 360 | 360 | false |
+| 375 | 375 | 375 | false |
+| 390 | 390 | 390 | false |
+| 414 | 414 | 414 | false |
+| 768 | 768 | 768 | false |
+| 980 | 980 | 980 | false |
+| 981 | 981 | 981 | false |
+| 1280 | 1280 | 1280 | false |
+
+Manual functional results, as reported: command/code box internal horizontal scrolling PASS; timing table layout and scrolling PASS; all six recorded-question buttons PASS; all three recorded-run selectors PASS; all five stage selectors PASS. Record: [user-reported-manual-results.json](screenshots/mobile-overflow-fix/deployed-2a1ffb0/user-reported-manual-results.json).
+
+Saved screenshots back eight of the nine width rows (360 to 1280 px) and the command-block scrolling. The eight console captures are published cropped, with the browser's tabs, address bar, profile icon and bookmarks removed; the DevTools device toolbar, page and console stay visible, and the originals are kept outside the repository (see the folder's README, "Cropping"). The 375 px screenshot's DevTools toolbar shows 375 × 404, not 812; the reported values are kept as given. The listed 320 px console screenshot, the Render dashboard and deployment-detail screenshots and two phone-frame previews were unavailable and were not saved.
+
+**Why this closes T-E7.** The fix commit is in the deployed history; the served stylesheet is byte-identical to the one verified locally across all 33 view states at the same nine widths (section below); and the user's checks on the public URL found no horizontal overflow at any of those widths, with the command block and timing table scrolling inside themselves.
+
+**Not verified:** a physical phone, Safari or Firefox, and assistive technology (all still T-E6); other heights or view-state combinations on the public site; the favicon 404 (T-E8). No phone-frame preview is evidence of a physical device or Safari.
+
+| Command | Result |
+| --- | --- |
+| `(cd screenshots/mobile-overflow-fix/deployed-2a1ffb0 && shasum -a 256 -c SHA256SUMS.txt)` | 12 of 12 OK (8 cropped console captures, 2 command-block images, 2 JSON records). The manifest was regenerated after cropping; each crop's pixel rows were checked against its original's, and the two command-block images are `cmp`-identical to their sources |
+| `(cd screenshots/mobile-overflow-fix && shasum -a 256 -c SHA256SUMS.txt)` | 15 of 15 OK (local before/after, unchanged) |
+| `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)` | 16 of 16 OK (unchanged) |
+| `git diff --check` | no output |
+
 ## Narrow-screen overflow fix T-E7 (October 28, 2026, about 22:30 IST)
 
-**Status: fixed and verified locally; not yet deployed.** The deployed site still serves the old `site/style.css` until the fix is pushed and Render rebuilds it (see [DEPLOYMENT.md](DEPLOYMENT.md)).
+**Status: fixed and verified locally; not yet deployed.** The deployed site still serves the old `site/style.css` until the fix is pushed and Render rebuilds it (see [DEPLOYMENT.md](DEPLOYMENT.md)). *Superseded: deployed in `2a1ffb0` and verified on the public site; see "T-E7 deployed verification" above.*
 
 **Cause, confirmed before editing.** Below 980 px, `.explainers` used `grid-template-columns:1fr`. A `1fr` track's minimum is `auto`, so the grid items could not shrink below their content's minimum width, and the `white-space:pre` command block in "Run it yourself" set that minimum. Its own `overflow-x:auto` did not help, because its ancestor grew instead. A scratch copy of `site/` with only that track changed to `minmax(0,1fr)` removed the overflow at 360–414 px. At 320 px it exposed a second, smaller offender: the answer card's `.tiny-label` "After source-only deletion · reworded question" is `white-space:nowrap` and 285 px wide in a 224 px card.
 
@@ -93,7 +147,7 @@ The maximum `scrollWidth` over all 33 states equalled the initial value in every
 | `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)` | 16 of 16 OK (original manifest unchanged) |
 | `(cd screenshots/mobile-overflow-fix && shasum -a 256 -c SHA256SUMS.txt)` | 15 of 15 OK |
 
-**Not verified:** the deployed site (pending push and rebuild), a real phone, browsers other than Chrome, and assistive technology (T-E6). No test was added that searches the CSS for a declaration; the check is browser geometry, and the harness lives outside the repository.
+**Not verified (at the time):** the deployed site (pending push and rebuild; *since verified, see "T-E7 deployed verification" above*), a real phone, browsers other than Chrome, and assistive technology (T-E6). No test was added that searches the CSS for a declaration; the check is browser geometry, and the harness lives outside the repository.
 
 ## Documentation audit (October 28, 2026, about 22:00 IST)
 
