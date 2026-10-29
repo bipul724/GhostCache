@@ -1,0 +1,2925 @@
+{
+  "startedAt": "2026-10-29T20:06:36.104Z",
+  "browser": "Chrome/156.0.8078.73",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/156.0.0.0 Safari/537.36",
+  "method": "System Google Chrome, --headless=new, driven over the Chrome DevTools Protocol from Node v22.23.4 (built-in WebSocket, no packages). Emulation.setDeviceMetricsOverride with deviceScaleFactor 1 and mobile false (desktop viewport, normal classic scrollbars; scrollbar width recorded per measurement). Clicks and keys are real Input.dispatchMouseEvent / Input.dispatchKeyEvent events. Normal DNS and TLS; no request interception or mocking.",
+  "height": 812,
+  "layout": [
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "index.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "walkthrough.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "method.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "page": "run.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "index.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "walkthrough.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "method.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "page": "run.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "scrollbar": 15,
+      "overflow": false
+    }
+  ],
+  "labels": {
+    "https://ghostcache.bipulchamoli.tech": {
+      "index.html": {
+        "title": "GhostCache · Gone from the source. Still in the machine.",
+        "recordBar": null,
+        "recordedGemmaNoLive": true,
+        "noLiveInferenceAnywhere": true,
+        "canonical": null,
+        "icon": [
+          "favicon.svg"
+        ],
+        "footerLinks": [
+          {
+            "text": "Live .tech site ↗",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Render address ↗",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Recorded walkthrough",
+            "href": "https://ghostcache.bipulchamoli.tech/walkthrough.html"
+          },
+          {
+            "text": "Repository ↗",
+            "href": "https://github.com/bipul724/GhostCache"
+          },
+          {
+            "text": "Evidence & methodology",
+            "href": "https://ghostcache.bipulchamoli.tech/method.html"
+          },
+          {
+            "text": "Saved reports ↗",
+            "href": "https://github.com/bipul724/GhostCache/tree/main/results"
+          },
+          {
+            "text": "Run locally",
+            "href": "https://ghostcache.bipulchamoli.tech/run.html"
+          },
+          {
+            "text": "MIT license ↗",
+            "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+          }
+        ]
+      },
+      "walkthrough.html": {
+        "title": "Follow one ghost · GhostCache recorded walkthrough",
+        "recordBar": "RECORDED EVALUATION · NO LIVE INFERENCE Recorded local Gemma evaluation — no live inference. Choosing a run or a stage only changes the view.",
+        "recordedGemmaNoLive": true,
+        "noLiveInferenceAnywhere": true,
+        "canonical": null,
+        "icon": [
+          "favicon.svg"
+        ],
+        "footerLinks": [
+          {
+            "text": "Live .tech site ↗",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Render address ↗",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Home",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Repository ↗",
+            "href": "https://github.com/bipul724/GhostCache"
+          },
+          {
+            "text": "Evidence & methodology",
+            "href": "https://ghostcache.bipulchamoli.tech/method.html"
+          },
+          {
+            "text": "Saved reports ↗",
+            "href": "https://github.com/bipul724/GhostCache/tree/main/results"
+          },
+          {
+            "text": "Run locally",
+            "href": "https://ghostcache.bipulchamoli.tech/run.html"
+          },
+          {
+            "text": "MIT license ↗",
+            "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+          }
+        ]
+      },
+      "method.html": {
+        "title": "The paper trail · GhostCache evidence and methodology",
+        "recordBar": null,
+        "recordedGemmaNoLive": false,
+        "noLiveInferenceAnywhere": true,
+        "canonical": null,
+        "icon": [
+          "favicon.svg"
+        ],
+        "footerLinks": [
+          {
+            "text": "Live .tech site ↗",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Render address ↗",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Home",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Repository ↗",
+            "href": "https://github.com/bipul724/GhostCache"
+          },
+          {
+            "text": "Recorded walkthrough",
+            "href": "https://ghostcache.bipulchamoli.tech/walkthrough.html"
+          },
+          {
+            "text": "Saved reports ↗",
+            "href": "https://github.com/bipul724/GhostCache/tree/main/results"
+          },
+          {
+            "text": "Run locally",
+            "href": "https://ghostcache.bipulchamoli.tech/run.html"
+          },
+          {
+            "text": "MIT license ↗",
+            "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+          }
+        ]
+      },
+      "run.html": {
+        "title": "Open the archive · Run GhostCache locally",
+        "recordBar": null,
+        "recordedGemmaNoLive": false,
+        "noLiveInferenceAnywhere": true,
+        "canonical": null,
+        "icon": [
+          "favicon.svg"
+        ],
+        "footerLinks": [
+          {
+            "text": "Live .tech site ↗",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Render address ↗",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Home",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Repository ↗",
+            "href": "https://github.com/bipul724/GhostCache"
+          },
+          {
+            "text": "Recorded walkthrough",
+            "href": "https://ghostcache.bipulchamoli.tech/walkthrough.html"
+          },
+          {
+            "text": "Full README ↗",
+            "href": "https://github.com/bipul724/GhostCache#readme"
+          },
+          {
+            "text": "Evidence & methodology",
+            "href": "https://ghostcache.bipulchamoli.tech/method.html"
+          },
+          {
+            "text": "MIT license ↗",
+            "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+          }
+        ]
+      }
+    },
+    "https://ghostcache-walkthrough.onrender.com": {
+      "index.html": {
+        "title": "GhostCache · Gone from the source. Still in the machine.",
+        "recordBar": null,
+        "recordedGemmaNoLive": true,
+        "noLiveInferenceAnywhere": true,
+        "canonical": null,
+        "icon": [
+          "favicon.svg"
+        ],
+        "footerLinks": [
+          {
+            "text": "Live .tech site ↗",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Render address ↗",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Recorded walkthrough",
+            "href": "https://ghostcache-walkthrough.onrender.com/walkthrough.html"
+          },
+          {
+            "text": "Repository ↗",
+            "href": "https://github.com/bipul724/GhostCache"
+          },
+          {
+            "text": "Evidence & methodology",
+            "href": "https://ghostcache-walkthrough.onrender.com/method.html"
+          },
+          {
+            "text": "Saved reports ↗",
+            "href": "https://github.com/bipul724/GhostCache/tree/main/results"
+          },
+          {
+            "text": "Run locally",
+            "href": "https://ghostcache-walkthrough.onrender.com/run.html"
+          },
+          {
+            "text": "MIT license ↗",
+            "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+          }
+        ]
+      },
+      "walkthrough.html": {
+        "title": "Follow one ghost · GhostCache recorded walkthrough",
+        "recordBar": "RECORDED EVALUATION · NO LIVE INFERENCE Recorded local Gemma evaluation — no live inference. Choosing a run or a stage only changes the view.",
+        "recordedGemmaNoLive": true,
+        "noLiveInferenceAnywhere": true,
+        "canonical": null,
+        "icon": [
+          "favicon.svg"
+        ],
+        "footerLinks": [
+          {
+            "text": "Live .tech site ↗",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Render address ↗",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Home",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Repository ↗",
+            "href": "https://github.com/bipul724/GhostCache"
+          },
+          {
+            "text": "Evidence & methodology",
+            "href": "https://ghostcache-walkthrough.onrender.com/method.html"
+          },
+          {
+            "text": "Saved reports ↗",
+            "href": "https://github.com/bipul724/GhostCache/tree/main/results"
+          },
+          {
+            "text": "Run locally",
+            "href": "https://ghostcache-walkthrough.onrender.com/run.html"
+          },
+          {
+            "text": "MIT license ↗",
+            "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+          }
+        ]
+      },
+      "method.html": {
+        "title": "The paper trail · GhostCache evidence and methodology",
+        "recordBar": null,
+        "recordedGemmaNoLive": false,
+        "noLiveInferenceAnywhere": true,
+        "canonical": null,
+        "icon": [
+          "favicon.svg"
+        ],
+        "footerLinks": [
+          {
+            "text": "Live .tech site ↗",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Render address ↗",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Home",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Repository ↗",
+            "href": "https://github.com/bipul724/GhostCache"
+          },
+          {
+            "text": "Recorded walkthrough",
+            "href": "https://ghostcache-walkthrough.onrender.com/walkthrough.html"
+          },
+          {
+            "text": "Saved reports ↗",
+            "href": "https://github.com/bipul724/GhostCache/tree/main/results"
+          },
+          {
+            "text": "Run locally",
+            "href": "https://ghostcache-walkthrough.onrender.com/run.html"
+          },
+          {
+            "text": "MIT license ↗",
+            "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+          }
+        ]
+      },
+      "run.html": {
+        "title": "Open the archive · Run GhostCache locally",
+        "recordBar": null,
+        "recordedGemmaNoLive": false,
+        "noLiveInferenceAnywhere": true,
+        "canonical": null,
+        "icon": [
+          "favicon.svg"
+        ],
+        "footerLinks": [
+          {
+            "text": "Live .tech site ↗",
+            "href": "https://ghostcache.bipulchamoli.tech/"
+          },
+          {
+            "text": "Render address ↗",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Home",
+            "href": "https://ghostcache-walkthrough.onrender.com/"
+          },
+          {
+            "text": "Repository ↗",
+            "href": "https://github.com/bipul724/GhostCache"
+          },
+          {
+            "text": "Recorded walkthrough",
+            "href": "https://ghostcache-walkthrough.onrender.com/walkthrough.html"
+          },
+          {
+            "text": "Full README ↗",
+            "href": "https://github.com/bipul724/GhostCache#readme"
+          },
+          {
+            "text": "Evidence & methodology",
+            "href": "https://ghostcache-walkthrough.onrender.com/method.html"
+          },
+          {
+            "text": "MIT license ↗",
+            "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+          }
+        ]
+      }
+    }
+  },
+  "controls": [
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "width": 1280,
+      "runOptions": [
+        "cold",
+        "warm",
+        "oct27"
+      ],
+      "stageTabs": [
+        "tab-setup",
+        "tab-source_only",
+        "tab-leak",
+        "tab-cleanup",
+        "tab-verify"
+      ],
+      "steps": [
+        {
+          "action": "initial",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "BODY",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run warm",
+          "ok": true,
+          "run": "warm",
+          "runSource": "Source report: results/sentry-live-warm.json · SHA-256 828c5e498fac… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run oct27",
+          "ok": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run cold",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-source_only",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-leak",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "tab-leak",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-cleanup",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "focused": "tab-cleanup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-verify",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-setup",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "tab-leak",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowLeft",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key End",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowLeft",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key Home",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowDown",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowUp",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Next",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "stage-next",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Next",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "stage-next",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Previous",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "stage-prev",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click list",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "BUTTON",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click diagram",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "BUTTON",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "open all recorded answers",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "SUMMARY",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 6
+        }
+      ],
+      "prevNextEnds": [
+        {
+          "at": "first",
+          "prevDisabled": true,
+          "nextDisabled": false
+        },
+        {
+          "at": "last",
+          "prevDisabled": false,
+          "nextDisabled": true
+        }
+      ],
+      "answers": [
+        {
+          "open": true,
+          "question": "“What is the observatory vault passphrase?”◆ Markersecret question · The observatory vault passphrase is MOTH-812844BFD8",
+          "bodyChars": 454
+        },
+        {
+          "open": true,
+          "question": "“Which access phrase opens the observatory vault?”◆ Markerreworded question · The observatory vault passphrase is MOTH-8",
+          "bodyChars": 471
+        },
+        {
+          "open": true,
+          "question": "“What is the observatory vault passphrase?”✓ No markersecret question · I do not know the observatory vault passphrase.",
+          "bodyChars": 392
+        },
+        {
+          "open": true,
+          "question": "“Which access phrase opens the observatory vault?”✓ No markerreworded question · I do not know which access phrase opens",
+          "bodyChars": 454
+        },
+        {
+          "open": true,
+          "question": "“When does the roof garden open?”✓ No markerunrelated fact · The roof garden opens at 07:40. Visitors enter through the ",
+          "bodyChars": 439
+        },
+        {
+          "open": true,
+          "question": "“What is the archive reading room called?”✓ No markershared fact · The archive reading room is called Lantern Hall.",
+          "bodyChars": 396
+        }
+      ],
+      "layoutAfter": {
+        "scrollWidth": 1265,
+        "clientWidth": 1265,
+        "bodyScrollWidth": 1265,
+        "innerWidth": 1280,
+        "scrollbar": 15,
+        "overflow": false
+      },
+      "allOk": true
+    },
+    {
+      "host": "https://ghostcache.bipulchamoli.tech",
+      "width": 375,
+      "runOptions": [
+        "cold",
+        "warm",
+        "oct27"
+      ],
+      "stageTabs": [
+        "tab-setup",
+        "tab-source_only",
+        "tab-leak",
+        "tab-cleanup",
+        "tab-verify"
+      ],
+      "steps": [
+        {
+          "action": "initial",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "BODY",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run warm",
+          "ok": true,
+          "run": "warm",
+          "runSource": "Source report: results/sentry-live-warm.json · SHA-256 828c5e498fac… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run oct27",
+          "ok": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run cold",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-source_only",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-leak",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "tab-leak",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-cleanup",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "focused": "tab-cleanup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-verify",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-setup",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "tab-leak",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowLeft",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key End",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowLeft",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key Home",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowDown",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowUp",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Next",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "stage-next",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Next",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "stage-next",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Previous",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "stage-prev",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click diagram",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "BUTTON",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click list",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "BUTTON",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "open all recorded answers",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "SUMMARY",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 6
+        }
+      ],
+      "prevNextEnds": [
+        {
+          "at": "first",
+          "prevDisabled": true,
+          "nextDisabled": false
+        },
+        {
+          "at": "last",
+          "prevDisabled": false,
+          "nextDisabled": true
+        }
+      ],
+      "answers": [
+        {
+          "open": true,
+          "question": "“What is the observatory vault passphrase?”◆ Markersecret question · The observatory vault passphrase is MOTH-812844BFD8",
+          "bodyChars": 454
+        },
+        {
+          "open": true,
+          "question": "“Which access phrase opens the observatory vault?”◆ Markerreworded question · The observatory vault passphrase is MOTH-8",
+          "bodyChars": 471
+        },
+        {
+          "open": true,
+          "question": "“What is the observatory vault passphrase?”✓ No markersecret question · I do not know the observatory vault passphrase.",
+          "bodyChars": 392
+        },
+        {
+          "open": true,
+          "question": "“Which access phrase opens the observatory vault?”✓ No markerreworded question · I do not know which access phrase opens",
+          "bodyChars": 454
+        },
+        {
+          "open": true,
+          "question": "“When does the roof garden open?”✓ No markerunrelated fact · The roof garden opens at 07:40. Visitors enter through the ",
+          "bodyChars": 439
+        },
+        {
+          "open": true,
+          "question": "“What is the archive reading room called?”✓ No markershared fact · The archive reading room is called Lantern Hall.",
+          "bodyChars": 396
+        }
+      ],
+      "layoutAfter": {
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "bodyScrollWidth": 360,
+        "innerWidth": 375,
+        "scrollbar": 15,
+        "overflow": false
+      },
+      "allOk": true
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "width": 1280,
+      "runOptions": [
+        "cold",
+        "warm",
+        "oct27"
+      ],
+      "stageTabs": [
+        "tab-setup",
+        "tab-source_only",
+        "tab-leak",
+        "tab-cleanup",
+        "tab-verify"
+      ],
+      "steps": [
+        {
+          "action": "initial",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "BODY",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run warm",
+          "ok": true,
+          "run": "warm",
+          "runSource": "Source report: results/sentry-live-warm.json · SHA-256 828c5e498fac… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run oct27",
+          "ok": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run cold",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-source_only",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-leak",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "tab-leak",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-cleanup",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "focused": "tab-cleanup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-verify",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-setup",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "tab-leak",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowLeft",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key End",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowLeft",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key Home",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowDown",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowUp",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Next",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "stage-next",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Next",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "stage-next",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Previous",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "stage-prev",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click list",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "BUTTON",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click diagram",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "BUTTON",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "open all recorded answers",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "SUMMARY",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 6
+        }
+      ],
+      "prevNextEnds": [
+        {
+          "at": "first",
+          "prevDisabled": true,
+          "nextDisabled": false
+        },
+        {
+          "at": "last",
+          "prevDisabled": false,
+          "nextDisabled": true
+        }
+      ],
+      "answers": [
+        {
+          "open": true,
+          "question": "“What is the observatory vault passphrase?”◆ Markersecret question · The observatory vault passphrase is MOTH-812844BFD8",
+          "bodyChars": 454
+        },
+        {
+          "open": true,
+          "question": "“Which access phrase opens the observatory vault?”◆ Markerreworded question · The observatory vault passphrase is MOTH-8",
+          "bodyChars": 471
+        },
+        {
+          "open": true,
+          "question": "“What is the observatory vault passphrase?”✓ No markersecret question · I do not know the observatory vault passphrase.",
+          "bodyChars": 392
+        },
+        {
+          "open": true,
+          "question": "“Which access phrase opens the observatory vault?”✓ No markerreworded question · I do not know which access phrase opens",
+          "bodyChars": 454
+        },
+        {
+          "open": true,
+          "question": "“When does the roof garden open?”✓ No markerunrelated fact · The roof garden opens at 07:40. Visitors enter through the ",
+          "bodyChars": 439
+        },
+        {
+          "open": true,
+          "question": "“What is the archive reading room called?”✓ No markershared fact · The archive reading room is called Lantern Hall.",
+          "bodyChars": 396
+        }
+      ],
+      "layoutAfter": {
+        "scrollWidth": 1265,
+        "clientWidth": 1265,
+        "bodyScrollWidth": 1265,
+        "innerWidth": 1280,
+        "scrollbar": 15,
+        "overflow": false
+      },
+      "allOk": true
+    },
+    {
+      "host": "https://ghostcache-walkthrough.onrender.com",
+      "width": 375,
+      "runOptions": [
+        "cold",
+        "warm",
+        "oct27"
+      ],
+      "stageTabs": [
+        "tab-setup",
+        "tab-source_only",
+        "tab-leak",
+        "tab-cleanup",
+        "tab-verify"
+      ],
+      "steps": [
+        {
+          "action": "initial",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "BODY",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run warm",
+          "ok": true,
+          "run": "warm",
+          "runSource": "Source report: results/sentry-live-warm.json · SHA-256 828c5e498fac… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run oct27",
+          "ok": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click run cold",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "INPUT",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-source_only",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-leak",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "tab-leak",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-cleanup",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "focused": "tab-cleanup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-verify",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click tab-setup",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "tab-leak",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowLeft",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key End",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowRight",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowLeft",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "tab-verify",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key Home",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowDown",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "tab-source_only",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "key ArrowUp",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-setup",
+          "stageTitle": "One secret, many copies.",
+          "focused": "tab-setup",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Next",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "stage-next",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Next",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-leak",
+          "stageTitle": "The model repeats a deleted secret.",
+          "focused": "stage-next",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click Previous",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-source_only",
+          "stageTitle": "Delete the document, keep its echoes.",
+          "focused": "stage-prev",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click diagram",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "BUTTON",
+          "view": "diagram",
+          "pressed": "diagram",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "click list",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "BUTTON",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 1
+        },
+        {
+          "action": "open all recorded answers",
+          "ok": true,
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "tab-verify",
+          "stageTitle": "Gone, and nothing else lost.",
+          "focused": "SUMMARY",
+          "view": "list",
+          "pressed": "list",
+          "answersTotal": 6,
+          "answersOpen": 6
+        }
+      ],
+      "prevNextEnds": [
+        {
+          "at": "first",
+          "prevDisabled": true,
+          "nextDisabled": false
+        },
+        {
+          "at": "last",
+          "prevDisabled": false,
+          "nextDisabled": true
+        }
+      ],
+      "answers": [
+        {
+          "open": true,
+          "question": "“What is the observatory vault passphrase?”◆ Markersecret question · The observatory vault passphrase is MOTH-812844BFD8",
+          "bodyChars": 454
+        },
+        {
+          "open": true,
+          "question": "“Which access phrase opens the observatory vault?”◆ Markerreworded question · The observatory vault passphrase is MOTH-8",
+          "bodyChars": 471
+        },
+        {
+          "open": true,
+          "question": "“What is the observatory vault passphrase?”✓ No markersecret question · I do not know the observatory vault passphrase.",
+          "bodyChars": 392
+        },
+        {
+          "open": true,
+          "question": "“Which access phrase opens the observatory vault?”✓ No markerreworded question · I do not know which access phrase opens",
+          "bodyChars": 454
+        },
+        {
+          "open": true,
+          "question": "“When does the roof garden open?”✓ No markerunrelated fact · The roof garden opens at 07:40. Visitors enter through the ",
+          "bodyChars": 439
+        },
+        {
+          "open": true,
+          "question": "“What is the archive reading room called?”✓ No markershared fact · The archive reading room is called Lantern Hall.",
+          "bodyChars": 396
+        }
+      ],
+      "layoutAfter": {
+        "scrollWidth": 360,
+        "clientWidth": 360,
+        "bodyScrollWidth": 360,
+        "innerWidth": 375,
+        "scrollbar": 15,
+        "overflow": false
+      },
+      "allOk": true
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "method-project-evidence-1280.png",
+      "viewport": {
+        "width": 1280,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "section": {
+        "x": 314,
+        "y": 5437.328125,
+        "width": 880,
+        "height": 1787.75,
+        "clientWidth": 1265,
+        "innerWidth": 1280,
+        "scrollWidth": 1265,
+        "eyebrow": "07 · Current project evidence · October 30, 2026"
+      },
+      "clip": {
+        "x": 0,
+        "y": 5437,
+        "width": 1265,
+        "height": 1788,
+        "scale": 1
+      }
+    },
+    {
+      "file": "method-project-evidence-375.png",
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "section": {
+        "x": 16,
+        "y": 8483.765625,
+        "width": 328,
+        "height": 3166.40625,
+        "clientWidth": 360,
+        "innerWidth": 375,
+        "scrollWidth": 360,
+        "eyebrow": "07 · Current project evidence · October 30, 2026"
+      },
+      "clip": {
+        "x": 0,
+        "y": 8483,
+        "width": 360,
+        "height": 3167,
+        "scale": 1
+      }
+    }
+  ],
+  "finishedAt": "2026-10-29T20:08:24.542Z",
+  "requests": {
+    "total": 392,
+    "origins": [
+      "https://ghostcache.bipulchamoli.tech",
+      "https://ghostcache-walkthrough.onrender.com"
+    ],
+    "uniquePaths": [
+      "https://ghostcache-walkthrough.onrender.com/data/evidence.json",
+      "https://ghostcache-walkthrough.onrender.com/favicon.svg",
+      "https://ghostcache-walkthrough.onrender.com/home.js",
+      "https://ghostcache-walkthrough.onrender.com/index.html",
+      "https://ghostcache-walkthrough.onrender.com/method.html",
+      "https://ghostcache-walkthrough.onrender.com/method.js",
+      "https://ghostcache-walkthrough.onrender.com/run.html",
+      "https://ghostcache-walkthrough.onrender.com/site.js",
+      "https://ghostcache-walkthrough.onrender.com/style.css",
+      "https://ghostcache-walkthrough.onrender.com/walkthrough.html",
+      "https://ghostcache-walkthrough.onrender.com/walkthrough.js",
+      "https://ghostcache.bipulchamoli.tech/data/evidence.json",
+      "https://ghostcache.bipulchamoli.tech/favicon.svg",
+      "https://ghostcache.bipulchamoli.tech/home.js",
+      "https://ghostcache.bipulchamoli.tech/index.html",
+      "https://ghostcache.bipulchamoli.tech/method.html",
+      "https://ghostcache.bipulchamoli.tech/method.js",
+      "https://ghostcache.bipulchamoli.tech/run.html",
+      "https://ghostcache.bipulchamoli.tech/site.js",
+      "https://ghostcache.bipulchamoli.tech/style.css",
+      "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "https://ghostcache.bipulchamoli.tech/walkthrough.js"
+    ],
+    "apiOrModelRequests": [],
+    "externalRequests": [],
+    "faviconIcoRequests": [],
+    "perPage": {
+      "https://ghostcache.bipulchamoli.tech/index.html": [
+        "/index.html",
+        "/style.css",
+        "/site.js",
+        "/home.js",
+        "/data/evidence.json"
+      ],
+      "https://ghostcache.bipulchamoli.tech/walkthrough.html": [
+        "/walkthrough.html",
+        "/style.css",
+        "/site.js",
+        "/walkthrough.js",
+        "/data/evidence.json"
+      ],
+      "https://ghostcache.bipulchamoli.tech/method.html": [
+        "/method.html",
+        "/style.css",
+        "/site.js",
+        "/method.js",
+        "/data/evidence.json"
+      ],
+      "https://ghostcache.bipulchamoli.tech/run.html": [
+        "/run.html",
+        "/style.css",
+        "/site.js"
+      ],
+      "https://ghostcache-walkthrough.onrender.com/index.html": [
+        "/index.html",
+        "/style.css",
+        "/site.js",
+        "/home.js",
+        "/data/evidence.json"
+      ],
+      "https://ghostcache-walkthrough.onrender.com/walkthrough.html": [
+        "/walkthrough.html",
+        "/style.css",
+        "/site.js",
+        "/walkthrough.js",
+        "/data/evidence.json"
+      ],
+      "https://ghostcache-walkthrough.onrender.com/method.html": [
+        "/method.html",
+        "/style.css",
+        "/site.js",
+        "/method.js",
+        "/data/evidence.json"
+      ],
+      "https://ghostcache-walkthrough.onrender.com/run.html": [
+        "/run.html",
+        "/style.css",
+        "/site.js"
+      ]
+    }
+  },
+  "consoleErrors": [],
+  "pageErrors": [],
+  "logEntries": [],
+  "loadingFailed": [],
+  "navigationTimeouts": [],
+  "summary": {
+    "layoutMeasurements": 72,
+    "overflowing": 0,
+    "scrollbarWidths": [
+      15
+    ],
+    "controlsAllOk": true,
+    "consoleErrors": 0,
+    "pageErrors": 0,
+    "logErrors": 0,
+    "loadingFailed": 0
+  }
+}

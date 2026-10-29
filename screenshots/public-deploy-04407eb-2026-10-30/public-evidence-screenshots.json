@@ -1,0 +1,149 @@
+{
+  "url": "https://ghostcache.bipulchamoli.tech/method.html",
+  "browser": "Chrome/156.0.8078.73",
+  "takenAt": "2026-10-29T20:09:54.919Z",
+  "method": "Direct viewport captures (Page.captureScreenshot without clip or captureBeyondViewport) of the live page in headless Chrome with classic scrollbars; the section is scrolled into view one viewport height at a time. Frames are separate files, not stitched.",
+  "errors": [],
+  "shots": [
+    {
+      "file": "method-project-evidence-1280-1of3.png",
+      "viewport": {
+        "width": 1280,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "frame": 1,
+      "frames": 3,
+      "sectionHeight": 1787.75,
+      "requestedScrollY": 5437,
+      "scrollY": 5437,
+      "innerWidth": 1280,
+      "innerHeight": 812,
+      "clientWidth": 1265,
+      "clientHeight": 812,
+      "scrollWidth": 1265,
+      "sectionTopInViewport": 0
+    },
+    {
+      "file": "method-project-evidence-1280-2of3.png",
+      "viewport": {
+        "width": 1280,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "frame": 2,
+      "frames": 3,
+      "sectionHeight": 1787.75,
+      "requestedScrollY": 6249,
+      "scrollY": 6249,
+      "innerWidth": 1280,
+      "innerHeight": 812,
+      "clientWidth": 1265,
+      "clientHeight": 812,
+      "scrollWidth": 1265,
+      "sectionTopInViewport": -812
+    },
+    {
+      "file": "method-project-evidence-1280-3of3.png",
+      "viewport": {
+        "width": 1280,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "frame": 3,
+      "frames": 3,
+      "sectionHeight": 1787.75,
+      "requestedScrollY": 7061,
+      "scrollY": 7061,
+      "innerWidth": 1280,
+      "innerHeight": 812,
+      "clientWidth": 1265,
+      "clientHeight": 812,
+      "scrollWidth": 1265,
+      "sectionTopInViewport": -1624
+    },
+    {
+      "file": "method-project-evidence-375-1of4.png",
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "frame": 1,
+      "frames": 4,
+      "sectionHeight": 3166.40625,
+      "requestedScrollY": 8484,
+      "scrollY": 8484,
+      "innerWidth": 375,
+      "innerHeight": 812,
+      "clientWidth": 360,
+      "clientHeight": 812,
+      "scrollWidth": 360,
+      "sectionTopInViewport": 0
+    },
+    {
+      "file": "method-project-evidence-375-2of4.png",
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "frame": 2,
+      "frames": 4,
+      "sectionHeight": 3166.40625,
+      "requestedScrollY": 9296,
+      "scrollY": 9296,
+      "innerWidth": 375,
+      "innerHeight": 812,
+      "clientWidth": 360,
+      "clientHeight": 812,
+      "scrollWidth": 360,
+      "sectionTopInViewport": -812
+    },
+    {
+      "file": "method-project-evidence-375-3of4.png",
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "frame": 3,
+      "frames": 4,
+      "sectionHeight": 3166.40625,
+      "requestedScrollY": 10108,
+      "scrollY": 10108,
+      "innerWidth": 375,
+      "innerHeight": 812,
+      "clientWidth": 360,
+      "clientHeight": 812,
+      "scrollWidth": 360,
+      "sectionTopInViewport": -1624
+    },
+    {
+      "file": "method-project-evidence-375-4of4.png",
+      "viewport": {
+        "width": 375,
+        "height": 812,
+        "deviceScaleFactor": 1,
+        "mobile": false
+      },
+      "frame": 4,
+      "frames": 4,
+      "sectionHeight": 3166.40625,
+      "requestedScrollY": 10920,
+      "scrollY": 10920,
+      "innerWidth": 375,
+      "innerHeight": 812,
+      "clientWidth": 360,
+      "clientHeight": 812,
+      "scrollWidth": 360,
+      "sectionTopInViewport": -2436
+    }
+  ]
+}

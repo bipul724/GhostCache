@@ -1,0 +1,923 @@
+{
+  "checked_at_utc": "2026-10-29T19:54:32+00:00",
+  "base": "https://ghostcache.bipulchamoli.tech/",
+  "method": "Python urllib GET, default TLS verification; anchors checked against id attributes in the served pages, and for GitHub markdown against rendered heading ids/anchor links",
+  "links": [
+    {
+      "page": "index.html",
+      "href": "#main",
+      "absolute": "https://ghostcache.bipulchamoli.tech/index.html#main",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "./",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "method.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "https://github.com/bipul724/GhostCache",
+      "absolute": "https://github.com/bipul724/GhostCache",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache"
+    },
+    {
+      "page": "index.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/results"
+    },
+    {
+      "page": "index.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "method.html#project-evidence",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#project-evidence",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "method.html#limits",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#limits",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "https://ghostcache.bipulchamoli.tech/",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "https://ghostcache-walkthrough.onrender.com/",
+      "absolute": "https://ghostcache-walkthrough.onrender.com/",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://ghostcache-walkthrough.onrender.com/"
+    },
+    {
+      "page": "index.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "https://github.com/bipul724/GhostCache",
+      "absolute": "https://github.com/bipul724/GhostCache",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache"
+    },
+    {
+      "page": "index.html",
+      "href": "method.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/results"
+    },
+    {
+      "page": "index.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "index.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/LICENSE",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "#main",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html#main",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "./",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "method.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "https://github.com/bipul724/GhostCache",
+      "absolute": "https://github.com/bipul724/GhostCache",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache"
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/results"
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/results"
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "https://ghostcache.bipulchamoli.tech/",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "https://ghostcache-walkthrough.onrender.com/",
+      "absolute": "https://ghostcache-walkthrough.onrender.com/",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://ghostcache-walkthrough.onrender.com/"
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "./",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "https://github.com/bipul724/GhostCache",
+      "absolute": "https://github.com/bipul724/GhostCache",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache"
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "method.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/results"
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "walkthrough.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/LICENSE",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+    },
+    {
+      "page": "method.html",
+      "href": "#main",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#main",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "./",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "method.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache",
+      "absolute": "https://github.com/bipul724/GhostCache",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache"
+    },
+    {
+      "page": "method.html",
+      "href": "#two-deletions",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#two-deletions",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "#corpus",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#corpus",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "#results",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#results",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "#balance",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#balance",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "#timing",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#timing",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "#limits",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#limits",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "#project-evidence",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#project-evidence",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "#sources",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#sources",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/TESTING.md",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/TESTING.md",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/TESTING.md"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/results"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/actions/runs/40573873485",
+      "absolute": "https://github.com/bipul724/GhostCache/actions/runs/40573873485",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/actions/runs/40573873485"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/actions/runs/40867758385",
+      "absolute": "https://github.com/bipul724/GhostCache/actions/runs/40867758385",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/actions/runs/40867758385"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/actions/runs/40922048949",
+      "absolute": "https://github.com/bipul724/GhostCache/actions/runs/40922048949",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/actions/runs/40922048949"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-16-2026-10-29",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-16-2026-10-29",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-16-2026-10-29"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-17-2026-10-29",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-17-2026-10-29",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-17-2026-10-29"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/.github/workflows/checks.yml",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/.github/workflows/checks.yml",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/.github/workflows/checks.yml"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/actions",
+      "absolute": "https://github.com/bipul724/GhostCache/actions",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/actions"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache#what-the-real-traces-showed",
+      "absolute": "https://github.com/bipul724/GhostCache#what-the-real-traces-showed",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache",
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://ghostcache.bipulchamoli.tech/",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://ghostcache-walkthrough.onrender.com/",
+      "absolute": "https://ghostcache-walkthrough.onrender.com/",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://ghostcache-walkthrough.onrender.com/"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29"
+    },
+    {
+      "page": "method.html",
+      "href": "run.html#troubleshooting",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#troubleshooting",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/CATEGORIES.md",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/CATEGORIES.md",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/CATEGORIES.md"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/tasks.md",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/tasks.md",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/tasks.md"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/results"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/ghostcache/store.py",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/ghostcache/store.py",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/ghostcache/store.py"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/ghostcache/app.py",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/ghostcache/app.py",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/ghostcache/app.py"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/EVALUATION.md",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/EVALUATION.md",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/EVALUATION.md"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/scripts/export_site_data.py",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/scripts/export_site_data.py",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/scripts/export_site_data.py"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/TESTING.md",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/TESTING.md",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/TESTING.md"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache#what-the-real-traces-showed",
+      "absolute": "https://github.com/bipul724/GhostCache#what-the-real-traces-showed",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache",
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/CATEGORIES.md",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/CATEGORIES.md",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/CATEGORIES.md"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29"
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29/promo-claim",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29/promo-claim",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29/promo-claim"
+    },
+    {
+      "page": "method.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://dev.to/vectorlinklabs/stale-rag-vs-expensive-rag-how-to-cache-rag-context-without-serving-outdated-answers-335f",
+      "absolute": "https://dev.to/vectorlinklabs/stale-rag-vs-expensive-rag-how-to-cache-rag-context-without-serving-outdated-answers-335f",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://dev.to/vectorlinklabs/stale-rag-vs-expensive-rag-how-to-cache-rag-context-without-serving-outdated-answers-335f"
+    },
+    {
+      "page": "method.html",
+      "href": "https://dev.to/fusionaldev/where-retrieval-assistants-leak-the-title-the-summary-and-the-cache-4po4",
+      "absolute": "https://dev.to/fusionaldev/where-retrieval-assistants-leak-the-title-the-summary-and-the-cache-4po4",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://dev.to/fusionaldev/where-retrieval-assistants-leak-the-title-the-summary-and-the-cache-4po4"
+    },
+    {
+      "page": "method.html",
+      "href": "https://ghostcache.bipulchamoli.tech/",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://ghostcache-walkthrough.onrender.com/",
+      "absolute": "https://ghostcache-walkthrough.onrender.com/",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://ghostcache-walkthrough.onrender.com/"
+    },
+    {
+      "page": "method.html",
+      "href": "./",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache",
+      "absolute": "https://github.com/bipul724/GhostCache",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache"
+    },
+    {
+      "page": "method.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "absolute": "https://github.com/bipul724/GhostCache/tree/main/results",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/tree/main/results"
+    },
+    {
+      "page": "method.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "method.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/LICENSE",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+    },
+    {
+      "page": "run.html",
+      "href": "#main",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#main",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "./",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "method.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "run.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "https://github.com/bipul724/GhostCache",
+      "absolute": "https://github.com/bipul724/GhostCache",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache"
+    },
+    {
+      "page": "run.html",
+      "href": "#requirements",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#requirements",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "#fixture",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#fixture",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "#live",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#live",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "#evaluate",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#evaluate",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "#tracing",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#tracing",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "#modes",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#modes",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "#troubleshooting",
+      "absolute": "https://ghostcache.bipulchamoli.tech/run.html#troubleshooting",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "https://ollama.com",
+      "absolute": "https://ollama.com",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://ollama.com"
+    },
+    {
+      "page": "run.html",
+      "href": "method.html#project-evidence",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#project-evidence",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "https://github.com/bipul724/GhostCache#optional-sentry-tracing",
+      "absolute": "https://github.com/bipul724/GhostCache#optional-sentry-tracing",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache",
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "method.html#project-evidence",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html#project-evidence",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "https://ghostcache.bipulchamoli.tech/",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "https://ghostcache-walkthrough.onrender.com/",
+      "absolute": "https://ghostcache-walkthrough.onrender.com/",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://ghostcache-walkthrough.onrender.com/"
+    },
+    {
+      "page": "run.html",
+      "href": "./",
+      "absolute": "https://ghostcache.bipulchamoli.tech/",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "https://github.com/bipul724/GhostCache",
+      "absolute": "https://github.com/bipul724/GhostCache",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache"
+    },
+    {
+      "page": "run.html",
+      "href": "walkthrough.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "https://github.com/bipul724/GhostCache#readme",
+      "absolute": "https://github.com/bipul724/GhostCache#readme",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache",
+      "anchor_ok": false
+    },
+    {
+      "page": "run.html",
+      "href": "method.html",
+      "absolute": "https://ghostcache.bipulchamoli.tech/method.html",
+      "kind": "internal",
+      "status": 200,
+      "anchor_ok": true
+    },
+    {
+      "page": "run.html",
+      "href": "https://github.com/bipul724/GhostCache/blob/main/LICENSE",
+      "absolute": "https://github.com/bipul724/GhostCache/blob/main/LICENSE",
+      "kind": "external",
+      "status": 200,
+      "final_url": "https://github.com/bipul724/GhostCache/blob/main/LICENSE"
+    }
+  ]
+}
