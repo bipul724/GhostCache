@@ -247,7 +247,9 @@ class PublicSafetyTests(unittest.TestCase):
         evidence.feed(section.group(1))
         repo = "https://github.com/bipul724/GhostCache"
         for source in ("/blob/main/TESTING.md", "/blob/main/CATEGORIES.md", "/actions",
-                       "/tree/main/screenshots/custom-domain-2026-10-29"):
+                       "/tree/main/screenshots/custom-domain-2026-10-29",
+                       "/tree/main/screenshots/hosted-ci-run-16-2026-10-29",
+                       "/tree/main/screenshots/hosted-ci-run-17-2026-10-29"):
             self.assertTrue(any(ref.startswith(repo + source) for ref in evidence.refs), source)
         self.assertRegex(" ".join(evidence.text).lower(), r"intended[\s,]+not entered")
 
