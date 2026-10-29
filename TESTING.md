@@ -52,6 +52,21 @@ GHOSTCACHE_APP_JS=<path to an older web/app.js> python3.12 -B -m unittest tests.
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
 
+## CI evidence update (October 30, 2026)
+
+**Local; uncommitted and not deployed.** The methodology page's `#project-evidence` GitHub Actions entry now reports both archived hosted reports. Run #16 on `f66977d` and run #17 on `00cfb10` each succeeded on every step, and each fixture report matches GitHub's artifact digest and passed 10/10. The entry says run #17 tested `00cfb10`, which contains the October 29 refresh and the failed-mode-switch fix, but not this later edit. The hosted test count stays unverified. The local-suite lines on `method.html` and `run.html` are redated to October 30. `tests/test_site.py` now also requires both CI evidence-folder links; against the pre-change page it fails on the run #17 link. Evidence: [ci-evidence-update-2026-10-30/](screenshots/ci-evidence-update-2026-10-30/README.md).
+
+| Check actually run | Result |
+| --- | --- |
+| `.venv/bin/python -B -m unittest discover -s tests -v` (Python 3.12.6, `sentry-sdk` 2.72.0, Node v22.23.4, no DSN) | `Ran 126 tests` … `OK`; store 11, controller 33, HTTP 10, providers/CLI 12, UI 24, telemetry 9, site 27 |
+| `python3.12 -B -m unittest discover -s tests -v` | `Ran 126 tests` … `OK (skipped=6)`, the SDK telemetry tests |
+| `env -u GHOSTCACHE_SENTRY_DSN python3.12 -B -m ghostcache evaluate --mode fixture --output <new scratch path outside the repo>` | exit 0, `passed: true`, 10/10 |
+| `python3.12 -B scripts/export_site_data.py --check` and `node --check` on the site scripts, `web/app.js` and both contract files | pass; `data/evidence.json` unchanged |
+| Headless Chrome 156 against a local preview of `site/` with the `render.yaml` headers, classic scrollbars, widths 320–1280 (nine), height 812 | 36 measurements without page overflow; no console, CSP, script or request errors; recorded-mode labels present; run, stage and view controls respond to real pointer clicks at 375 and 1280 px |
+| Read-only GET of the seven links in the revised entry | 200 each, no redirects |
+
+The node-off-PATH run was not repeated for this edit. The October 29 figure was `OK (skipped=33)`.
+
 ## Audit fixes (October 29, 2026)
 
 **Fixed and verified locally; uncommitted, not run on GitHub and not deployed.** *(Later status: committed and pushed in `00cfb10`, and hosted [run #17](#ci-github-actions) on that commit succeeded, with its fixture report 10/10; no hosted test count. Deployment is still unverified, T-E9.)* Two parts: a code fix in the local lab, and documentation corrections. Evidence: [audit-fixes-2026-10-29/](screenshots/audit-fixes-2026-10-29/README.md) and [hosted-ci-run-16-2026-10-29/](screenshots/hosted-ci-run-16-2026-10-29/README.md).
