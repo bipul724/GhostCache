@@ -2,7 +2,7 @@
 
 GhostCache has exactly one public deployment: the **static recorded walkthrough** in [site/](site/), hosted on Render. It replays three saved live Gemma reports. It runs **no inference**, cannot answer new questions, stores nothing and deletes nothing. The interactive app in `web/`, the Python server, the SQLite database and Ollama stay on the author's laptop and are never deployed (DECISIONS.md D-13).
 
-Render is used only for hosting: it serves these static files and runs nothing else. Since October 29, 2026, **Best Use of Render** is one of the four intended submission categories, alongside Gemma, GitHub Copilot through Actions and Sentry Agent Tracing (DECISIONS.md D-14, second amendment).
+Render is used only for hosting: it serves these static files and runs nothing else. Since October 29, 2026, **Best Use of Render** is one of the five intended submission categories, alongside Gemma, GitHub Copilot through Actions, Sentry Agent Tracing and a .tech Domain (DECISIONS.md D-14, second and third amendments). The .tech category uses the custom domain below, which points to this same static site.
 
 - **Basis:** the deployment and verification recorded here.
 - **Eligibility:** our interpretation of the category's "host an agent's front end" wording, not organizer confirmation ([CATEGORIES.md](CATEGORIES.md#best-use-of-render)).
@@ -26,6 +26,7 @@ After it is pushed and Render rebuilds:
 | Field | Value |
 | --- | --- |
 | Public URL | <https://ghostcache-walkthrough.onrender.com/> |
+| Custom domain | <https://ghostcache.bipulchamoli.tech/> (since October 29, 2026), a CNAME to the Render site, which shows it as Verified with Certificate Issued ([custom-domain evidence](screenshots/custom-domain-2026-10-29/README.md)). The portfolio at `bipulchamoli.tech` is separate and stays on Vercel |
 | Render service | `ghostcache-walkthrough`, a Blueprint-managed Render static site created from [render.yaml](render.yaml) |
 | Initial deployment | October 28, 2026, from branch `main` at commit `8013d01`, as shown in the Render dashboard ([screenshot 00](screenshots/00-render-dashboard-live-8013d01.png)) |
 | Current deployment | Commit `2a1ffb0` on `main`, which contains the T-E7 stylesheet fix `08e0524`. The user's Render dashboard screenshots showed it as successfully deployed; those images could not be saved. The served files were byte-identical to `site/` at `2a1ffb0` when checked on October 28, 2026 at 18:45 UTC |
@@ -111,6 +112,7 @@ Every check below was read-only. Full command tables are in [TESTING.md](TESTING
 | About 22:00 IST | Documentation audit: `curl` and headless Chrome | The same status codes and headers; `/style.css`, `/walkthrough.js` and `/index.html` 200; `/api` and `/favicon.ico` 404; deployed files byte-identical to `site/` at `26a1c3e`; the click-through repeated. A 375 px emulated viewport showed horizontal overflow (see Known issues) |
 | Date not stated; the screenshot files date from about 23:25 IST on October 28 to 00:04 IST on October 29 | The owner: Render dashboard and Chrome DevTools responsive emulation (reported height 812 px), as reported by the user | Dashboard showed `2a1ffb0` successfully deployed (screenshots not saved). Console `scrollWidth` equalled `clientWidth`, with no horizontal overflow, at 320, 360, 375, 390, 414, 768, 980, 981 and 1280 px. The command block and timing table scrolled internally, and all run, stage and question buttons passed. Saved screenshots: [deployed-2a1ffb0/](screenshots/mobile-overflow-fix/deployed-2a1ffb0/README.md) (360–1280 px and the command block; the 320 px capture was unavailable) |
 | October 29, about 00:15 IST (18:45 UTC on October 28) | Coding agent: `curl` and Git, read-only | `/style.css` 200; its SHA-256 `035e46ec…bc488027` is byte-identical to `site/style.css` at `2a1ffb0` and at the fix commit `08e0524`. `/`, `/index.html`, `/walkthrough.js` and `/data/evidence.json` 200, with the latter three byte-identical to `2a1ffb0`. `/api/state` 404; the four headers present. `08e0524` is an ancestor of `2a1ffb0`. No browser measurement was made by the agent |
+| October 29, about 02:25 IST (20:55 UTC on October 28) | Coding agent: `curl` and Git, read-only, on the custom domain ([custom-domain evidence](screenshots/custom-domain-2026-10-29/README.md)) | Normal HTTPS GETs on `ghostcache.bipulchamoli.tech` returned 200 for the page, stylesheet, script and evidence JSON, byte-identical to the committed files at `c7c05c3`; the exact `/api/state` returned 404. Global DNS propagation was not established |
 
 The screenshots show what the browser displayed; they do not establish HTTP status codes. Screenshot 15 has extra characters after `/api/state` in its URL and is **not** evidence of the clean `/api/state` check, which comes from `curl`. Screenshots 09 and 10 are identical and both kept.
 

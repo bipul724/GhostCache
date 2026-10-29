@@ -95,7 +95,8 @@ python3.12 scripts/export_site_data.py --check         # public walkthrough data
 - Do not claim an integration, deployment, hosted CI run, category entry or benchmark without the evidence listed in [tasks.md](tasks.md). Writing configuration alone does not count.
 - The walkthrough's evidenced initial deployment is commit `8013d01` ([DEPLOYMENT.md](DEPLOYMENT.md)). Do not assume the current `HEAD` is what Render serves; check the dashboard or compare the served files.
 - Do not say GitHub Copilot wrote existing code. The GitHub category is targeted through GitHub Actions.
-- The submission is intended to enter four categories (DECISIONS.md D-14, amended October 29, 2026). They are Best Use of Gemma, Best Use of GitHub Copilot (through GitHub Actions only), Best Use of Sentry Agent Tracing and Best Use of Render.
+- The submission is intended to enter five categories (DECISIONS.md D-14, amended twice on October 29, 2026). They are Best Use of Gemma, Best Use of GitHub Copilot (through GitHub Actions only), Best Use of Sentry Agent Tracing, Best Use of Render and Best Use of a .tech Domain.
+- The .tech category rests on <https://ghostcache.bipulchamoli.tech/>, which serves the same Render static walkthrough. Its Hacktoberfest promo origin is the owner's confirmation. The archived screenshots do not show which redemption code was applied, so never present the promo link or the category's eligibility as verified or organizer-confirmed. Leave the portfolio at `bipulchamoli.tech` alone.
 - Render's role is still hosting only. It serves the static walkthrough; never run inference, the backend or the database there because of the category.
 - Describe Render's eligibility as an interpretation of the official "host an agent's front end" wording, not as organizer confirmation.
 - A category is entered only by the DEV submission, never by editing docs. Do not add any dropped category without a new decision.
