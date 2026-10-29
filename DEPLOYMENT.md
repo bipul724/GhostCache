@@ -10,7 +10,17 @@ Render is used only for hosting: it serves these static files and runs nothing e
 
 *(Until October 29, 2026, Render was hosting only and not one of the submission's categories.)*
 
-## Pending: the light redesign (October 29, 2026)
+## Pending: the UI content refresh (October 29, 2026)
+
+The current local refresh has not been pushed or deployed by the agent. It updates the four public HTML pages and the opening comment in `method.js`; the public stylesheet, report export, `data/evidence.json` and `render.yaml` are unchanged. The home page links to `method.html#project-evidence`, which separates current tests, tracing, hosting, domain proof and five intended categories from recorded model results. The run guide adds optional tracing and current recovery instructions; footers show the custom domain and alternate Render address.
+
+Local verification is recorded in [TESTING.md](TESTING.md#ui-content-refresh-october-29-2026) and [new captures](screenshots/ui-content-refresh-2026-10-29/README.md): 124 tests, a fresh 10/10 fixture evaluation and browser checks with normal scrollbars. The later audit fixes updated the same pages' project evidence and run guide (hosted run #16, current counts, the favicon, fixture prerequisites and recovery wording) and were checked locally again: 126 tests and new browser measurements ([audit-fix evidence](screenshots/audit-fixes-2026-10-29/README.md)). This is local evidence, not public deployment acceptance; the new project-evidence links reach the public section only after the owner deploys it.
+
+After the owner reviews, commits and pushes, confirm Render's deployment in the dashboard, compare the served files with the actual new commit, repeat the status/header checks in [Verify a deployment](#verify-a-deployment), and inspect the new project-evidence section and run guide at narrow and desktop widths. Preserve the recorded-mode labels and controls; keep T-E9 open until the current refresh has been verified publicly. The local lab's evaluator-retention note and failed-mode-switch fix are served by the Python app only and are not part of Render's static deployment.
+
+## Earlier pending record: the light redesign (October 29, 2026)
+
+**Later resolution, October 29:** the new [read-only comparison](screenshots/ui-content-refresh-2026-10-29/public-before-refresh.json) returned 200 for all 11 public files and found them byte-identical to committed `f66977d`. This confirms the earlier four-page redesign and linked favicon are served, resolving T-E8. It does not identify Render's built commit or supply public browser acceptance for the current content refresh. The original pending record below is retained as history; T-E9 now covers the new refresh.
 
 The working tree holds a redesign of `site/` that is **not deployed**. It replaces the single walkthrough page with four static pages and their shared assets: `index.html` (home), `walkthrough.html`, `method.html`, `run.html`, `style.css`, `site.js`, `home.js`, `walkthrough.js`, `method.js`, `favicon.svg` and the unchanged `data/evidence.json`. Nothing about hosting changes: `render.yaml` still publishes `./site` with the same headers, and the pages need no font, inline script or inline style, so the existing CSP fits them.
 
@@ -29,10 +39,10 @@ After it is pushed and Render rebuilds:
 | Custom domain | <https://ghostcache.bipulchamoli.tech/> (since October 29, 2026), a CNAME to the Render site, which shows it as Verified with Certificate Issued ([custom-domain evidence](screenshots/custom-domain-2026-10-29/README.md)). The portfolio at `bipulchamoli.tech` is separate and stays on Vercel |
 | Render service | `ghostcache-walkthrough`, a Blueprint-managed Render static site created from [render.yaml](render.yaml) |
 | Initial deployment | October 28, 2026, from branch `main` at commit `8013d01`, as shown in the Render dashboard ([screenshot 00](screenshots/00-render-dashboard-live-8013d01.png)) |
-| Current deployment | Commit `2a1ffb0` on `main`, which contains the T-E7 stylesheet fix `08e0524`. The user's Render dashboard screenshots showed it as successfully deployed; those images could not be saved. The served files were byte-identical to `site/` at `2a1ffb0` when checked on October 28, 2026 at 18:45 UTC |
+| Latest verified public content | October 29 read-only checks: all 11 public files returned 200 and matched `site/` at committed `f66977d` byte for byte, including the four-page redesign and linked favicon ([first comparison](screenshots/ui-content-refresh-2026-10-29/public-before-refresh.json)). Repeated at 16:33 UTC on **both** addresses with the same result; the exact `/api/state` returned 404, the four headers were present, and the served `style.css` (55,445 bytes) no longer matches the T-E7 file at `2a1ffb0` ([latest comparison](screenshots/audit-fixes-2026-10-29/public-served-files.json)). No fresh Render dashboard check, so neither comparison names its built commit. The new working-tree HTML/comment changes are not served yet; T-E9 remains open. |
 | Deployed by | The repository owner, from their own Render account |
 
-**Which commit is live now.** Two deploys are evidenced:
+**Earlier dashboard-backed deploy records.** Two deploys are evidenced; the later content comparison above establishes the currently served bytes separately:
 - **`8013d01`, the initial deploy.** Shown in screenshot 00.
 - **`2a1ffb0`, the T-E7 fix.** The user reported that their Render dashboard screenshots show it as successfully deployed. Those screenshots were not saved, because the temporary files were gone when copying was tried. Separately, a read-only check found `/style.css` and the other three served files byte-identical to `site/` at `2a1ffb0`. The stylesheet's `Last-Modified` header was 17:21:42 UTC on October 28, just after the fix commit was made. The byte comparison shows what is served; it does not by itself name the commit Render built.
 
@@ -79,25 +89,35 @@ python3.12 -m http.server 8790 --bind 127.0.0.1 --directory site
 
 ## Verify a deployment
 
-Read-only checks, run from the repository root:
+Read-only checks for the current four-page site, run from the repository root against the commit you expect Render to serve (set `REV`). Check both addresses:
 
 ```sh
-URL=https://ghostcache-walkthrough.onrender.com
-for p in / /data/evidence.json /api/state; do
-  printf '%s ' "$p"; curl -s -o /dev/null -w '%{http_code}\n' "$URL$p"
-done                                   # expect 200, 200, 404
-curl -sI "$URL/" | grep -iE '^(content-security-policy|x-content-type-options|referrer-policy|x-frame-options):'
-curl -s "$URL/data/evidence.json" | shasum -a 256
-shasum -a 256 site/data/evidence.json  # the two hashes should match
+REV=HEAD                               # the commit you pushed and Render reports as live
+for URL in https://ghostcache.bipulchamoli.tech https://ghostcache-walkthrough.onrender.com; do
+  for f in index.html walkthrough.html method.html run.html style.css site.js home.js \
+           walkthrough.js method.js favicon.svg data/evidence.json; do
+    served=$(curl -s "$URL/$f" | shasum -a 256 | cut -c1-64)
+    committed=$(git show "${REV}:site/$f" | shasum -a 256 | cut -c1-64)   # braces matter in zsh
+    printf '%s %s %s\n' "$(curl -s -o /dev/null -w '%{http_code}' "$URL/$f")" \
+      "$([ "$served" = "$committed" ] && echo match || echo DIFFERS)" "$URL/$f"
+  done                                 # expect 200 match for all 11
+  printf '%s %s/api/state\n' "$(curl -s -o /dev/null -w '%{http_code}' "$URL/api/state")" "$URL"   # expect 404
+  curl -sI "$URL/" | grep -iE '^(content-security-policy|x-content-type-options|referrer-policy|x-frame-options):'
+done
 ```
 
-In a browser, also confirm:
+Matching bytes show what is served, not which commit Render built; confirm that in the Render dashboard.
 
-- the banner reads "Recorded local Gemma evaluation — no live inference";
-- the three run buttons, five stage buttons and six question buttons change the view;
-- the network panel shows only `style.css`, `walkthrough.js` and `data/evidence.json` (plus the browser's own `/favicon.ico` request; see Known issues).
+In a browser with its normal scrollbars, also confirm:
 
-*After the redesign is deployed:* on `/walkthrough.html` the sticky bar reads "Recorded evaluation · No live inference" and the page also carries "Recorded local Gemma evaluation — no live inference"; the three run choices, five stage tabs and the diagram/list toggle change the view; and each page requests only `style.css`, `site.js`, `favicon.svg`, its own script and `data/evidence.json`, except `run.html`, which has no page script and no data request. Scrolled down to the timing chart on the walkthrough and methodology pages, hovering a segment shows its tooltip beside the pointer, inside the chart.
+- on `/walkthrough.html` the sticky bar reads "Recorded evaluation · No live inference" and the page also carries "Recorded local Gemma evaluation — no live inference";
+- the three run choices, five stage tabs (including arrow keys), the diagram/list toggle and the six recorded-answer disclosures change the view;
+- each page requests only `style.css`, `site.js`, `favicon.svg`, its own script and `data/evidence.json`, except `run.html`, which has no page script and no data request; there is no `/favicon.ico` request and no console error;
+- scrolled down to the timing chart on the walkthrough and methodology pages, hovering a segment shows its tooltip beside the pointer, inside the chart;
+- `method.html#project-evidence` and `run.html` show the content of the commit you deployed;
+- `document.documentElement.scrollWidth` does not exceed `document.documentElement.clientWidth` at 320, 360, 375, 390, 414, 768, 980, 981 and 1280 px on all four pages.
+
+*Original checklist (October 28, 2026), for the single-page site of that date:* status codes for `/`, `/data/evidence.json` and `/api/state` (200, 200, 404), the four headers, the evidence JSON's hash against `site/data/evidence.json`, the banner, the run/stage/question buttons, and a network panel showing only `style.css`, `walkthrough.js` and `data/evidence.json` plus the browser's own `/favicon.ico` request. Those checks are recorded below; the list above replaces them for the four-page site.
 
 The screenshot evidence can be checked with `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)`. The manifest holds bare file names, so the command must run inside `screenshots/`. The T-E7 captures have their own manifests: `(cd screenshots/mobile-overflow-fix && shasum -a 256 -c SHA256SUMS.txt)` (local before/after) and `(cd screenshots/mobile-overflow-fix/deployed-2a1ffb0 && shasum -a 256 -c SHA256SUMS.txt)` (deployed site).
 
@@ -113,6 +133,7 @@ Every check below was read-only. Full command tables are in [TESTING.md](TESTING
 | Date not stated; the screenshot files date from about 23:25 IST on October 28 to 00:04 IST on October 29 | The owner: Render dashboard and Chrome DevTools responsive emulation (reported height 812 px), as reported by the user | Dashboard showed `2a1ffb0` successfully deployed (screenshots not saved). Console `scrollWidth` equalled `clientWidth`, with no horizontal overflow, at 320, 360, 375, 390, 414, 768, 980, 981 and 1280 px. The command block and timing table scrolled internally, and all run, stage and question buttons passed. Saved screenshots: [deployed-2a1ffb0/](screenshots/mobile-overflow-fix/deployed-2a1ffb0/README.md) (360–1280 px and the command block; the 320 px capture was unavailable) |
 | October 29, about 00:15 IST (18:45 UTC on October 28) | Coding agent: `curl` and Git, read-only | `/style.css` 200; its SHA-256 `035e46ec…bc488027` is byte-identical to `site/style.css` at `2a1ffb0` and at the fix commit `08e0524`. `/`, `/index.html`, `/walkthrough.js` and `/data/evidence.json` 200, with the latter three byte-identical to `2a1ffb0`. `/api/state` 404; the four headers present. `08e0524` is an ancestor of `2a1ffb0`. No browser measurement was made by the agent |
 | October 29, about 02:25 IST (20:55 UTC on October 28) | Coding agent: `curl` and Git, read-only, on the custom domain ([custom-domain evidence](screenshots/custom-domain-2026-10-29/README.md)) | Normal HTTPS GETs on `ghostcache.bipulchamoli.tech` returned 200 for the page, stylesheet, script and evidence JSON, byte-identical to the committed files at `c7c05c3`; the exact `/api/state` returned 404. Global DNS propagation was not established |
+| October 29, about 22:03 IST (16:33 UTC) | Coding agent (audit fixes): Python `urllib` and Git, read-only, normal TLS, both addresses ([saved comparison](screenshots/audit-fixes-2026-10-29/public-served-files.json)) | All 11 four-page site files returned 200 on both addresses, byte-identical to committed `f66977d`; working-tree HTML and `method.js` differ (the undeployed refresh). `/favicon.svg` 200; direct `/favicon.ico` 404; `/api/state` 404; the four headers present. Served `style.css` no longer matches `2a1ffb0`. No dashboard check, so the built commit is not named. The [checklist above](#verify-a-deployment) was also run in zsh and bash: 22 of 22 "200 match" |
 
 The screenshots show what the browser displayed; they do not establish HTTP status codes. Screenshot 15 has extra characters after `/api/state` in its URL and is **not** evidence of the clean `/api/state` check, which comes from `curl`. Screenshots 09 and 10 are identical and both kept.
 
@@ -123,8 +144,10 @@ The screenshots show what the browser displayed; they do not establish HTTP stat
 
    ```sh
    curl -s https://ghostcache-walkthrough.onrender.com/style.css | shasum -a 256
-   shasum -a 256 site/style.css           # the fixed file: 035e46ec…bc488027
+   shasum -a 256 site/style.css           # in October 2026, the T-E7 fix: 035e46ec…bc488027
    ```
+
+   *Note, October 29, 2026:* the redesign (D-21) replaced that stylesheet, so `site/style.css` no longer hashes to `035e46ec…`. The T-E7 file is still available as `git show 2a1ffb0:site/style.css`. For a future stylesheet change, compare against the commit you deployed, as in [Verify a deployment](#verify-a-deployment).
 
 3. Repeat the [Verify a deployment](#verify-a-deployment) checks (status codes and headers).
 4. On the public URL, measure `document.documentElement.clientWidth` and `scrollWidth` at 320, 360, 375, 390, 414, 768, 980, 981 px and a desktop width, and confirm that the command block and timing table scroll inside themselves.
@@ -143,6 +166,7 @@ The steps stay here for any future stylesheet change.
 - **Resolved: horizontal overflow on narrow screens (found October 28, 2026; fix live in `2a1ffb0`).** In headless Chrome emulation, at the tested 375 px viewport, the document's scrollWidth was 573 px, while the layout viewport stayed 375 px, so the page scrolled sideways. The cause is in `site/style.css`: below 980 px it sets `.explainers` to `grid-template-columns:1fr`, and the `white-space:pre` command block in "Run it yourself" held that column at about 557 px. The exact width at which overflow starts can vary with browser and font metrics, and no real phone was tested. This contradicts the earlier local T-E2 check, which reported no overflow at the 375×812 preset. Fix and recheck: T-E7 in [tasks.md](tasks.md).
   *Resolution in progress (October 28, 2026, about 22:30 IST): fixed and verified locally on October 28, 2026; awaiting deployment.* Two rules in `site/style.css` changed: `.explainers` uses `minmax(0,1fr)` below 980 px, and `.tiny-label` may wrap below 650 px (a second, smaller offender at 320 px). Served locally, `scrollWidth` equalled `clientWidth` at every tested width from 320 to 1280 px, and the command block scrolls inside itself. The public site keeps the old stylesheet until the change is pushed and Render rebuilds it. See [TESTING.md](TESTING.md), "Narrow-screen overflow fix T-E7", and [screenshots/mobile-overflow-fix/](screenshots/mobile-overflow-fix/README.md).
   *Resolved (deployed in `2a1ffb0`; verified October 28–29, 2026).* The served `style.css` is byte-identical to the fixed file. The user's DevTools checks on the public URL found no horizontal overflow from 320 to 1280 px. See "Verification record" above, TESTING.md "T-E7 deployed verification", and [screenshots/mobile-overflow-fix/deployed-2a1ffb0/](screenshots/mobile-overflow-fix/deployed-2a1ffb0/README.md). A real phone and other browsers remain unchecked (next item).
-- **No favicon.** Browsers request `/favicon.ico`, which returns 404 and logs one console error. Cosmetic only (T-E8). The undeployed redesign links `favicon.svg`; with that link, headless Chrome made no `/favicon.ico` request in the local checks.
+  *Later, October 29, 2026:* the four-page redesign replaced that stylesheet. The served `style.css` now matches `f66977d`, not `2a1ffb0`, so the byte comparison above is a dated record of T-E7, not a description of the current file. The redesigned stylesheet's narrow-width behaviour was measured locally with normal scrollbars ([TESTING.md](TESTING.md#ui-content-refresh-october-29-2026), [audit-fix evidence](screenshots/audit-fixes-2026-10-29/README.md)); on the public site it has been byte-compared, not measured in a browser.
+- **Favicon (T-E8).** *Original issue, October 28, 2026:* there was no favicon; browsers requested `/favicon.ico`, which returned 404 and logged one console error. Cosmetic only. *Resolved, October 29, 2026:* every page links `favicon.svg`, which both public addresses serve with status 200, byte-identical to `site/favicon.svg`. A direct `/favicon.ico` request still returns 404, but headless Chrome loading the four public pages made no such request and logged no console error ([audit-fix evidence](screenshots/audit-fixes-2026-10-29/README.md)).
 - **Not checked:** a real phone, browsers other than Chrome, and assistive technology (T-E6). The click-throughs pressed each button once; they did not try every combination of run, stage and question.
 - **No live inference by design.** The page cannot show a new Gemma run. To see one, run GhostCache locally (README.md, "Run it with local Gemma").

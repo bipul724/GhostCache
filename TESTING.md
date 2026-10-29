@@ -9,12 +9,12 @@ This file covers what to run, what each result shows, what has actually been ver
 - No packages are needed for the core suite. The 6 SDK-dependent tests in `tests/test_telemetry.py` need the optional `sentry-sdk==2.72.0`, installed only into a virtualenv: `python3.12 -m venv .venv && .venv/bin/python -m pip install "sentry-sdk==2.72.0"`. Without it they are **skipped** with the reason "sentry-sdk not installed; optional extra".
 - Run every command from the application directory (the one containing `pyproject.toml`). The tests import `ghostcache` from the current directory.
 - Live evaluation also needs Ollama running locally, with `gemma4:e2b-it-qat` (or your `--model`) pulled.
-- **Node.js is optional.** 21 of the 22 UI tests in `tests/test_ui.py` call `node`; the twenty-second, `test_paraphrase_fallback_matches_backend_question`, is pure Python. Four tests in `tests/test_site.py` need it too: the script syntax test and the three `site/site.js` behaviour cases. If `node` is not on PATH, those 25 tests are **skipped** with the reason "Node.js is not on PATH"; without both Node and the optional `sentry-sdk`, 31 tests skip (25 Node plus 6 SDK). These current figures are counted from the registered tests, not from a run without Node. *Historical:* on October 29, 2026, before the rebuild-outcome and reconciliation tests, the suite was run with `node` removed from PATH: `Ran 107 tests … OK (skipped=24)` (18 Node plus 6 SDK). Verified with Node v22.23.4; no npm packages are used. *(Until October 29, 2026: six of seven UI tests.)*
+- **Node.js is optional.** 23 of the 24 UI tests in `tests/test_ui.py` call `node`; the twenty-fourth, `test_paraphrase_fallback_matches_backend_question`, is pure Python. Four tests in `tests/test_site.py` need it too: the script syntax test and the three `site/site.js` behaviour cases. If `node` is not on PATH, those 27 tests are **skipped** with the reason "Node.js is not on PATH"; without both Node and the optional `sentry-sdk`, 33 tests skip. Measured on October 29, 2026 after the audit fixes, with every directory containing `node` removed from PATH: `Ran 126 tests … OK (skipped=33)` (23 `web/app.js` contract, 3 `site.js` behaviour, 1 syntax and 6 SDK skips). *(After the UI content refresh the figures were 21 of 22, 25 and 31, counted from the registered tests.)* *Historical:* on October 29, 2026, before the rebuild-outcome and reconciliation tests, the suite was run with `node` removed from PATH: `Ran 107 tests … OK (skipped=24)` (18 Node plus 6 SDK). Verified with Node v22.23.4; no npm packages are used. *(Until October 29, 2026: six of seven UI tests.)*
 
 ## Commands
 
 ```sh
-# 1. Unit, controller, HTTP-handler and UI contract tests (offline, no model, under 1 s)
+# 1. Unit, controller, HTTP-handler and UI contract tests (offline, no model)
 python3.12 -m unittest discover -s tests -v
 
 # Run a single test
@@ -52,9 +52,65 @@ GHOSTCACHE_APP_JS=<path to an older web/app.js> python3.12 -B -m unittest tests.
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
 
+## Audit fixes (October 29, 2026)
+
+**Fixed and verified locally; uncommitted, not run on GitHub and not deployed.** Two parts: a code fix in the local lab, and documentation corrections. Evidence: [audit-fixes-2026-10-29/](screenshots/audit-fixes-2026-10-29/README.md) and [hosted-ci-run-16-2026-10-29/](screenshots/hosted-ci-run-16-2026-10-29/README.md).
+
+**Failed mode switch (`web/app.js`).** Choosing Live in fixture mode, with `/api/reset` returning 502, kept the fixture experiment and banner. The menu and `selectedMode` stayed on Live, though, so the next Reset asked for live again. After a 503 whose state read-back also failed, the menu showed fixture while `selectedMode` stayed live. Now `perform()` sets `selectedMode = currentMode()` and calls `renderProvider()` after the existing error recovery for any failed seed or reset. It keeps the original error, the unchanged experiment's answer and checks, `storage_failed` recovery, unknown-state handling and failed-cleanup reconciliation, and it retries nothing. The contract harness's fake DOM now keeps event listeners, so the new cases fire the page's real `mode-select` change handler.
+
+| Check actually run | Result |
+| --- | --- |
+| `.venv/bin/python -B -m unittest discover -s tests` (Python 3.12.6, `sentry-sdk` 2.72.0, Node v22.23.4) | `Ran 126 tests` … `OK` |
+| `python3.12 -B -m unittest discover -s tests` | `Ran 126 tests` … `OK (skipped=6)`, the SDK telemetry tests |
+| The same with every directory containing `node` removed from PATH | `Ran 126 tests` … `OK (skipped=33)`: 23 `web/app.js` contract, 3 `site.js` behaviour, 1 syntax and 6 SDK skips |
+| Per-module count (verbose run) | store 11, controller 33, HTTP 10, providers/CLI 12, UI 24, telemetry 9, site 27 |
+| New cases against the pre-fix `web/app.js` (`GHOSTCACHE_APP_JS=<copy> … tests.test_ui`) | 24 tests, 1 failure: `failed_mode_switch_keeps_the_confirmed_mode` (menu and `selectedMode` `live` under a fixture banner). A scratch variant fixing only the 502 path also fails it, at the unknown-state step. `successful_mode_switch` passes on both, because successful switching was already correct |
+| `env -u GHOSTCACHE_SENTRY_DSN python3.12 -B -m ghostcache evaluate --mode fixture --output <new scratch path outside the repo>` | exit 0, `passed: true`, 10/10; telemetry off |
+| Real headless Chrome 156 against the real fixture lab (scratch database, port 8891), with **mocked** live availability and live reset responses | 502, 503 with an unreadable state and 503 into `storage_failed`: menu, `selectedMode` and banner all fixture afterwards, and the next real pointer click on Reset sent `fixture`. A mocked successful switch: all live, and Reset sent `live`; switching back went to the real server. The pre-fix file reproduced the defect in the same browser. No live request reached the server; the menu change was script-dispatched, because the arrow key did not change the closed `<select>` in headless Chrome |
+| Local preview of the working-tree `site/` with `render.yaml` headers, normal classic scrollbars, widths 320–1280 px (nine), height 812 | 54 measurements, `scrollWidth <= clientWidth` throughout; no console, CSP or page errors; the changed content renders |
+
+**Documentation corrections.**
+- The T-E7 stylesheet comparison is kept as a dated record; the redesign has since replaced that file.
+- The missing-favicon claims are resolved with dated notes. The public checks found `/favicon.svg` 200 and no `/favicon.ico` request from headless Chrome, against a control page that did make one.
+- DEPLOYMENT.md has a four-page verification checklist, tested in zsh and bash: 22 of 22 matches against `HEAD`.
+- Run #16 is added (see [CI](#ci-github-actions)).
+- Also corrected:
+  - architecture.md's "last 12" events: the lab renders every event the server returns, up to 50;
+  - the coverage limits below;
+  - the "nothing to install" wording;
+  - CATEGORIES.md's broken "Deployment record" reference;
+  - scoped later-status notes on earlier "uncommitted" or "not deployed" records.
+- These separate committed local code from publicly served static files: the lab and backend are never deployed.
+
+**Limits:** no live Gemma, Sentry telemetry, hosted CI of these changes, physical phone, second browser engine or accessibility check. The public site still serves `f66977d`'s content; T-E9 stays open until the owner deploys and verifies it.
+
+## UI content refresh (October 29, 2026)
+
+**Implemented and verified locally; this refresh is not deployed.** The public methodology page distinguishes current project evidence from the three historical live reports. It links the 124-test local suite, historical hosted CI, real metadata-only Sentry findings, Render/custom-domain evidence and five intended categories, with their limits. The run guide now covers optional tracing and current error recovery. The local lab adds an evaluator-retention note after confirmed cleanup (T-A7), including a failed rebuild; it hides the note after reset, for unavailable storage and when current server state is unknown.
+
+| Check actually run for this refresh | Result |
+| --- | --- |
+| `.venv/bin/python -B -m unittest discover -s tests` | 124 tests, OK, none skipped (2.642 s) |
+| `python3.12 -B -m unittest discover -s tests` | 124 tests, OK (skipped=6, optional SDK tests; 2.471 s) |
+| Fresh fixture evaluation to a scratch file outside `results/` | Exit 0, 10/10 checks |
+| `python3.12 -B scripts/export_site_data.py --check` | Selected reports still match `site/data/evidence.json` |
+| `node --check web/app.js` | Exit 0; the full suite also checks all public scripts |
+| Automated local browser layout checks | 147 measurements; `scrollWidth <= clientWidth` throughout |
+| Browser console / page errors | 0 / 0 |
+
+**Browser method.** Headless Chrome 156.0.8078.73 with normal classic scrollbars (Playwright's `--hide-scrollbars` default removed), height 812 px. All four public pages, expanded run-guide troubleshooting and the fixture lab were checked at requested widths 320, 360, 375, 390, 414, 768, 980, 981 and 1280 px. Actual `clientWidth` was recorded, often 15 px below the requested viewport because of the vertical scrollbar; the comparison uses that actual width. Public preview used the deployed CSP and security headers. The lab used a separate disposable scratch database, not `.local/assistant.sqlite`.
+
+**Real browser actions, driven by automation.** At 375 and 1280 px, all three recorded-run selectors, five stages, both diagram/list views, all six answer disclosures and arrow-key stage navigation worked. At every tested width, the fixture lab completed seed → secret → source-only → reworded echo → cascade → verify (8/8), showed the evaluator note after cleanup and reload, and hid it after reset. The offline contract cases also cover failed rebuild, failed-cleanup reconciliation, unavailable storage and unknown state. No new test methods were added: the existing site-link test and UI cases were extended.
+
+**Evidence:** [UI refresh captures and browser report](screenshots/ui-content-refresh-2026-10-29/README.md). The screenshots are local browser captures, not a deployed-site or live-model result. They also supply the new local-UI captures for T-A9; the October 27 screenshots in `results/` remain unchanged historical evidence. The initial locator-based capture attempt clipped content; it was discarded in favour of the correctly framed captures indexed there.
+
+**Separate read-only public comparison.** All 11 files served from the custom-domain site returned 200 and matched `site/` at committed `f66977d` byte for byte. The public HTML and `method.js` still differ from the local refresh; unchanged assets and the exported JSON match both. This confirms the earlier redesign and linked favicon are publicly served, not the new content. The report records actual hashes and headers; it does not identify Render's built commit. A separate normal-TLS GET of the exact custom-domain `/api/state` returned 404 (curl exit 0).
+
+**Limits:** no new live Gemma evaluation, physical phone, second browser engine, screen-reader check or hosted CI run. No public deployment was performed. The 124 local regression tests are separate from the historical hosted 62-test run and from each saved evaluation's ten checks. Real-phone, other-browser and accessibility work remains T-E6; public verification of this content refresh remains T-E9.
+
 ## Cleanup-error reconciliation (October 29, 2026)
 
-**Status: fixed and verified locally; uncommitted.** A focused follow-up to D-22 (recorded as its amendment). The backend did not change.
+**Status: fixed and verified locally; uncommitted.** A focused follow-up to D-22 (recorded as its amendment). The backend did not change. *Later status (checked October 29, 2026): committed and pushed to `main` (in `f66977d`'s history). This is local lab and controller code; it is not served by Render, so it is committed, not deployed.*
 
 **Root cause.** A cascade commits its purge, sets `stage = "cleaned"`, then summarises the surviving documents and stores the rebuilt summary. If storing it raises a non-provider error, the controller records `rebuild` `failed` / `not_stored` and re-raises: `sqlite3.OperationalError` becomes HTTP 500 ("Unexpected server error; inspect the local tests."), and a commit-validation `ValueError` from `Store.add_artifact` becomes HTTP 400 with its fixed message. `perform()` in `web/app.js` re-read state only after a 503, so the page kept the source-only view (5 stale descendants, 5 marker rows, the old graph, no rebuild warning) while the server was clean. A manual reload corrected it.
 
@@ -106,7 +162,7 @@ The only console errors were the browser's resource-load messages for the intend
 
 ## Rebuild outcome survives the event window (October 29, 2026)
 
-**Status: fixed and verified locally; uncommitted.** D-22. The counts below are from that change (119 tests); current totals are in "Test inventory". Supersedes the "Known limit" recorded under "Review fixes to the redesign" below.
+**Status: fixed and verified locally; uncommitted.** *Later status (checked October 29, 2026): committed and pushed to `main` (in `f66977d`'s history). This is local lab and controller code; it is not served by Render, so it is committed, not deployed.* D-22. The counts below are from that change (119 tests); current totals are in "Test inventory". Supersedes the "Known limit" recorded under "Review fixes to the redesign" below.
 
 **Root cause.** `web/app.js` decided whether the cleanup's summary rebuild had failed by scanning `state.events` for `summary.rebuild_failed`. `Experiment.state()` returns only `self.events[-50:]`, so once 50 further events followed the failure it left the window and the lab showed the green "Cleanup propagated" state, though no successful rebuild or reset had resolved it. Each verification records four answer events, so 13 verifications were enough.
 
@@ -177,7 +233,7 @@ No console errors. Only the temporary server was stopped; the unrelated server o
 
 ## Review fixes to the redesign (October 29, 2026)
 
-**Status: fixed and verified locally; not committed or deployed (T-E9).** A review of the uncommitted redesign found eight problems. All are fixed in the working tree. No backend, export script, report, screenshot, evidence file or `render.yaml` change.
+**Status: fixed and verified locally; not committed or deployed (T-E9).** *Later status (checked October 29, 2026): committed and pushed to `main` (in `f66977d`'s history). Its public `site/` files are served byte-identical to committed `f66977d`; its `web/` lab changes run only on the local server.* A review of the uncommitted redesign found eight problems. All are fixed in the working tree. No backend, export script, report, screenshot, evidence file or `render.yaml` change.
 
 | # | Problem | Fix |
 | --- | --- | --- |
@@ -226,7 +282,7 @@ No console errors. Only the temporary server was stopped; the unrelated server o
 
 ## Residual Archive redesign (October 29, 2026)
 
-**Status: implemented and verified locally; not deployed (T-E9).** A light redesign of the public site (`site/`, now four pages) and the local lab (`web/`), recorded as DECISIONS.md D-21. No backend, export script, report, screenshot or `render.yaml` change. Live mode was not exercised: Ollama was not running, which let the "unavailable model" state be checked instead.
+**Status: implemented and verified locally; not deployed (T-E9).** *Later status (checked October 29, 2026): committed and pushed to `main` (in `f66977d`'s history). Its public `site/` files are served byte-identical to committed `f66977d`; its `web/` lab changes run only on the local server.* A light redesign of the public site (`site/`, now four pages) and the local lab (`web/`), recorded as DECISIONS.md D-21. No backend, export script, report, screenshot or `render.yaml` change. Live mode was not exercised: Ollama was not running, which let the "unavailable model" state be checked instead.
 
 | Command or check | Result |
 | --- | --- |
@@ -297,7 +353,7 @@ Saved screenshots back eight of the nine width rows (360 to 1280 px) and the com
 
 **Why this closes T-E7.** The fix commit is in the deployed history; the served stylesheet is byte-identical to the one verified locally across all 33 view states at the same nine widths (section below); and the user's checks on the public URL found no horizontal overflow at any of those widths, with the command block and timing table scrolling inside themselves.
 
-**Not verified:** a physical phone, Safari or Firefox, and assistive technology (all still T-E6); other heights or view-state combinations on the public site; the favicon 404 (T-E8). No phone-frame preview is evidence of a physical device or Safari.
+**Not verified:** a physical phone, Safari or Firefox, and assistive technology (all still T-E6); other heights or view-state combinations on the public site; the favicon 404 (T-E8; *resolved October 29, 2026: the linked `favicon.svg` is served*). No phone-frame preview is evidence of a physical device or Safari.
 
 | Command | Result |
 | --- | --- |
@@ -449,7 +505,7 @@ All times in this section are IST on October 28, 2026. The user created a Sentry
 
   | Span | Cold `dd21f76b3293450b84b0ad5ca45961dd` | Warm `fb1530272ecd481399aa77f95d505dfa` |
   | --- | ---: | ---: |
-  | First `chat gemma4:e2b-it-qat` (summarizer, during reset) | 40.45 s | 2.28 s |
+  | First `chat gemma4:e2b-it-qat` model-call span (the summarizer's, during reset; a child of `invoke_agent ghostcache-summarizer`) | 40.45 s | 2.28 s |
   | `ghostcache.reset` | 48.20 s | 9.58 s |
   | `ghostcache.verify` | 4.99 s | 4.51 s |
   | Root `ghostcache.evaluate` | 1.03 min | 22.40 s |
@@ -580,7 +636,7 @@ The planner read these values from the user's Sentry screenshots on October 28, 
 - Seed → ask → delete the source only (15 nodes) → look for the echo: it sent "Which access phrase opens the observatory vault?", the marker was echoed, and the trace read "Context: c-vault, s-mixed, s-handoff, s-vault, d-garden, c-garden · Deterministic fixture; no model inference". Cleanup → verify gave **8 / 8 PASS**.
 - The retained and shared shortcuts answered correctly, with the context shown.
 - No console errors. At a 375 px viewport the page `scrollWidth` was 375 (no horizontal page scroll), and the trace wrapped.
-- No new screenshots were saved; `results/*.jpg` still show the pre-fix wording.
+- No new screenshots were saved; `results/*.jpg` still show the pre-fix wording. *(Resolved October 29, 2026: new local captures of the current wording were saved separately for T-A9 in [screenshots/ui-content-refresh-2026-10-29/](screenshots/ui-content-refresh-2026-10-29/README.md); the October 27 images are unchanged.)*
 
 Not run: live Gemma and hosted CI. The UI tests on the hosted runner depend on Node being on its PATH, which is unverified until a real Actions run. `.github/workflows/` was not changed.
 
@@ -642,7 +698,7 @@ The last two rows below record the bugs as found. They were fixed afterwards (T-
 
 **Not run in this audit:** live Gemma evaluation (no model calls were made), browser QA, and GitHub Actions. The saved files in `results/` were not modified.
 
-## Test inventory (124)
+## Test inventory (126)
 
 **`tests/test_store.py`: 11 store tests** (9 in `StoreTests`, 2 in `PublicationPrimitiveTests`), using in-memory SQLite except for the reopen and publication-primitive tests:
 
@@ -730,7 +786,7 @@ The last two rows below record the bugs as found. They were fixed afterwards (T-
 | `test_non_transport_defects_still_propagate` | `urlopen` raising `RuntimeError` propagates from both generation and `status()` |
 | `test_malformed_model_output_exits_1_with_failed_report` | `main(["evaluate", "--mode", "live", …, "--output", …])` with malformed output returns 1, writes `passed: false` with the error and the no-fallback note, and prints a failed summary |
 
-**`tests/test_ui.py`: 22 UI tests** (20 in `UIContractTests`, 2 in `CleanupFailureReconciliationTests`). Twenty-one run `node tests/ui/app_contract.js <case>` as a subprocess and require exit 0; they are skipped when `node` is not on PATH (the two reconciliation tests first check the real controller and HTTP handler, then skip their Node half). Setting `GHOSTCACHE_APP_JS` runs the same cases against another copy of `web/app.js`. The harness loads the **unmodified** `web/app.js` into `node:vm`. It uses a minimal fake DOM (lazily created nodes with `textContent`, `hidden`, `value`, `classList`, attributes and children) and a fake `fetch` that records request bodies and returns canned state, ask, delete and verify replies, or a chosen HTTP failure. It waits one `setImmediate` tick for `initialize()`. Every `perform()` it drives must leave the error banner hidden. It uses only `assert`, `fs`, `path` and `vm`.
+**`tests/test_ui.py`: 24 UI tests** (22 in `UIContractTests`, 2 in `CleanupFailureReconciliationTests`). Twenty-three run `node tests/ui/app_contract.js <case>` as a subprocess and require exit 0; they are skipped when `node` is not on PATH (the two reconciliation tests first check the real controller and HTTP handler, then skip their Node half). Setting `GHOSTCACHE_APP_JS` runs the same cases against another copy of `web/app.js`. The harness loads the **unmodified** `web/app.js` into `node:vm`. It uses a minimal fake DOM (lazily created nodes with `textContent`, `hidden`, `value`, `classList`, attributes and children) and a fake `fetch` that records request bodies and returns canned state, ask, delete and verify replies, or a chosen HTTP failure. It waits one `setImmediate` tick for `initialize()`. Every `perform()` it drives must leave the error banner hidden. It uses only `assert`, `fs`, `path` and `vm`.
 
 | Test | Covers |
 | --- | --- |
@@ -751,6 +807,8 @@ The last two rows below record the bugs as found. They were fixed afterwards (T-
 | `test_failed_reconciliation_keeps_the_original_error` | A 500 from `/api/delete`, then an unreachable `/api/state`: exactly those two requests; the original error stays, with "cannot tell whether the deletion finished"; the status says the state could not be confirmed (neither "Incomplete deletion" nor "Cleanup"); old answer and checks withdrawn; not busy; a later successful state clears it |
 | `test_unchanged_state_after_a_failed_deletion_keeps_results` | A 400 rejected before any change: one `/api/delete` and one `/api/state`; the identical state keeps the answer and 8/8 checks |
 | `test_failed_question_does_not_read_state` | A 502 from `/api/ask`: no state read, results kept, banner shown |
+| `test_failed_mode_switch_keeps_the_confirmed_mode` | Fires the page's real `mode-select` change handler (fixture confirmed, Live chosen). A 502 from `/api/reset`: exactly one `{mode: "live"}` request, no retry or state read, the original error, menu, `selectedMode` and banner all back on fixture, answer and 8/8 checks kept, and the next Reset sends `{mode: "fixture"}`. Then a 503 with an unreachable `/api/state` (unknown state; menu and `selectedMode` agree on fixture) and a 503 that ends in `storage_failed` (the server's restored mode wins); after each, Reset sends `fixture` |
+| `test_successful_mode_switch` | The same handler switches fixture → live and back: menu, `selectedMode` and banner follow each server state, and each following Reset sends that mode |
 | `test_save_failure_after_purge_is_a_500_and_the_lab_shows_the_server_state` | `CleanupFailureReconciliationTests`, simulated: the real controller and HTTP handler after source-only deletion, with `Store.add_artifact` raising `sqlite3.OperationalError` during the cascade, return 500 with the generic body after one `summarize` call; the state is `cleaned`, 0 marker rows, 0 stale, `failed` / `not_stored`. The real `web/app.js` given those states shows them under the original error: warning with "The rebuilt summary could not be stored.", the audit's counts, 5 / 5, tombstones on every removed node, the server's ledger, no old answer or checks, one `/api/delete` and one `/api/state` |
 | `test_validation_failure_after_purge_is_a_400_and_the_lab_shows_the_server_state` | The same with a commit-validation `ValueError`: 400 with its message, then the same display |
 | `test_thread_ends_meet_their_knots` | Every link's curve ends at its knot; a same-column link (summary to summary) ends on the target's right edge, others on its left edge |
@@ -841,7 +899,7 @@ The public walkthrough (`site/`) is a separate page; its browser checks are reco
 - **Steps:** runs the unit suite, then a fresh fixture evaluation into `$RUNNER_TEMP`, and uploads only that JSON (`ghostcache-synthetic-evaluation`, kept 3 days).
 - **The evaluation still runs if the tests fail**, as long as Python setup succeeded.
 - **Telemetry step (added October 28, 2026; first ran on GitHub in [run #5](https://github.com/bipul724/GhostCache/actions/runs/40623927599), which succeeded):** after the steps above, "Check telemetry privacy with the optional Sentry SDK" installs `sentry-sdk==2.72.0` and runs `python -m unittest tests.test_telemetry -v`. The earlier steps run without the SDK, so its 6 tests skip there. No DSN or secret is used, and nothing contacts Sentry.
-- **UI contract and site behaviour tests:** they run inside the same `unittest` command, so 21 of the 22 UI tests and 4 site tests (25 in all) need `node` on the runner's PATH. Otherwise they are skipped and the job still passes. Hosted run #1 confirmed that the runner provides Node: all 7 UI tests of that time ran and passed. The workflow was not changed.
+- **UI contract and site behaviour tests:** they run inside the same `unittest` command, so 23 of the 24 UI tests and 4 site tests (27 in all) need `node` on the runner's PATH. Otherwise they are skipped and the job still passes. Hosted run #1 confirmed that the runner provides Node: all 7 UI tests of that time ran and passed. The workflow was not changed.
 - **Security settings:** read-only contents, no persisted credentials, actions pinned to commit SHAs, no secrets, no model and no live inference.
 
 **Status:**
@@ -851,6 +909,10 @@ The public walkthrough (`site/`) is a separate page; its browser checks are reco
 - **Later runs (checked in the documentation audit through GitHub's public API):** runs #6 to #10 also succeeded, the latest being [run #10](https://github.com/bipul724/GhostCache/actions/runs/40725375114) on `26a1c3e` with all seven steps successful. Of the ten runs, only #2 did not succeed; it was a cancelled duplicate. The logs were not read, so hosted test counts are recorded only for runs #1 and #3 (62 tests each).
 - `ghostcache/` is the repository root, so the workflow was discovered.
 - Evidence: the run URLs are recorded. Run #1's report was not downloaded; run #3's report was downloaded and inspected (10 of 10 checks, `passed: true`; see "Hosted CI runs #2 and #3" above).
+- **Run #16 (checked October 29, 2026, 16:30–16:35 UTC, through the public API):** [run #16](https://github.com/bipul724/GhostCache/actions/runs/40867758385) (run ID `40867758385`, job `123426739687`) was triggered by the push of `f66977d` and completed with `success` at 11:45:11 UTC. All ten job steps, including the test, fixture-evaluation, report-upload and telemetry steps, reported `success`; the only annotation is a notice about the `ubuntu-latest` label. Runs #11 to #15 also succeeded, so 15 of 16 runs succeeded and #2 remains the only cancelled one. The artifact `ghostcache-synthetic-evaluation` (ID `12893963182`, 2,111 bytes) expires on 2026-11-01 at 11:45:03 UTC.
+  - **Not established:** the report could not be downloaded (HTTP 401 without sign-in) and the job log could not be read (HTTP 403), so its ten checks were not inspected and **no hosted test count is claimed** for run #16. The successful evaluation step is consistent with a passing report, because `evaluate` exits 0 only when `passed` is true, but that is an inference from the code. Counted locally, the `f66977d` tree defines 124 tests; that is not a hosted count.
+  - **Not tested on GitHub:** run #16 tested committed `f66977d`, not the uncommitted UI content refresh or the audit fixes; no hosted run has tested them yet.
+  - Evidence: [hosted-ci-run-16-2026-10-29/](screenshots/hosted-ci-run-16-2026-10-29/README.md) (the API responses and a checksum manifest).
 
 ## Collecting new evidence without overwriting the old
 
@@ -869,7 +931,7 @@ The public walkthrough (`site/`) is a separate page; its browser checks are reco
 
 The current tests do **not** cover:
 
-- the UI JavaScript in a real browser: the contract tests cover only rendering of the answer trace, banner and labels, the echo request and stale-display clearing, against a fake DOM, not layout, CSS, graph drawing or events (a one-off manual browser check is recorded in the UI fixes section);
+- the UI JavaScript in a real browser. The contract tests run the real `web/app.js` and `site/site.js` against a fake DOM and fetch. They cover the answer trace, banner and labels, requests (including the echo question and the mode each Reset sends), stale-display clearing, graph structure (node kinds, lineage highlighting, node reuse across deletions, tombstones and the list view), link geometry computed from the SVG attributes the code writes (`thread_ends_meet_their_knots`), the rebuild outcome, failed-cleanup reconciliation, unknown state, `storage_failed` recovery and mode switching through the page's real change handler. A fake DOM does **not** establish actual browser rendering, layout, CSS, real pointer or keyboard input, or accessibility. Those were checked only in separate, one-off automated local browser sessions (the UI fixes, redesign, UI content refresh and audit-fix sections), and assistive technology has not been checked at all (T-E6);
 - live inference;
 - concurrent HTTP requests;
 - Python 3.15;
@@ -879,7 +941,6 @@ The current tests do **not** cover:
 - a rebuild failure from live Gemma: every rebuild-failure test uses a simulated `ProviderError`;
 - the deployed walkthrough: `tests/test_site.py` checks `site/` and `render.yaml` offline, but no automated test or CI step requests the public URL, its headers or its layout (the deployment checks above were manual, read-only runs);
 - crash safety or durability of reset publication (process kill or power loss mid-copy), concurrent writers from other processes, and Windows;
-- the UI's handling of `storage_failed` (see architecture.md known discrepancy 4);
 - large or real corpora.
 
 They do not prove secure disk erasure, model unlearning, production authorisation or behaviour on arbitrary RAG systems.
@@ -889,5 +950,5 @@ Worthwhile additions, in order:
 1. *(Done; extended October 29, 2026 by D-22.)* A rebuild `ProviderError` keeps cleanup complete, logs `summary.rebuild_failed`, returns `rebuild_error` and sets `state.rebuild`.
 2. *(Done October 28, 2026, in `tests/test_telemetry.py`.)* `main(["evaluate", "--output", tmp])` in fixture mode writes a passing report and returns 0.
 3. Asking during the `source_only` stage never saves a stale conversation.
-4. An automated real-browser run of the UI contract. The manual check and hosted CI with Node are done; the rest of T-A9 is new screenshots.
+4. A repeatable real-browser test in the suite or CI. The manual check, hosted CI with Node and one-off automated local browser sessions are done, and T-A9's new screenshots were saved on October 29, 2026 ([UI refresh captures](screenshots/ui-content-refresh-2026-10-29/README.md)); what remains is a browser check that runs on every change.
 5. Retrieval tie-break ordering.

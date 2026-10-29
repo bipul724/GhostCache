@@ -156,6 +156,8 @@ The evidence for each record is code, tests, saved results or the workspace hand
   - Unlearning, secure erasure, backups, logs and paraphrases are out of scope.
 - **Evidence:** `app.py` `state` and `evaluate`; the `scope` strings in the reports and `store.audit`.
 
+**UI clarification, October 29, 2026 (T-A7).** The local lab now states the evaluator/evidence retention boundary next to the checks after confirmed cleanup, including when rebuilding failed. Reset, unavailable storage and an unknown server state hide the note. It names `scenario.canary`, `/api/state` and saved reports without showing the expected marker's value. This changes presentation only; evaluator state, model context and the cleanup scope are unchanged. Extended UI contract cases and [new local browser captures](screenshots/ui-content-refresh-2026-10-29/README.md) verify the note.
+
 ## D-12. Single-user localhost server that resets its database on start
 
 - **Status:** Accepted (for the prototype)
@@ -335,7 +337,7 @@ The evidence for each record is code, tests, saved results or the workspace hand
 
 ## D-21. A light "Residual Archive" design: a four-page public site and a redesigned local lab
 
-- **Status:** Accepted (implemented and tested locally on October 29, 2026; **not deployed**, T-E9)
+- **Status:** Accepted. Originally implemented and tested locally on October 29, 2026; a later read-only comparison confirms the earlier committed four-page site and favicon are publicly served. The current content refresh still awaits deployment verification (T-E9).
 - **Context:** The user asked for a light, editorial redesign of both experiences, keeping the public recording and the local lab clearly separate, the plain HTML, CSS and JavaScript architecture with no build step, the existing API contracts, DOM hooks and report data, and the honest labelling rules. Two constraints shaped it:
   - The deployed CSP (`render.yaml`) is `default-src 'none'` with no `font-src` and `style-src 'self'`, so web fonts, inline styles and inline scripts cannot load.
   - The local server serves only `/`, `/index.html`, `/app.js` and `/style.css` from `web/`, so the lab cannot share files with `site/`.
@@ -351,9 +353,11 @@ The evidence for each record is code, tests, saved results or the workspace hand
   - Still unverified: real phones, Safari or Firefox, a screen reader, and live mode in the redesigned lab (Ollama was not running).
 - **Evidence:** `site/`, `web/`, `tests/test_site.py`, `tests/test_ui.py`, `tests/ui/app_contract.js`, `tests/ui/site_contract.js`; TESTING.md, "Residual Archive redesign (October 29, 2026)" and "Review fixes to the redesign (October 29, 2026)".
 
+**Content amendment, October 29, 2026.** Keep current project evidence in the methodology page's separately dated `#project-evidence` section. The local regression suite, historical hosted CI, Sentry findings, hosting/domain proof and five intended categories have source links and explicit limits; they do not rewrite the three live reports or their exported answers, counts and timings. Add optional tracing and current recovery instructions to the run guide, and use the `.tech` canonical address with Render as an alternate. No dependency, report, export or backend change. Existing site and UI tests are extended; [local verification](screenshots/ui-content-refresh-2026-10-29/README.md) passes. New content is not yet deployed.
+
 ## D-22. The current rebuild outcome is controller state, not a scan of the event window
 
-- **Status:** Accepted (implemented and verified locally on October 29, 2026; uncommitted). Amends the D-21 review-fix amendment, which read the outcome from the ledger.
+- **Status:** Accepted (implemented and verified locally on October 29, 2026; uncommitted). Amends the D-21 review-fix amendment, which read the outcome from the ledger. *Later status (checked October 29, 2026): committed and pushed to `main` (in `f66977d`'s history). This is local lab and controller code; it is not served by Render, so it is committed, not deployed.*
 - **Context:** The lab decided whether a cleanup's summary rebuild had failed by scanning `state.events`, but `/api/state` returns only the latest 50 events. Fifty later events (13 verifications record 52 answer events) pushed `summary.rebuild_failed` out of that window, and the lab went back to the green "Cleanup propagated" state although nothing had resolved the failure.
 - **Decision:**
   - `Experiment.rebuild` holds the latest cascade rebuild's outcome, separate from the event ledger: `{"status": "not_attempted"}`, `{"status": "succeeded", "artifact_id", "parent_ids"}` or `{"status": "failed", "parent_ids", "error_category"}`. `state()` returns a copy as `rebuild`; the event window stays at 50 (`EVENT_WINDOW`).
