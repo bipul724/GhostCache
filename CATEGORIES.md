@@ -1,10 +1,10 @@
 # GhostCache: expanded prize-category plan
 
-Updated October 27, 2026; scope amended October 28, 2026 (three categories) and October 29, 2026 (four, adding Render). This replaces the category choices from the Recipe Séance plans for **GhostCache**. It is a build plan, not a claim that these integrations or entries already exist.
+Updated October 27, 2026; scope amended October 28, 2026 (three categories) and twice on October 29, 2026 (four, adding Render; then five, restoring the .tech domain). This replaces the category choices from the Recipe Séance plans for **GhostCache**. It is a build plan, not a claim that these integrations or entries already exist.
 
 ## Current scope (October 29, 2026)
 
-GhostCache intends to enter **four** categories, each with working use and evidence (DECISIONS.md D-14, amendment of October 29, 2026):
+GhostCache intends to enter **five** categories, each with working use and evidence (DECISIONS.md D-14, second and third amendments, October 29, 2026):
 
 | Official category | How GhostCache uses it | Main evidence |
 | --- | --- | --- |
@@ -12,8 +12,9 @@ GhostCache intends to enter **four** categories, each with working use and evide
 | **Best Use of GitHub Copilot** | Targeted through **GitHub Actions**, which the official description includes ("automate your project with GitHub Actions"). The workflow runs the test suite and a fresh fixture evaluation on every push. Copilot did not write this project, and the post must not say it did | Hosted runs #1 and #3 to #10 succeeded; run #3's report was downloaded and inspected |
 | **Best Use of Sentry Agent Tracing** | Optional metadata-only spans for the agent, model calls, memory operations, reset and verify | Real traces, seven screenshots and two explained findings |
 | **Best Use of Render** | Render hosts the public walkthrough of three recorded local Gemma evaluations (see [below](#best-use-of-render)) | [render.yaml](render.yaml), [DEPLOYMENT.md](DEPLOYMENT.md), deployment and T-E7 evidence |
+| **Best Use of a .tech Domain** | The same walkthrough is live at <https://ghostcache.bipulchamoli.tech/>, a subdomain of the owner's Hacktoberfest-promo .tech domain (see [below](#best-use-of-a-tech-domain)) | [Custom-domain evidence](screenshots/custom-domain-2026-10-29/README.md) and [promo-claim evidence](screenshots/custom-domain-2026-10-29/promo-claim/README.md) |
 
-The .tech domain, Backboard, Browserbase, ElevenLabs and Entire stay dropped; none has code or evidence.
+Backboard, Browserbase, ElevenLabs and Entire stay dropped; none has code or evidence. *(The .tech domain was dropped with them on October 28, 2026 and restored on October 29, 2026.)*
 
 **Intended is not entered.** As of October 29, 2026 no DEV post exists on DEV, as a draft or published, so no category has been entered. A category is entered only when the eventual DEV submission lists it. The official page says each submission "is automatically in the running for the overall prize and every partner category it qualifies for", so whether an entry qualifies is the organizers' decision. Editing these documents enters nothing. The remaining submission work is in [tasks.md](tasks.md), section I.
 
@@ -47,9 +48,45 @@ The .tech domain, Backboard, Browserbase, ElevenLabs and Entire stay dropped; no
 - **Which clause applies.** GhostCache relies on "to host an agent's front end". The walkthrough is the public front end for recorded runs of its local Gemma assistant.
 - **Why it is not certain.** The wording does not explicitly address a static walkthrough of recorded runs with no live agent behind it. This is a reasonable intended entry, not organizer-confirmed eligibility, and acceptance is not guaranteed.
 
+### Best Use of a .tech Domain
+
+*Restored as an intended category on October 29, 2026 (DECISIONS.md D-14, third amendment). It had been dropped on October 28, 2026.*
+
+**What the domain does.**
+- **Where GhostCache lives.** <https://ghostcache.bipulchamoli.tech/> serves the same Render static site as <https://ghostcache-walkthrough.onrender.com/>, which stays available as an alternate address. The subdomain is a CNAME to the Render site.
+- **What stays where it was.** The portfolio stays at `bipulchamoli.tech` on Vercel. The Python backend, the SQLite experiment and Ollama stay on the laptop. The domain adds a public address and nothing else, and nothing new runs on Render.
+
+**Evidence in this repository.**
+- **Working custom domain.** [Custom-domain evidence](screenshots/custom-domain-2026-10-29/README.md):
+  - Render shows the hostname as Verified and Certificate Issued;
+  - normal HTTPS requests returned the page, stylesheet, script and evidence JSON byte-identical to the committed files;
+  - `/api/state` returned 404.
+- **Promo origin.** The owner confirmed that `bipulchamoli.tech` was registered using the Hacktoberfest 2026 .tech promotion.
+- **Promo claimed.** A screenshot of the MLH Hacktoberfest 2026 page shows the .Tech 2026 promo code as "Already Claimed" ([promo-claim evidence](screenshots/custom-domain-2026-10-29/promo-claim/README.md)).
+- **Registration.** The same folder holds a screenshot of the registration confirmation for `bipulchamoli.tech` for one year. The registration confirmation email is dated October 11, 2026. The October 29 timestamp in its print header records when it was printed.
+
+**Limits of that evidence.**
+- **Which code was used.** The screenshots show a claimed Hacktoberfest .tech promotion and a domain registration confirmation. They do not explicitly show which redemption code was applied to this registration, so that link rests on the owner's confirmation.
+- **Authenticity.** Both screenshots are user-supplied and cropped or redacted. Neither is an independently authenticated registration record.
+- **DNS scope.** Global DNS propagation was not established. No browser, device or accessibility checks were repeated on the custom hostname.
+
+**Eligibility, an interpretation.**
+- **The wording checked.** The official category text, checked on October 29, 2026 at <https://dev.to/challenges/hf26>, reads: "Put your project live on a .tech domain you claimed through Hacktoberfest, and link to it in your write-up."
+- **How GhostCache meets it.** GhostCache is live on a subdomain of a .tech domain that the owner says was claimed through Hacktoberfest. The write-up must link to <https://ghostcache.bipulchamoli.tech/>.
+- **Why it is not certain.**
+  - The wording does not say whether a subdomain counts.
+  - The promo link rests on the owner's confirmation, not on a record that shows the applied code.
+  - The project's address serves a static walkthrough of recorded runs, not a live agent; the Render caveat [above](#best-use-of-render) applies to that too.
+
+  This is a reasonable intended entry, not organizer-confirmed eligibility, and acceptance is not guaranteed.
+
+**Ready to copy into the DEV post.** Paste as written, with nothing added:
+
+> **Best Use of a .tech Domain:** GhostCache’s public walkthrough is live at <https://ghostcache.bipulchamoli.tech/>, a subdomain of my .tech domain claimed through the Hacktoberfest promotion. It serves the same static recorded walkthrough hosted on Render; no inference runs there.
+
 ### Previous scope (October 28, 2026; superseded October 29, 2026)
 
-*Kept as written. Render was added on October 29, 2026; the rest still applies.*
+*Kept as written. Render was added on October 29, 2026, and the .tech domain was restored later that day; the rest still applies.*
 
 
 The submission enters **three** categories, the ones with working use and evidence: **Gemma**, **GitHub (through GitHub Actions)** and **Sentry Agent Tracing**. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire targets are dropped; none has code or evidence (DECISIONS.md D-14 amendment). Render hosts the public recorded walkthrough ([render.yaml](render.yaml), D-13; deployed October 28, 2026 at <https://ghostcache-walkthrough.onrender.com/>) but is not added to the category list. The original seven-category plan below is kept as history.
@@ -66,7 +103,7 @@ The original plan aimed for **seven partner categories**, with two optional addi
 | 2 | Best Use of GitHub Copilot | Use **GitHub Actions**, explicitly included in this challenge's category description, to run the deletion regression suite and save a fresh synthetic report on changes. | Workflow configured in `.github/workflows/checks.yml`; YAML parsed, 22 tests and fresh 10/10 fixture evaluation passed locally. Hosted [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) passed on October 28, 2026 (62 tests). The fixture report from [run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485) was downloaded and inspected: 10 of 10 checks passed. Every later run through #10 succeeded (run #2 was a cancelled duplicate). | Public repository, successful workflow link, uploaded fixture report. Describe Actions use accurately; do not claim Copilot generated existing code. |
 | 3 | Best Use of Sentry Agent Tracing | Show retrieval, generation, deletion and rebuild spans; measure timings, tokens and failure classes; explain a finding in the post. | **Implemented, with real traces (October 28, 2026):** optional metadata-only spans for the agent, model calls, memory search/write/delete, reset and verify, with offline privacy tests (T-D2). Real traces from one fixture and two live evaluations, seven screenshots and two explained findings (T-D3): a 40.45 s first model call after an Ollama server start dominates the cold run (cause inferred, not measured), and the source-only leak is visible through `answer_contains_marker` and synthetic `context_ids`. Failure classes are visible too: a failed live run's root span carries `error.type: ProviderError`. Sent from a 14-day Sentry Business trial with no payment method; the runs used 120 of 100M spans (T-D1). The local ledger is not Sentry. | Actual Sentry traces/screenshots and explanation of an observed issue or bottleneck. |
 | 4 | Best Use of Render | Host the public synthetic GhostCache interface and recorded evaluation evidence. | **Not entered (October 28, 2026).** A static recorded walkthrough (`site/`) and its Blueprint (`render.yaml`) are implemented, tested locally and deployed on Render (October 28, 2026: <https://ghostcache-walkthrough.onrender.com/>, recorded runs only). Hosting only. *(October 29, 2026: now an intended category, with Render's role unchanged; see [Best Use of Render](#best-use-of-render).)* | Render deployment and working public interface, with replay/simulation clearly distinguished from live inference. |
-| 5 | Best Use of a .tech Domain | Serve that public project under a subdomain such as `ghostcache.bipulchamoli.tech`. | **Dropped October 28, 2026.** Never started. | Live HTTPS URL and the promo claim/registration evidence. Do not change the existing main-domain application. |
+| 5 | Best Use of a .tech Domain | Serve that public project under a subdomain such as `ghostcache.bipulchamoli.tech`. | **Dropped October 28, 2026.** Never started. *(October 29, 2026: restored as an intended category (D-14, third amendment). GhostCache is served at `ghostcache.bipulchamoli.tech`. The owner confirmed the domain's Hacktoberfest promo origin. Screenshots show the promo claimed and a registration confirmation email dated October 11, 2026, though they do not show which code was applied. See [Best Use of a .tech Domain](#best-use-of-a-tech-domain).)* | Live HTTPS URL and the promo claim/registration evidence. Do not change the existing main-domain application. |
 | 6 | Best Use of Backboard | Run a small, budget-capped comparison across 2–3 available open-weight models through one Backboard key, using the same synthetic corpus and deletion probes. | **Dropped October 28, 2026.** No API calls or results. | Model IDs, actual requests/results, latency, token/cost records, disclosure and retained-fact outcomes. |
 | 7 | Best Use of Browserbase | Use Stagehand with a real browser to drive the hosted workflow: expose the marker, delete the source, observe residual information, propagate cleanup, and verify retained facts. | **Dropped October 28, 2026.** Never started. Local Chrome/CUA checks do not count as Browserbase use. | Actual Stagehand execution, browser session evidence and assertions; report whether it exercised simulation/replay or live inference. |
 
@@ -89,13 +126,13 @@ The registered main Hacktoberfest event also lists official voice skills from `e
 | Backboard | New-account $5 credit, valid 30 days, no payment information required. | Finite credit, not permanent free inference. Existing accounts may have used it. Check available models/prices and cap requests before a comparison. |
 | Browserbase | $0 plan currently lists one browser hour, three concurrent browsers, 15 minutes per session, three managed agent runs and $5 model tokens. | Browser hours, managed agent runs and model tokens are separate allowances; confirm consumption before running. A cloud browser needs a reachable demo. |
 | Sentry | Target the free Developer plan; confirm the account's current tracing allowance before enabling the integration. *Recorded October 28, 2026 (T-D1): the account used was on a 14-day Business Plan Trial with no payment method on file, not the Developer plan; usage period Oct 28 – Nov 10, 120 of 100M spans used.* | Do not promise unlimited traces or raw-payload capture. The Developer plan's limits and what happens when the trial ends were not checked. |
-| .tech | Reuse the existing domain only if its promo claim qualifies. | The first year and renewal are different costs; do not register another domain just for this plan. |
+| .tech | Reuse the existing domain only if its promo claim qualifies. *(October 29, 2026: reused through the subdomain `ghostcache.bipulchamoli.tech`; the owner confirmed the domain came from the Hacktoberfest promo.)* | The first year and renewal are different costs; do not register another domain just for this plan. |
 
 ## Execution order
 
 1. Put the project in its own public repository and run the checked-in GitHub Actions workflow. *(Done October 28, 2026: [run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382).)* This makes the existing automated test suite and randomized fixture evaluation repeatable evidence. It does not replace live-model evaluation.
 2. Add metadata-only Sentry instrumentation. Export operation names, durations, token counts, result counts and error categories. Do not export document bodies, questions, answers or the marker. *(Done October 28, 2026: implemented (T-D2), then real traces and two findings recorded (T-D3; README.md, "What the real traces showed"). The plan and usage were recorded the same day: a 14-day Business trial, 120 of 100M spans used (T-D1).)*
-3. Build the public synthetic interface/replay for Render and connect the qualifying .tech subdomain. *(October 28, 2026: the recorded walkthrough and Render Blueprint are done locally (T-E2), not deployed; the .tech subdomain is dropped.)* *(The walkthrough was deployed on Render later on October 28, 2026 (T-E3), labelled as a recorded run.)* A replay must say **recorded run**; simulation must say **simulation**. Neither may imply a new Gemma call. Do not expose the existing single-user, resettable localhost server directly as a shared service without redesigning session/state isolation.
+3. Build the public synthetic interface/replay for Render and connect the qualifying .tech subdomain. *(October 28, 2026: the recorded walkthrough and Render Blueprint are done locally (T-E2), not deployed; the .tech subdomain is dropped.)* *(The walkthrough was deployed on Render later on October 28, 2026 (T-E3), labelled as a recorded run.)* *(October 29, 2026: `ghostcache.bipulchamoli.tech` now serves the Render walkthrough, and the .tech category is restored. See [Best Use of a .tech Domain](#best-use-of-a-tech-domain).)* A replay must say **recorded run**; simulation must say **simulation**. Neither may imply a new Gemma call. Do not expose the existing single-user, resettable localhost server directly as a shared service without redesigning session/state isolation.
 4. *(Dropped October 28, 2026.)* Add an optional Backboard evaluation provider. Preserve the local Ollama path. Use stateless calls with only explicitly supplied synthetic context; do not introduce opaque provider memory into the current deletion claim. Capture the full supplied-context lineage in the local store.
 5. *(Dropped October 28, 2026.)* Compare actual model behavior on the same defined cases. Record whether the broken control exposed the marker, whether cleanup cleared managed content, whether secret answers changed, and whether unrelated facts remained answerable. Do not rank “model forgetting”: cleanup is an application operation and the benchmark is bounded.
 6. *(Dropped October 28, 2026.)* Use Browserbase/Stagehand to exercise the public browser workflow and collect evidence. A test of a replay is a UI regression test, not another live-model experiment.
@@ -116,7 +153,7 @@ Only list categories genuinely used in the final project and write-up. A valid s
 ## Sources
 
 - [Week 4 challenge and judging criteria](https://dev.to/challenges/hacktoberfest-week4-2026-10-26)
-- [Official partner category descriptions](https://dev.to/challenges/hf26) (Render, Gemma, GitHub Copilot and Sentry Agent Tracing wording rechecked October 29, 2026)
+- [Official partner category descriptions](https://dev.to/challenges/hf26) (Render, Gemma, GitHub Copilot, Sentry Agent Tracing and .tech Domain wording rechecked October 29, 2026)
 - [GitHub Actions billing](https://docs.github.com/en/billing/concepts/product-billing/github-actions)
 - [Render free services and limitations](https://render.com/docs/free)
 - [Backboard credits, expiry and no-card policy](https://docs.backboard.io/faq)
