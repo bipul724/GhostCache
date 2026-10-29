@@ -1,0 +1,69 @@
+{
+  "checked_at_utc": "2026-10-28T20:48:12.879312+00:00",
+  "checked_at_ist": "2026-10-29T02:18:12.879312+05:30",
+  "method": "Read-only HTTPS GET requests using Python urllib with default certificate/hostname validation; four public assets compared byte-for-byte with Git-committed files. No browser interaction or model inference.",
+  "compared_git_commit": "c7c05c3cc63b46777de384bf78b4e6bc007e9ee8",
+  "requests": [
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/",
+      "checked_at_utc": "2026-10-28T20:48:11.921610+00:00",
+      "verified": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>"
+    },
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/style.css",
+      "checked_at_utc": "2026-10-28T20:48:11.922029+00:00",
+      "verified": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>"
+    },
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/walkthrough.js",
+      "checked_at_utc": "2026-10-28T20:48:11.922125+00:00",
+      "verified": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>"
+    },
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/data/evidence.json",
+      "checked_at_utc": "2026-10-28T20:48:11.922186+00:00",
+      "verified": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>"
+    },
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/api/state",
+      "checked_at_utc": "2026-10-28T20:48:11.922251+00:00",
+      "verified": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1000)>"
+    },
+    {
+      "requested_url": "https://bipulchamoli.tech/",
+      "checked_at_utc": "2026-10-28T20:48:11.922299+00:00",
+      "verified": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)>"
+    },
+    {
+      "requested_url": "https://ghostcache-walkthrough.onrender.com/",
+      "checked_at_utc": "2026-10-28T20:48:11.922351+00:00",
+      "verified": false,
+      "error_type": "URLError",
+      "error": "<urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)>"
+    }
+  ],
+  "domain_promo_provenance": {
+    "status": "user_confirmed",
+    "source": "User confirmed in this conversation that bipulchamoli.tech was obtained through the Hacktoberfest promo.",
+    "independently_verified_registration_document": false
+  },
+  "screenshot": "01-render-custom-domain-verified-certificate-issued.png",
+  "limitations": [
+    "No browser control, responsive, physical-device or accessibility checks were repeated for the new hostname.",
+    "Matching served bytes do not establish which commit Render deployed.",
+    "The new custom domain and certificate status are shown in the user-supplied Render screenshot.",
+    "A successful portfolio request confirms reachability at check time, not a complete comparison with its prior contents."
+  ]
+}

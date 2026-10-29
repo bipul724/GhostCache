@@ -1,0 +1,89 @@
+{
+  "checked_at_utc": "2026-10-28T20:50:20.115302+00:00",
+  "checked_at_ist": "2026-10-29T02:20:20.115302+05:30",
+  "method": "Read-only system curl HTTPS GET requests with redirects followed and default certificate/hostname validation enabled; no insecure flags. Four assets compared byte-for-byte with the recorded Git commit.",
+  "compared_git_commit": "c7c05c3cc63b46777de384bf78b4e6bc007e9ee8",
+  "public_cname_query": {
+    "command": "dig +short CNAME ghostcache.bipulchamoli.tech",
+    "answer": "ghostcache-walkthrough.onrender.com."
+  },
+  "requests": [
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/",
+      "checked_at_utc": "2026-10-28T20:50:19.129879+00:00",
+      "curl_exit_code": 35,
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to ghostcache.bipulchamoli.tech:443"
+    },
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/style.css",
+      "checked_at_utc": "2026-10-28T20:50:19.130190+00:00",
+      "curl_exit_code": 35,
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to ghostcache.bipulchamoli.tech:443"
+    },
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/walkthrough.js",
+      "checked_at_utc": "2026-10-28T20:50:19.130246+00:00",
+      "curl_exit_code": 35,
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to ghostcache.bipulchamoli.tech:443"
+    },
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/data/evidence.json",
+      "checked_at_utc": "2026-10-28T20:50:19.130409+00:00",
+      "curl_exit_code": 35,
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to ghostcache.bipulchamoli.tech:443"
+    },
+    {
+      "requested_url": "https://ghostcache.bipulchamoli.tech/api/state",
+      "checked_at_utc": "2026-10-28T20:50:19.130538+00:00",
+      "curl_exit_code": 35,
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to ghostcache.bipulchamoli.tech:443"
+    },
+    {
+      "requested_url": "https://bipulchamoli.tech/",
+      "checked_at_utc": "2026-10-28T20:50:19.130665+00:00",
+      "curl_exit_code": 0,
+      "status": 200,
+      "final_url": "https://www.bipulchamoli.tech/",
+      "response_bytes": 144776,
+      "sha256": "8fc693a9e95c0e9e96495e62dfa5dae4fdd25edc9c04594c69c59f8b93986616",
+      "ssl_verify_result": 0,
+      "certificate_verification_disabled": false,
+      "headers": {
+        "cache-control": "public, max-age=0, must-revalidate",
+        "content-type": "text/html; charset=utf-8",
+        "server": "Vercel",
+        "strict-transport-security": "max-age=63072000"
+      },
+      "html_title": "Bipul Chamoli — Full-stack Engineer"
+    },
+    {
+      "requested_url": "https://ghostcache-walkthrough.onrender.com/",
+      "checked_at_utc": "2026-10-28T20:50:19.130906+00:00",
+      "curl_exit_code": 0,
+      "status": 200,
+      "final_url": "https://ghostcache-walkthrough.onrender.com/",
+      "response_bytes": 8489,
+      "sha256": "15d3c2dee90e9f2106ca06a6d123fa2d1537f427362c15135a75051a0dd1b26b",
+      "ssl_verify_result": 0,
+      "certificate_verification_disabled": false,
+      "headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, s-maxage=300",
+        "content-security-policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        "referrer-policy": "no-referrer",
+        "server": "cloudflare",
+        "strict-transport-security": "max-age=315360000; includeSubdomains; preload",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "html_title": "GhostCache · Recorded walkthrough"
+    }
+  ],
+  "earlier_attempt": "verification.json retains an earlier Python urllib attempt that could not complete TLS verification; those errors are client observations and do not establish a server outage.",
+  "limitations": [
+    "No browser controls, responsive, physical-device or accessibility checks were repeated on the new hostname.",
+    "Matching served bytes do not establish which commit Render deployed.",
+    "Portfolio reachability does not establish a complete before/after comparison of its contents.",
+    "Hacktoberfest domain provenance was confirmed by the user, not independently checked against registration documents."
+  ]
+}

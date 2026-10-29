@@ -1,0 +1,187 @@
+{
+  "recorded_at_utc": "2026-10-28T20:55:39.336399+00:00",
+  "recorded_at_ist": "2026-10-29T02:25:39.336399+05:30",
+  "method": "Direct system curl HTTPS GETs with default certificate and hostname validation; no insecure flags or DNS override used for the final results below.",
+  "requests": [
+    {
+      "path": "/",
+      "repo": "site/index.html",
+      "status": 200,
+      "ssl_verify_result": 0,
+      "remote_ip": "216.24.57.18",
+      "final_url": "https://ghostcache.bipulchamoli.tech/",
+      "exit_code": 0,
+      "response_bytes": 8489,
+      "sha256": "15d3c2dee90e9f2106ca06a6d123fa2d1537f427362c15135a75051a0dd1b26b",
+      "response_headers": {
+        "content-type": "text/html; charset=utf-8",
+        "cache-control": "public, max-age=0, s-maxage=300",
+        "content-security-policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        "referrer-policy": "no-referrer",
+        "server": "cloudflare",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "certificate_verification_disabled": false,
+      "dns_override_used": false,
+      "comparison": {
+        "git_commit": "c7c05c3cc63b46777de384bf78b4e6bc007e9ee8",
+        "repository_path": "site/index.html",
+        "committed_sha256": "15d3c2dee90e9f2106ca06a6d123fa2d1537f427362c15135a75051a0dd1b26b",
+        "byte_identical": true
+      }
+    },
+    {
+      "path": "/style.css",
+      "file": "style.css",
+      "repo": "site/style.css",
+      "status": 200,
+      "ssl_verify_result": 0,
+      "remote_ip": "216.24.57.16",
+      "final_url": "https://ghostcache.bipulchamoli.tech/style.css",
+      "exit_code": 0,
+      "response_bytes": 9935,
+      "sha256": "035e46ec0210e14951f1e0c8cda9748ded207f9d1cdd73ee7a65126bbc488027",
+      "response_headers": {
+        "content-type": "text/css; charset=utf-8",
+        "cache-control": "public, max-age=0, s-maxage=300",
+        "content-security-policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        "referrer-policy": "no-referrer",
+        "server": "cloudflare",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "certificate_verification_disabled": false,
+      "dns_override_used": false,
+      "comparison": {
+        "git_commit": "c7c05c3cc63b46777de384bf78b4e6bc007e9ee8",
+        "repository_path": "site/style.css",
+        "committed_sha256": "035e46ec0210e14951f1e0c8cda9748ded207f9d1cdd73ee7a65126bbc488027",
+        "byte_identical": true
+      }
+    },
+    {
+      "path": "/data/evidence.json",
+      "file": "evidence.json",
+      "repo": "site/data/evidence.json",
+      "status": 200,
+      "ssl_verify_result": 0,
+      "remote_ip": "216.24.57.16",
+      "final_url": "https://ghostcache.bipulchamoli.tech/data/evidence.json",
+      "exit_code": 0,
+      "response_bytes": 38996,
+      "sha256": "557416eac4e4f6d70aee2d089ee33ac316da278c7ba1f2f2f3b882aa27e2b951",
+      "response_headers": {
+        "content-type": "application/json",
+        "cache-control": "no-cache",
+        "content-security-policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        "referrer-policy": "no-referrer",
+        "server": "cloudflare",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "certificate_verification_disabled": false,
+      "dns_override_used": false,
+      "comparison": {
+        "git_commit": "c7c05c3cc63b46777de384bf78b4e6bc007e9ee8",
+        "repository_path": "site/data/evidence.json",
+        "committed_sha256": "557416eac4e4f6d70aee2d089ee33ac316da278c7ba1f2f2f3b882aa27e2b951",
+        "byte_identical": true
+      }
+    },
+    {
+      "path": "/api/state",
+      "file": "api-state.txt",
+      "repo": null,
+      "status": 404,
+      "ssl_verify_result": 0,
+      "remote_ip": "216.24.57.16",
+      "final_url": "https://ghostcache.bipulchamoli.tech/api/state",
+      "exit_code": 0,
+      "response_bytes": 10,
+      "sha256": "7515bf959b73b956ceb967351c7e299cbb3668a53d35f9c770eb72e00d93ced6",
+      "response_headers": {
+        "content-type": "text/plain; charset=utf-8",
+        "x-content-type-options": "nosniff",
+        "server": "cloudflare"
+      },
+      "certificate_verification_disabled": false,
+      "dns_override_used": false
+    },
+    {
+      "path": "/walkthrough.js",
+      "repo": "site/walkthrough.js",
+      "status": 200,
+      "ssl_verify_result": 0,
+      "remote_ip": "216.24.57.18",
+      "final_url": "https://ghostcache.bipulchamoli.tech/walkthrough.js",
+      "exit_code": 0,
+      "response_bytes": 15908,
+      "sha256": "50bde415e1cc886d729e89a7fe2dbd1cd8350d4fb0c07cbc1712d19f72bfb9e0",
+      "response_headers": {
+        "content-type": "application/javascript",
+        "cache-control": "public, max-age=0, s-maxage=300",
+        "content-security-policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        "referrer-policy": "no-referrer",
+        "server": "cloudflare",
+        "x-content-type-options": "nosniff",
+        "x-frame-options": "DENY"
+      },
+      "certificate_verification_disabled": false,
+      "dns_override_used": false,
+      "comparison": {
+        "git_commit": "c7c05c3cc63b46777de384bf78b4e6bc007e9ee8",
+        "repository_path": "site/walkthrough.js",
+        "committed_sha256": "50bde415e1cc886d729e89a7fe2dbd1cd8350d4fb0c07cbc1712d19f72bfb9e0",
+        "byte_identical": true
+      }
+    }
+  ],
+  "dns_observations": {
+    "authoritative_cname": "ghostcache-walkthrough.onrender.com.",
+    "authoritative_nameserver": "ns1.vercel-dns.com",
+    "public_resolver_1_1_1_1_correct": true,
+    "earlier_local_cache_old_A_values": [
+      "216.198.79.1",
+      "64.29.17.65"
+    ],
+    "later_local_cache": "Correct CNAME and Render addresses returned after the old cache TTL expired.",
+    "later_Render_addresses": [
+      "216.24.57.18",
+      "216.24.57.16"
+    ],
+    "global_propagation": "Not established; only the tested resolution paths were checked."
+  },
+  "earlier_intermediate_JS_request": [
+    {
+      "path": "/walkthrough.js",
+      "file": "walkthrough.js",
+      "repo": "site/walkthrough.js",
+      "target": "/private/tmp/ghostcache-tech-domain-walkthrough.js",
+      "headers": "/private/tmp/ghostcache-tech-domain-walkthrough.js.headers",
+      "error": "curl: (35) LibreSSL SSL_connect: SSL_ERROR_SYSCALL in connection to ghostcache.bipulchamoli.tech:443 \n{\"status\":000,\"ssl_verify_result\":1,\"remote_ip\":\"216.198.79.1\",\"final_url\":\"https://ghostcache.bipulchamoli.tech/walkthrough.js\"}\n",
+      "exit_code": 35
+    }
+  ],
+  "diagnostic_JS_request": {
+    "used_dns_override": true,
+    "curl_resolve": "ghostcache.bipulchamoli.tech:443:216.24.57.16",
+    "status": 200,
+    "ssl_verify_result": 0,
+    "note": "This separate diagnostic succeeded without disabling TLS validation. The final normal request above subsequently succeeded without an override."
+  },
+  "portfolio_control": {
+    "source": "verification-curl.json",
+    "requested_url": "https://bipulchamoli.tech/",
+    "final_url": "https://www.bipulchamoli.tech/",
+    "status": 200,
+    "ssl_verify_result": 0,
+    "observed_title": "Bipul Chamoli — Full-stack Engineer"
+  },
+  "promo_provenance": "Confirmed by the user in this conversation; no registration or promo-claim document independently checked or saved.",
+  "limitations": [
+    "No browser selector, responsive, physical-device or accessibility checks were repeated for the new hostname.",
+    "Matching served files do not establish which commit Render deployed.",
+    "Portfolio reachability does not establish a complete comparison with its prior contents."
+  ]
+}
