@@ -337,7 +337,7 @@ The evidence for each record is code, tests, saved results or the workspace hand
 
 ## D-21. A light "Residual Archive" design: a four-page public site and a redesigned local lab
 
-- **Status:** Accepted. Originally implemented and tested locally on October 29, 2026; a later read-only comparison confirms the earlier committed four-page site and favicon are publicly served. The current content refresh still awaits deployment verification (T-E9).
+- **Status:** Accepted. Originally implemented and tested locally on October 29, 2026; a later read-only comparison confirms the earlier committed four-page site and favicon are publicly served. The current content refresh still awaits deployment verification (T-E9). *(Later status, October 30, 2026: deployed and verified; both addresses serve `site/` at `04407eb`, T-E9 done.)*
 - **Context:** The user asked for a light, editorial redesign of both experiences, keeping the public recording and the local lab clearly separate, the plain HTML, CSS and JavaScript architecture with no build step, the existing API contracts, DOM hooks and report data, and the honest labelling rules. Two constraints shaped it:
   - The deployed CSP (`render.yaml`) is `default-src 'none'` with no `font-src` and `style-src 'self'`, so web fonts, inline styles and inline scripts cannot load.
   - The local server serves only `/`, `/index.html`, `/app.js` and `/style.css` from `web/`, so the lab cannot share files with `site/`.
