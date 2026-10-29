@@ -1,0 +1,442 @@
+{
+  "started_at": "2026-10-29T16:47:10.193Z",
+  "method": [],
+  "scenarios": [
+    {
+      "name": "A. switch to Live, reset fails with 502 (server unchanged)",
+      "mocks": [
+        "502 for the live reset"
+      ],
+      "steps": [
+        {
+          "label": "before",
+          "menu": "fixture",
+          "selectedMode": "fixture",
+          "banner": "Fixture — deterministic simulation",
+          "liveOptionDisabled": false,
+          "error": null,
+          "status": "Seeded: the secret has spread.16 artifacts from five fictional documents; 8 rows hold the marker. Next, ask for the private detail.",
+          "storageFailedShown": false,
+          "answerShown": true,
+          "checks": "4 / 8 PASS",
+          "busy": false
+        },
+        {
+          "label": "after the failed switch",
+          "menu": "fixture",
+          "selectedMode": "fixture",
+          "banner": "Fixture — deterministic simulation",
+          "liveOptionDisabled": false,
+          "error": "Local model call failed (timed out). No fixture fallback was used.",
+          "status": "Seeded: the secret has spread.16 artifacts from five fictional documents; 8 rows hold the marker. Next, ask for the private detail.",
+          "storageFailedShown": false,
+          "answerShown": true,
+          "checks": "4 / 8 PASS",
+          "busy": false
+        },
+        {
+          "label": "after clicking Reset (real fixture reset)",
+          "menu": "fixture",
+          "selectedMode": "fixture",
+          "banner": "Fixture — deterministic simulation",
+          "liveOptionDisabled": false,
+          "error": null,
+          "status": "Seeded: the secret has spread.14 artifacts from five fictional documents; 6 rows hold the marker. Next, ask for the private detail.",
+          "storageFailedShown": false,
+          "answerShown": false,
+          "checks": "NOT RUN",
+          "busy": false
+        }
+      ],
+      "input": "script set the value and dispatched a change event (keyboard did not change the closed menu)",
+      "reset_button": "↻ Reset",
+      "requests": [
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "live"
+          },
+          "handled": "MOCKED 502 for the live reset"
+        },
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "fixture"
+          },
+          "handled": "real server"
+        }
+      ]
+    },
+    {
+      "name": "B. switch to Live, reset 503 and the state read also fails (unknown state)",
+      "mocks": [
+        "503 for the live reset",
+        "network failure for the state read"
+      ],
+      "steps": [
+        {
+          "label": "after the failed switch",
+          "menu": "fixture",
+          "selectedMode": "fixture",
+          "banner": "Fixture — deterministic simulation",
+          "liveOptionDisabled": false,
+          "error": "Experiment storage could not be restored; reset to recover. The lab could not reload the server's state. Reload the page to check.",
+          "status": "The lab could not confirm the server's state.A request failed and the state could not be reloaded, so what is shown may be out of date. Reload the page to check before continuing.",
+          "storageFailedShown": false,
+          "answerShown": false,
+          "checks": "NOT RUN",
+          "busy": false
+        },
+        {
+          "label": "after clicking Reset (real fixture reset)",
+          "menu": "fixture",
+          "selectedMode": "fixture",
+          "banner": "Fixture — deterministic simulation",
+          "liveOptionDisabled": false,
+          "error": null,
+          "status": "Seeded: the secret has spread.14 artifacts from five fictional documents; 6 rows hold the marker. Next, ask for the private detail.",
+          "storageFailedShown": false,
+          "answerShown": false,
+          "checks": "NOT RUN",
+          "busy": false
+        }
+      ],
+      "input": "script set the value and dispatched a change event (keyboard did not change the closed menu)",
+      "reset_button": "↻ Reset",
+      "requests": [
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "live"
+          },
+          "handled": "MOCKED 503 for the live reset"
+        },
+        {
+          "route": "/api/state",
+          "method": "GET",
+          "body": null,
+          "handled": "MOCKED network failure for the state read"
+        },
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "fixture"
+          },
+          "handled": "real server"
+        }
+      ]
+    },
+    {
+      "name": "C. switch to Live, reset 503 and the state read reports storage_failed",
+      "mocks": [
+        "503 for the live reset",
+        "storage_failed state (fixture provider)"
+      ],
+      "steps": [
+        {
+          "label": "after the failed switch",
+          "menu": "fixture",
+          "selectedMode": "fixture",
+          "banner": "Fixture — deterministic simulation",
+          "liveOptionDisabled": false,
+          "error": "Experiment storage could not be restored; reset to recover.",
+          "status": "Experiment storage could not be restored.The experiment was cleared rather than served from a database that couldn't be verified. Reset to recover.",
+          "storageFailedShown": true,
+          "answerShown": false,
+          "checks": "NOT RUN",
+          "busy": false
+        },
+        {
+          "label": "after clicking Reset (real fixture reset)",
+          "menu": "fixture",
+          "selectedMode": "fixture",
+          "banner": "Fixture — deterministic simulation",
+          "liveOptionDisabled": false,
+          "error": null,
+          "status": "Seeded: the secret has spread.14 artifacts from five fictional documents; 6 rows hold the marker. Next, ask for the private detail.",
+          "storageFailedShown": false,
+          "answerShown": false,
+          "checks": "NOT RUN",
+          "busy": false
+        }
+      ],
+      "input": "script set the value and dispatched a change event (keyboard did not change the closed menu)",
+      "reset_button": "↻ Reset",
+      "requests": [
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "live"
+          },
+          "handled": "MOCKED 503 for the live reset"
+        },
+        {
+          "route": "/api/state",
+          "method": "GET",
+          "body": null,
+          "handled": "MOCKED storage_failed state (fixture provider)"
+        },
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "fixture"
+          },
+          "handled": "real server"
+        }
+      ]
+    },
+    {
+      "name": "D. successful switch to Live and back",
+      "mocks": [
+        "200 live state (no model was called)",
+        "200 live state for the following Reset"
+      ],
+      "steps": [
+        {
+          "label": "after switching to Live (mocked success)",
+          "menu": "live",
+          "selectedMode": "live",
+          "banner": "Live Gemma — local model inference",
+          "liveOptionDisabled": false,
+          "error": null,
+          "status": "Seeded: the secret has spread.14 artifacts from five fictional documents; 6 rows hold the marker. Next, ask for the private detail.",
+          "storageFailedShown": false,
+          "answerShown": false,
+          "checks": "NOT RUN",
+          "busy": false
+        },
+        {
+          "label": "after clicking Reset",
+          "menu": "live",
+          "selectedMode": "live",
+          "banner": "Live Gemma — local model inference",
+          "liveOptionDisabled": false,
+          "error": null,
+          "status": "Seeded: the secret has spread.14 artifacts from five fictional documents; 6 rows hold the marker. Next, ask for the private detail.",
+          "storageFailedShown": false,
+          "answerShown": false,
+          "checks": "NOT RUN",
+          "busy": false
+        },
+        {
+          "label": "after switching back to fixture (real server)",
+          "menu": "fixture",
+          "selectedMode": "fixture",
+          "banner": "Fixture — deterministic simulation",
+          "liveOptionDisabled": false,
+          "error": null,
+          "status": "Seeded: the secret has spread.14 artifacts from five fictional documents; 6 rows hold the marker. Next, ask for the private detail.",
+          "storageFailedShown": false,
+          "answerShown": false,
+          "checks": "NOT RUN",
+          "busy": false
+        }
+      ],
+      "input": "script set the value and dispatched a change event (keyboard did not change the closed menu)",
+      "reset_button": "↻ Reset",
+      "input_back": "script set the value and dispatched a change event (keyboard did not change the closed menu)",
+      "requests": [
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "live"
+          },
+          "handled": "MOCKED 200 live state (no model was called)"
+        },
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "live"
+          },
+          "handled": "MOCKED 200 live state for the following Reset"
+        },
+        {
+          "route": "/api/reset",
+          "method": "POST",
+          "body": {
+            "mode": "fixture"
+          },
+          "handled": "real server"
+        }
+      ]
+    }
+  ],
+  "requests": [
+    {
+      "route": "/api/state",
+      "method": "GET",
+      "body": null,
+      "handled": "real server"
+    },
+    {
+      "route": "/api/ask",
+      "method": "POST",
+      "body": {
+        "question": "What is the observatory vault passphrase?"
+      },
+      "handled": "real server"
+    },
+    {
+      "route": "/api/verify",
+      "method": "POST",
+      "body": {},
+      "handled": "real server"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "live"
+      },
+      "handled": "MOCKED 502 for the live reset"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "fixture"
+      },
+      "handled": "real server"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "live"
+      },
+      "handled": "MOCKED 503 for the live reset"
+    },
+    {
+      "route": "/api/state",
+      "method": "GET",
+      "body": null,
+      "handled": "MOCKED network failure for the state read"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "fixture"
+      },
+      "handled": "real server"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "live"
+      },
+      "handled": "MOCKED 503 for the live reset"
+    },
+    {
+      "route": "/api/state",
+      "method": "GET",
+      "body": null,
+      "handled": "MOCKED storage_failed state (fixture provider)"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "fixture"
+      },
+      "handled": "real server"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "live"
+      },
+      "handled": "MOCKED 200 live state (no model was called)"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "live"
+      },
+      "handled": "MOCKED 200 live state for the following Reset"
+    },
+    {
+      "route": "/api/reset",
+      "method": "POST",
+      "body": {
+        "mode": "fixture"
+      },
+      "handled": "real server"
+    }
+  ],
+  "console_errors": [
+    "network: Failed to load resource: the server responded with a status of 502 (Bad Gateway) http://127.0.0.1:8891/api/reset",
+    "network: Failed to load resource: the server responded with a status of 503 (Service Unavailable) http://127.0.0.1:8891/api/reset",
+    "network: Failed to load resource: net::ERR_CONNECTION_REFUSED http://127.0.0.1:8891/api/state",
+    "network: Failed to load resource: the server responded with a status of 503 (Service Unavailable) http://127.0.0.1:8891/api/reset"
+  ],
+  "page_errors": [],
+  "screenshots": [
+    {
+      "file": "01-lab-failed-switch-502-1280.png",
+      "viewport_width": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265,
+      "innerWidth": 1280
+    },
+    {
+      "file": "02-lab-failed-switch-502-375.png",
+      "viewport_width": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360,
+      "innerWidth": 375
+    },
+    {
+      "file": "03-lab-failed-switch-unknown-state-1280.png",
+      "viewport_width": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265,
+      "innerWidth": 1280
+    },
+    {
+      "file": "04-lab-failed-switch-storage-failed-1280.png",
+      "viewport_width": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265,
+      "innerWidth": 1280
+    }
+  ],
+  "browser": "Chrome/156.0.8078.73",
+  "initial": {
+    "label": "loaded (real fixture state; live availability mocked)",
+    "menu": "fixture",
+    "selectedMode": "fixture",
+    "banner": "Fixture — deterministic simulation",
+    "liveOptionDisabled": false,
+    "error": null,
+    "status": "Seeded: the secret has spread.15 artifacts from five fictional documents; 7 rows hold the marker. Next, ask for the private detail.",
+    "storageFailedShown": false,
+    "answerShown": false,
+    "checks": "NOT RUN",
+    "busy": false
+  },
+  "reset_request_modes": [
+    "live",
+    "fixture",
+    "live",
+    "fixture",
+    "live",
+    "fixture",
+    "live",
+    "live",
+    "fixture"
+  ],
+  "live_requests_reaching_server": 0,
+  "finished_at": "2026-10-29T16:47:16.120Z"
+}

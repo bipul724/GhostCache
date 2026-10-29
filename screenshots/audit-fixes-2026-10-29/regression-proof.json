@@ -1,0 +1,119 @@
+{
+  "checked_at_utc": "2026-10-29T16:50:35+00:00",
+  "node": "v22.23.4",
+  "command": "node tests/ui/app_contract.js <case> <app.js>",
+  "runs": [
+    {
+      "app_js": "pre-fix web/app.js (working tree before this fix, including the uncommitted T-A7 change)",
+      "sha256": "9e657ca86fefff6f62b6b66d1de99bead05a340ccfb490851b2aa0fb990e2b01",
+      "cases": {
+        "failed_mode_switch_keeps_the_confirmed_mode": {
+          "exit": 1,
+          "output": [
+            "FAIL failed_mode_switch_keeps_the_confirmed_mode: the menu returns to the experiment's confirmed mode",
+            "+ actual - expected",
+            "",
+            "  {",
+            "    banner: 'Fixture \u2014 deterministic simulation',",
+            "+   menu: 'live',",
+            "+   selected: 'live'",
+            "-   menu: 'fixture',",
+            "-   selected: 'fixture'",
+            "  }"
+          ]
+        },
+        "successful_mode_switch": {
+          "exit": 0,
+          "output": [
+            "ok successful_mode_switch"
+          ]
+        },
+        "storage_failed_state": {
+          "exit": 0,
+          "output": [
+            "ok storage_failed_state"
+          ]
+        },
+        "failed_reconciliation_keeps_the_original_error": {
+          "exit": 0,
+          "output": [
+            "ok failed_reconciliation_keeps_the_original_error"
+          ]
+        }
+      }
+    },
+    {
+      "app_js": "502-only variant (the fix applied only to HTTP 502; scratch file, never in the repository)",
+      "sha256": "1da9eba28946bddc93669c881d8f2ef438717631818ff34f4f31c494ddfef544",
+      "cases": {
+        "failed_mode_switch_keeps_the_confirmed_mode": {
+          "exit": 1,
+          "output": [
+            "FAIL failed_mode_switch_keeps_the_confirmed_mode: Expected values to be strictly deep-equal:",
+            "+ actual - expected",
+            "",
+            "  {",
+            "    banner: 'Fixture \u2014 deterministic simulation',",
+            "    menu: 'fixture',",
+            "+   selected: 'live'",
+            "-   selected: 'fixture'",
+            "  }"
+          ]
+        },
+        "successful_mode_switch": {
+          "exit": 0,
+          "output": [
+            "ok successful_mode_switch"
+          ]
+        },
+        "storage_failed_state": {
+          "exit": 0,
+          "output": [
+            "ok storage_failed_state"
+          ]
+        },
+        "failed_reconciliation_keeps_the_original_error": {
+          "exit": 0,
+          "output": [
+            "ok failed_reconciliation_keeps_the_original_error"
+          ]
+        }
+      }
+    },
+    {
+      "app_js": "fixed web/app.js (working tree)",
+      "sha256": "fe26a085bd14b4c628f7ce60a73219c8456cbdfce2fb2a2df6bb917b38d1d0f3",
+      "cases": {
+        "failed_mode_switch_keeps_the_confirmed_mode": {
+          "exit": 0,
+          "output": [
+            "ok failed_mode_switch_keeps_the_confirmed_mode"
+          ]
+        },
+        "successful_mode_switch": {
+          "exit": 0,
+          "output": [
+            "ok successful_mode_switch"
+          ]
+        },
+        "storage_failed_state": {
+          "exit": 0,
+          "output": [
+            "ok storage_failed_state"
+          ]
+        },
+        "failed_reconciliation_keeps_the_original_error": {
+          "exit": 0,
+          "output": [
+            "ok failed_reconciliation_keeps_the_original_error"
+          ]
+        }
+      }
+    }
+  ],
+  "test_ui_against_pre_fix": [
+    "FAIL: test_failed_mode_switch_keeps_the_confirmed_mode (tests.test_ui.UIContractTests.test_failed_mode_switch_keeps_the_confirmed_mode)",
+    "Ran 24 tests in 1.944s",
+    "FAILED (failures=1)"
+  ]
+}

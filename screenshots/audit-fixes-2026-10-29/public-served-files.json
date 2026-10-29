@@ -1,0 +1,193 @@
+{
+  "checked_at_utc": "2026-10-29T16:33:09+00:00",
+  "method": "Python urllib HTTPS GET with normal certificate validation; no DNS override; read-only",
+  "head_commit": "f66977d78da58c0f71fd9d57f9c5a6289629c73e",
+  "hosts": {
+    "https://ghostcache.bipulchamoli.tech/": {
+      "files": {
+        "index.html": {
+          "status": 200,
+          "bytes": 20879,
+          "sha256": "fd4f76c6bbf82b41dd23314bfb1dc21a612ef29c0006613ee115b86e6d069d64",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "walkthrough.html": {
+          "status": 200,
+          "bytes": 9511,
+          "sha256": "67dfdd78d473add033d015e1d531f22d3aa4487a86a4e2fa8fcbeb50cb7b49ec",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "method.html": {
+          "status": 200,
+          "bytes": 22015,
+          "sha256": "7d1117f4cca329e66d14bda633a629d63f9e1c949271ea0ff6632ccbada87cc6",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "run.html": {
+          "status": 200,
+          "bytes": 16763,
+          "sha256": "63b4ba722e3af7974002ee7ffc756b42ef1565450c3989df96f367f05259ef2c",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "style.css": {
+          "status": 200,
+          "bytes": 55445,
+          "sha256": "cc88408e2646fccd28f44f7dd0eb01370fb6f13246f975729f2f2bbff2c88932",
+          "matches_HEAD": true,
+          "matches_working_tree": true,
+          "matches_T-E7_2a1ffb0": false,
+          "T-E7_2a1ffb0_sha256": "035e46ec0210e14951f1e0c8cda9748ded207f9d1cdd73ee7a65126bbc488027"
+        },
+        "site.js": {
+          "status": 200,
+          "bytes": 37707,
+          "sha256": "d120ffecb2239ed33d094560c8327fa6b4255ab91993e6263db15d400da26c93",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        },
+        "home.js": {
+          "status": 200,
+          "bytes": 3860,
+          "sha256": "4a691cdeab9160e9b90b08747900268e6c27143e01258d46999a50dfc328c6d6",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        },
+        "walkthrough.js": {
+          "status": 200,
+          "bytes": 28103,
+          "sha256": "d0f35a868b20053fc2b8addf82fff94ce09fa8f83697607b5407d2c5434e2847",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        },
+        "method.js": {
+          "status": 200,
+          "bytes": 5605,
+          "sha256": "c9a3a5f12ffd450f36342738da31e2f90c3b1eded5ddd29619736098c4701a86",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "favicon.svg": {
+          "status": 200,
+          "bytes": 334,
+          "sha256": "bf41eabe3eea331fd2850a115735cbf4793ef017db2325ac68787b228d12a0e8",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        },
+        "data/evidence.json": {
+          "status": 200,
+          "bytes": 38996,
+          "sha256": "557416eac4e4f6d70aee2d089ee33ac316da278c7ba1f2f2f3b882aa27e2b951",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        }
+      },
+      "status_only": {
+        "/api/state": 404,
+        "/favicon.ico": 404
+      },
+      "root_headers": {
+        "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "X-Frame-Options": "DENY"
+      }
+    },
+    "https://ghostcache-walkthrough.onrender.com/": {
+      "files": {
+        "index.html": {
+          "status": 200,
+          "bytes": 20879,
+          "sha256": "fd4f76c6bbf82b41dd23314bfb1dc21a612ef29c0006613ee115b86e6d069d64",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "walkthrough.html": {
+          "status": 200,
+          "bytes": 9511,
+          "sha256": "67dfdd78d473add033d015e1d531f22d3aa4487a86a4e2fa8fcbeb50cb7b49ec",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "method.html": {
+          "status": 200,
+          "bytes": 22015,
+          "sha256": "7d1117f4cca329e66d14bda633a629d63f9e1c949271ea0ff6632ccbada87cc6",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "run.html": {
+          "status": 200,
+          "bytes": 16763,
+          "sha256": "63b4ba722e3af7974002ee7ffc756b42ef1565450c3989df96f367f05259ef2c",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "style.css": {
+          "status": 200,
+          "bytes": 55445,
+          "sha256": "cc88408e2646fccd28f44f7dd0eb01370fb6f13246f975729f2f2bbff2c88932",
+          "matches_HEAD": true,
+          "matches_working_tree": true,
+          "matches_T-E7_2a1ffb0": false,
+          "T-E7_2a1ffb0_sha256": "035e46ec0210e14951f1e0c8cda9748ded207f9d1cdd73ee7a65126bbc488027"
+        },
+        "site.js": {
+          "status": 200,
+          "bytes": 37707,
+          "sha256": "d120ffecb2239ed33d094560c8327fa6b4255ab91993e6263db15d400da26c93",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        },
+        "home.js": {
+          "status": 200,
+          "bytes": 3860,
+          "sha256": "4a691cdeab9160e9b90b08747900268e6c27143e01258d46999a50dfc328c6d6",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        },
+        "walkthrough.js": {
+          "status": 200,
+          "bytes": 28103,
+          "sha256": "d0f35a868b20053fc2b8addf82fff94ce09fa8f83697607b5407d2c5434e2847",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        },
+        "method.js": {
+          "status": 200,
+          "bytes": 5605,
+          "sha256": "c9a3a5f12ffd450f36342738da31e2f90c3b1eded5ddd29619736098c4701a86",
+          "matches_HEAD": true,
+          "matches_working_tree": false
+        },
+        "favicon.svg": {
+          "status": 200,
+          "bytes": 334,
+          "sha256": "bf41eabe3eea331fd2850a115735cbf4793ef017db2325ac68787b228d12a0e8",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        },
+        "data/evidence.json": {
+          "status": 200,
+          "bytes": 38996,
+          "sha256": "557416eac4e4f6d70aee2d089ee33ac316da278c7ba1f2f2f3b882aa27e2b951",
+          "matches_HEAD": true,
+          "matches_working_tree": true
+        }
+      },
+      "status_only": {
+        "/api/state": 404,
+        "/favicon.ico": 404
+      },
+      "root_headers": {
+        "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "no-referrer",
+        "X-Frame-Options": "DENY"
+      }
+    }
+  }
+}

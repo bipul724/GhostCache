@@ -1,0 +1,59 @@
+{
+  "started_at": "2026-10-29T16:49:57.178Z",
+  "browser": "Chrome/156.0.8078.73",
+  "method": "Headless Chrome page loads; requests observed with the Network domain; a fresh tab per page, 2.5 s after load",
+  "pages": [
+    {
+      "url": "https://ghostcache.bipulchamoli.tech/",
+      "icon_links": [
+        "favicon.svg"
+      ],
+      "favicon_requests": [
+        "https://ghostcache.bipulchamoli.tech/favicon.svg",
+        "200 https://ghostcache.bipulchamoli.tech/favicon.svg"
+      ],
+      "favicon_ico_requested": false,
+      "console_errors": []
+    },
+    {
+      "url": "https://ghostcache.bipulchamoli.tech/walkthrough.html",
+      "icon_links": [
+        "favicon.svg"
+      ],
+      "favicon_requests": [],
+      "favicon_ico_requested": false,
+      "console_errors": []
+    },
+    {
+      "url": "https://ghostcache.bipulchamoli.tech/method.html",
+      "icon_links": [
+        "favicon.svg"
+      ],
+      "favicon_requests": [],
+      "favicon_ico_requested": false,
+      "console_errors": []
+    },
+    {
+      "url": "https://ghostcache.bipulchamoli.tech/run.html",
+      "icon_links": [
+        "favicon.svg"
+      ],
+      "favicon_requests": [],
+      "favicon_ico_requested": false,
+      "console_errors": []
+    }
+  ],
+  "control": {
+    "url": "http://127.0.0.1:8893/",
+    "icon_links": [],
+    "favicon_requests": [
+      "http://127.0.0.1:8893/favicon.ico",
+      "404 http://127.0.0.1:8893/favicon.ico"
+    ],
+    "favicon_ico_requested": true,
+    "console_errors": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)"
+    ]
+  },
+  "finished_at": "2026-10-29T16:50:11.179Z"
+}
