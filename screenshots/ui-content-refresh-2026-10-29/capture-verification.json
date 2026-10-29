@@ -1,0 +1,219 @@
+{
+  "started_at": "2026-10-29T15:51:12.084Z",
+  "method": "Unedited Chrome DevTools Protocol viewport captures; no fullPage or locator screenshots. Fresh page per public capture; normal classic scrollbars. Capture dimensions and actual client/scroll widths recorded per image.",
+  "captures": [
+    {
+      "file": "01-project-evidence-1280.png",
+      "url": "http://127.0.0.1:8876/method.html",
+      "selector": "#project-evidence",
+      "before": {
+        "innerWidth": 1280,
+        "innerHeight": 1800,
+        "clientWidth": 1265,
+        "scrollWidth": 1265,
+        "scrollY": 5419
+      },
+      "after": {
+        "innerWidth": 1280,
+        "innerHeight": 1800,
+        "clientWidth": 1265,
+        "scrollWidth": 1265,
+        "scrollY": 5419
+      },
+      "pixels": {
+        "width": 1280,
+        "height": 1800
+      }
+    },
+    {
+      "file": "02-project-evidence-375.png",
+      "url": "http://127.0.0.1:8876/method.html",
+      "selector": "#project-evidence",
+      "before": {
+        "innerWidth": 375,
+        "innerHeight": 1200,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "scrollY": 8466
+      },
+      "after": {
+        "innerWidth": 375,
+        "innerHeight": 1200,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "scrollY": 8466
+      },
+      "pixels": {
+        "width": 375,
+        "height": 1200
+      }
+    },
+    {
+      "file": "03-five-intended-categories-375.png",
+      "url": "http://127.0.0.1:8876/method.html",
+      "selector": "#intended-categories",
+      "before": {
+        "innerWidth": 375,
+        "innerHeight": 1200,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "scrollY": 10327
+      },
+      "after": {
+        "innerWidth": 375,
+        "innerHeight": 1200,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "scrollY": 10327
+      },
+      "pixels": {
+        "width": 500,
+        "height": 1113
+      }
+    },
+    {
+      "file": "04-optional-tracing-375.png",
+      "url": "http://127.0.0.1:8876/run.html",
+      "selector": "#tracing",
+      "before": {
+        "innerWidth": 375,
+        "innerHeight": 1200,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "scrollY": 5565
+      },
+      "after": {
+        "innerWidth": 375,
+        "innerHeight": 1200,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "scrollY": 5565
+      },
+      "pixels": {
+        "width": 500,
+        "height": 1113
+      }
+    },
+    {
+      "file": "06-lab-cleanup-retention-375.png",
+      "url": "http://127.0.0.1:8877/",
+      "selector": ".checks-card",
+      "before": {
+        "innerWidth": 375,
+        "innerHeight": 1200,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "scrollY": 2399
+      },
+      "after": {
+        "innerWidth": 375,
+        "innerHeight": 1200,
+        "clientWidth": 360,
+        "scrollWidth": 360,
+        "scrollY": 2399
+      },
+      "pixels": {
+        "width": 375,
+        "height": 1200
+      }
+    },
+    {
+      "file": "07-lab-source-only-echo-1280.png",
+      "url": "http://127.0.0.1:8877/",
+      "selector": "body",
+      "before": {
+        "innerWidth": 1280,
+        "innerHeight": 2800,
+        "clientWidth": 1280,
+        "scrollWidth": 1280,
+        "scrollY": 0
+      },
+      "after": {
+        "innerWidth": 1280,
+        "innerHeight": 2800,
+        "clientWidth": 1280,
+        "scrollWidth": 1280,
+        "scrollY": 0
+      },
+      "pixels": {
+        "width": 1280,
+        "height": 2800
+      }
+    },
+    {
+      "file": "05-lab-cleanup-retention-1280.png",
+      "url": "http://127.0.0.1:8877/",
+      "selector": ".checks-card",
+      "before": {
+        "innerWidth": 1280,
+        "innerHeight": 2800,
+        "clientWidth": 1280,
+        "scrollWidth": 1280,
+        "scrollY": 0
+      },
+      "after": {
+        "innerWidth": 1280,
+        "innerHeight": 2800,
+        "clientWidth": 1280,
+        "scrollWidth": 1280,
+        "scrollY": 0
+      },
+      "pixels": {
+        "width": 1280,
+        "height": 2800
+      }
+    },
+    {
+      "file": "08-lab-cleaned-retained-fact-1280.png",
+      "url": "http://127.0.0.1:8877/",
+      "selector": "body",
+      "before": {
+        "innerWidth": 1280,
+        "innerHeight": 2800,
+        "clientWidth": 1265,
+        "scrollWidth": 1265,
+        "scrollY": 0
+      },
+      "after": {
+        "innerWidth": 1280,
+        "innerHeight": 2800,
+        "clientWidth": 1265,
+        "scrollWidth": 1265,
+        "scrollY": 0
+      },
+      "pixels": {
+        "width": 1280,
+        "height": 2800
+      }
+    }
+  ],
+  "functional": [
+    {
+      "width": 375,
+      "mode": "fixture",
+      "reworded_echo": "PASS",
+      "parent_context_trace": "PASS",
+      "checks": "8/8",
+      "retained_garden": "07:40",
+      "retention_note": "visible after cleanup, hidden after reset"
+    },
+    {
+      "width": 1280,
+      "mode": "fixture",
+      "reworded_echo": "PASS",
+      "parent_context_trace": "PASS",
+      "checks": "8/8",
+      "retained_garden": "07:40",
+      "retention_note": "visible after cleanup, hidden after reset"
+    }
+  ],
+  "errors": [],
+  "limits": [
+    "Local previews only; not a public deployment.",
+    "Desktop Chrome viewport checks, not a physical phone or a second browser engine.",
+    "Fixture lab uses a separate scratch database; no live model calls."
+  ],
+  "browser": "156.0.8078.73",
+  "passed": true,
+  "finished_at": "2026-10-29T15:51:17.664Z"
+}

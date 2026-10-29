@@ -1,0 +1,1202 @@
+{
+  "started_at": "2026-10-29T12:19:58.758Z",
+  "method": "Local headless Chrome, normal scrollbar settings, viewport height 812; public preview serves the deployed CSP. Real pointer/keyboard actions; fixture-only lab with a disposable database.",
+  "measurements": [
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 375,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 375,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8876/index.html",
+      "state": "index.html initial",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html",
+      "state": "walkthrough.html initial",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/method.html",
+      "state": "method.html initial",
+      "innerWidth": 1280,
+      "clientWidth": 1280,
+      "scrollWidth": 1280
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html initial",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/run.html",
+      "state": "run.html all troubleshooting open",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=setup",
+      "state": "walkthrough cold setup diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=setup",
+      "state": "walkthrough cold setup list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=source_only",
+      "state": "walkthrough cold source_only diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=source_only",
+      "state": "walkthrough cold source_only list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=leak",
+      "state": "walkthrough cold leak diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=leak",
+      "state": "walkthrough cold leak list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=cleanup",
+      "state": "walkthrough cold cleanup diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=cleanup",
+      "state": "walkthrough cold cleanup list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=verify",
+      "state": "walkthrough cold verify diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=verify",
+      "state": "walkthrough cold verify list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=verify",
+      "state": "walkthrough cold all six answers open",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=setup",
+      "state": "walkthrough warm setup diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=setup",
+      "state": "walkthrough warm setup list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=source_only",
+      "state": "walkthrough warm source_only diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=source_only",
+      "state": "walkthrough warm source_only list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=leak",
+      "state": "walkthrough warm leak diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=leak",
+      "state": "walkthrough warm leak list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=cleanup",
+      "state": "walkthrough warm cleanup diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=cleanup",
+      "state": "walkthrough warm cleanup list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=verify",
+      "state": "walkthrough warm verify diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=verify",
+      "state": "walkthrough warm verify list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=verify",
+      "state": "walkthrough warm all six answers open",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=setup",
+      "state": "walkthrough oct27 setup diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=setup",
+      "state": "walkthrough oct27 setup list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=source_only",
+      "state": "walkthrough oct27 source_only diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=source_only",
+      "state": "walkthrough oct27 source_only list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=leak",
+      "state": "walkthrough oct27 leak diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=leak",
+      "state": "walkthrough oct27 leak list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=cleanup",
+      "state": "walkthrough oct27 cleanup diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=cleanup",
+      "state": "walkthrough oct27 cleanup list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=verify",
+      "state": "walkthrough oct27 verify diagram",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=verify",
+      "state": "walkthrough oct27 verify list",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=verify",
+      "state": "walkthrough oct27 all six answers open",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=setup",
+      "state": "walkthrough cold setup diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=setup",
+      "state": "walkthrough cold setup list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=source_only",
+      "state": "walkthrough cold source_only diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=source_only",
+      "state": "walkthrough cold source_only list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=leak",
+      "state": "walkthrough cold leak diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=leak",
+      "state": "walkthrough cold leak list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=cleanup",
+      "state": "walkthrough cold cleanup diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=cleanup",
+      "state": "walkthrough cold cleanup list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=verify",
+      "state": "walkthrough cold verify diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=verify",
+      "state": "walkthrough cold verify list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=cold&stage=verify",
+      "state": "walkthrough cold all six answers open",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=setup",
+      "state": "walkthrough warm setup diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=setup",
+      "state": "walkthrough warm setup list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=source_only",
+      "state": "walkthrough warm source_only diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=source_only",
+      "state": "walkthrough warm source_only list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=leak",
+      "state": "walkthrough warm leak diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=leak",
+      "state": "walkthrough warm leak list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=cleanup",
+      "state": "walkthrough warm cleanup diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=cleanup",
+      "state": "walkthrough warm cleanup list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=verify",
+      "state": "walkthrough warm verify diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=verify",
+      "state": "walkthrough warm verify list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=warm&stage=verify",
+      "state": "walkthrough warm all six answers open",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=setup",
+      "state": "walkthrough oct27 setup diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=setup",
+      "state": "walkthrough oct27 setup list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=source_only",
+      "state": "walkthrough oct27 source_only diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=source_only",
+      "state": "walkthrough oct27 source_only list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=leak",
+      "state": "walkthrough oct27 leak diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=leak",
+      "state": "walkthrough oct27 leak list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=cleanup",
+      "state": "walkthrough oct27 cleanup diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=cleanup",
+      "state": "walkthrough oct27 cleanup list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=verify",
+      "state": "walkthrough oct27 verify diagram",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=verify",
+      "state": "walkthrough oct27 verify list",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8876/walkthrough.html#run=oct27&stage=verify",
+      "state": "walkthrough oct27 all six answers open",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 320,
+      "clientWidth": 305,
+      "scrollWidth": 305
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 360,
+      "clientWidth": 345,
+      "scrollWidth": 345
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 375,
+      "clientWidth": 360,
+      "scrollWidth": 360
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 390,
+      "clientWidth": 375,
+      "scrollWidth": 375
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 414,
+      "clientWidth": 399,
+      "scrollWidth": 399
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 768,
+      "clientWidth": 753,
+      "scrollWidth": 753
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 980,
+      "clientWidth": 965,
+      "scrollWidth": 965
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 981,
+      "clientWidth": 966,
+      "scrollWidth": 966
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab seeded",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab source only",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab verified and evaluator retention visible",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    },
+    {
+      "url": "http://127.0.0.1:8877/",
+      "state": "lab cleaned after reload",
+      "innerWidth": 1280,
+      "clientWidth": 1265,
+      "scrollWidth": 1265
+    }
+  ],
+  "functional": [
+    {
+      "viewport": 375,
+      "public_run_selectors": "PASS",
+      "public_stage_tabs": "PASS",
+      "diagram_list": "PASS",
+      "recorded_answers": "PASS",
+      "keyboard_stage_navigation": "PASS"
+    },
+    {
+      "viewport": 1280,
+      "public_run_selectors": "PASS",
+      "public_stage_tabs": "PASS",
+      "diagram_list": "PASS",
+      "recorded_answers": "PASS",
+      "keyboard_stage_navigation": "PASS"
+    },
+    {
+      "viewport": 320,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    },
+    {
+      "viewport": 360,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    },
+    {
+      "viewport": 375,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    },
+    {
+      "viewport": 390,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    },
+    {
+      "viewport": 414,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    },
+    {
+      "viewport": 768,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    },
+    {
+      "viewport": 980,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    },
+    {
+      "viewport": 981,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    },
+    {
+      "viewport": 1280,
+      "fixture_failure_and_cleanup": "PASS",
+      "interactive_checks": "8/8",
+      "evaluator_note_after_cleanup_reload_reset": "PASS"
+    }
+  ],
+  "screenshots": [
+    "02-project-evidence-375.png",
+    "05-optional-tracing-375.png",
+    "01-project-evidence-1280.png",
+    "04-lab-cleanup-retention-375.png",
+    "03-lab-cleanup-retention-1280.png"
+  ],
+  "console_errors": [],
+  "page_errors": [],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/index.html"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/style.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/site.js"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/home.js"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/data/evidence.json"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/favicon.svg"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/walkthrough.html"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/walkthrough.js"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/method.html"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/method.js"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8876/run.html"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8877/"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8877/style.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8877/app.js"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8877/api/state"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8877/api/reset"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8877/api/ask"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8877/api/delete"
+    },
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8877/api/verify"
+    }
+  ],
+  "failures": [],
+  "limitations": [
+    "Local preview only; no public deployment verified.",
+    "No physical phone, second browser engine, screen reader or live Gemma run."
+  ],
+  "browser": "156.0.8078.73",
+  "passed": true,
+  "finished_at": "2026-10-29T12:20:18.796Z"
+}

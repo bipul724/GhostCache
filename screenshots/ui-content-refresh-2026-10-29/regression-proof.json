@@ -1,0 +1,10 @@
+{
+  "case": "graph_kinds_lineage_and_tombstones",
+  "baseline": "HEAD:web/app.js",
+  "purpose": "Existing UI case now asserts evaluator-note visibility. The baseline is expected to fail; current app must pass.",
+  "before_exit": 1,
+  "before_output": "FAIL graph_kinds_lineage_and_tombstones: the cleanup scope note is hidden before cleanup\n\nfalse !== true\n\n",
+  "after_exit": 0,
+  "after_output": "ok graph_kinds_lineage_and_tombstones\n",
+  "passed": true
+}
