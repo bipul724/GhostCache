@@ -18,17 +18,55 @@ SPEC = importlib.util.spec_from_file_location("export_site_data", ROOT / "script
 export = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(export)
 NODE = shutil.which("node")
+PAGES = ("index.html", "walkthrough.html", "method.html", "run.html")
+SCRIPTS = ("site.js", "home.js", "walkthrough.js", "method.js")
+# The only external destinations the public pages link to.
+EXTERNAL = ("https://github.com/bipul724/GhostCache", "https://ollama.com",
+            "https://dev.to/vectorlinklabs/stale-rag-vs-expensive-rag-how-to-cache-rag-context-without-serving-outdated-answers-335f",
+            "https://dev.to/fusionaldev/where-retrieval-assistants-leak-the-title-the-summary-and-the-cache-4po4")
 
 
 class LocalRefs(HTMLParser):
+    """Collects what the page tests check: links, ids, landmarks and anything the CSP would block."""
+
     def __init__(self):
         super().__init__()
-        self.refs = []
+        self.refs, self.ids, self.nav, self.blocked = [], set(), [], []
+        self.h1 = 0
+        self.current = []
+        self._in_nav = 0
 
     def handle_starttag(self, tag, attrs):
-        for name, value in attrs:
-            if name in ("href", "src") and value:
-                self.refs.append(value)
+        attrs = dict(attrs)
+        for name in ("href", "src"):
+            if attrs.get(name):
+                self.refs.append(attrs[name])
+        if attrs.get("id"):
+            self.ids.add(attrs["id"])
+        if tag == "h1":
+            self.h1 += 1
+        if tag == "nav":
+            self._in_nav += 1
+        if tag == "a" and self._in_nav and attrs.get("href"):
+            self.nav.append(attrs["href"])
+        if attrs.get("aria-current") == "page":
+            self.current.append(attrs.get("href"))
+        # The deployed CSP allows only same-origin scripts and stylesheets: no inline code or styles.
+        if tag == "style" or "style" in attrs or (tag == "script" and not attrs.get("src")):
+            self.blocked.append(tag)
+        self.blocked.extend(f"{tag}[{name}]" for name in attrs if name.startswith("on"))
+        if str(attrs.get("href", "")).startswith("javascript:"):
+            self.blocked.append("javascript: link")
+
+    def handle_endtag(self, tag):
+        if tag == "nav":
+            self._in_nav -= 1
+
+
+def parse(path):
+    parser = LocalRefs()
+    parser.feed(path.read_text(encoding="utf-8"))
+    return parser
 
 
 class ExportTests(unittest.TestCase):
@@ -97,8 +135,12 @@ class ExportTests(unittest.TestCase):
             self.assertEqual(("recorded", "live", export.MODEL), (run["kind"], run["mode"], run["model"]))
             for answer in run["answers"].values():
                 self.assertEqual(("live", export.MODEL), (answer["mode"], answer["provider"]))
-        html = (SITE / "index.html").read_text(encoding="utf-8")
-        self.assertIn("Recorded local Gemma evaluation — no live inference", html)
+        for page in ("index.html", "walkthrough.html"):
+            with self.subTest(page=page):
+                self.assertIn("Recorded local Gemma evaluation — no live inference", (SITE / page).read_text(encoding="utf-8"))
+        # The walkthrough keeps a persistent label while its recorded stages are on screen.
+        walkthrough = (SITE / "walkthrough.html").read_text(encoding="utf-8")
+        self.assertRegex(walkthrough, r'class="record-bar"[^>]*>\s*<div[^>]*>\s*<span[^>]*></span>\s*<strong>Recorded evaluation · No live inference</strong>')
 
     def test_fixture_reports_are_refused(self):
         with self.assertRaisesRegex(export.EvidenceError, "mode must be live"):
@@ -174,23 +216,53 @@ class PublicSafetyTests(unittest.TestCase):
 
     def test_site_contains_only_the_intended_files(self):
         files = sorted(str(p.relative_to(SITE)) for p in SITE.rglob("*") if p.is_file())
-        self.assertEqual(["data/evidence.json", "index.html", "style.css", "walkthrough.js"], files)
+        self.assertEqual(sorted(["data/evidence.json", "favicon.svg", "style.css", *PAGES, *SCRIPTS]), files)
 
-    def test_local_assets_exist_and_external_links_are_https(self):
-        parser = LocalRefs()
-        parser.feed((SITE / "index.html").read_text(encoding="utf-8"))
-        self.assertTrue(parser.refs)
-        for ref in parser.refs:
-            with self.subTest(ref=ref):
-                if ref.startswith("http"):
-                    self.assertTrue(ref.startswith("https://github.com/bipul724/GhostCache"), ref)
-                else:
+    def test_local_assets_and_anchors_exist_and_external_links_are_allowlisted(self):
+        pages = {page: parse(SITE / page) for page in PAGES}
+        for page, parser in pages.items():
+            self.assertTrue(parser.refs, page)
+            for ref in parser.refs:
+                with self.subTest(page=page, ref=ref):
+                    if ref.startswith("http"):
+                        self.assertTrue(ref.startswith(EXTERNAL), ref)
+                        continue
                     self.assertFalse(ref.startswith("/"), "use relative paths so the site works anywhere")
-                    self.assertTrue((SITE / (ref if ref != "./" else "index.html")).is_file(), ref)
+                    path, _, anchor = ref.partition("#")
+                    target = page if not path else "index.html" if path == "./" else path
+                    self.assertTrue((SITE / target).is_file(), ref)
+                    if anchor:
+                        self.assertIn(anchor, pages[target].ids, f"{target} has no id {anchor!r}")
 
-    def test_script_fetches_only_the_static_evidence(self):
-        script = (SITE / "walkthrough.js").read_text(encoding="utf-8")
-        code = re.sub(r"//[^\n]*", "", script)
+    def test_pages_share_navigation_and_landmarks(self):
+        for page in PAGES:
+            with self.subTest(page=page):
+                parser = parse(SITE / page)
+                html = (SITE / page).read_text(encoding="utf-8")
+                self.assertEqual(1, parser.h1)
+                self.assertIn('<html lang="en">', html)
+                self.assertIn('href="#main"', html)
+                self.assertIn("main", parser.ids)
+                self.assertIn('<link rel="icon" href="favicon.svg"', html)
+                for link in ("walkthrough.html", "method.html", "run.html", "https://github.com/bipul724/GhostCache"):
+                    self.assertIn(link, parser.nav)
+                self.assertEqual([] if page == "index.html" else [page], parser.current)
+
+    def test_pages_are_compatible_with_the_content_security_policy(self):
+        for path in [*(SITE / page for page in PAGES), ROOT / "web" / "index.html"]:
+            with self.subTest(page=str(path.relative_to(ROOT))):
+                self.assertEqual([], parse(path).blocked)
+
+    def test_design_tokens_are_shared_with_the_local_lab(self):
+        def shared(path):
+            text = path.read_text(encoding="utf-8")
+            match = re.search(r"/\* <gc-shared>.*?/\* </gc-shared> \*/", text, re.DOTALL)
+            self.assertIsNotNone(match, path)
+            return match.group(0)
+        self.assertEqual(shared(SITE / "style.css"), shared(ROOT / "web" / "style.css"))
+
+    def test_scripts_fetch_only_the_static_evidence(self):
+        code = "\n".join(re.sub(r"//[^\n]*", "", (SITE / name).read_text(encoding="utf-8")) for name in SCRIPTS)
         self.assertEqual(["DATA_URL"], re.findall(r"fetch\(\s*([^,)\s]+)", code))
         self.assertIn('const DATA_URL = "data/evidence.json";', code)
         for forbidden in ("/api/", "11434", "localhost", "127.0.0.1", "XMLHttpRequest", "WebSocket",
@@ -200,8 +272,37 @@ class PublicSafetyTests(unittest.TestCase):
     def test_script_syntax(self):
         if NODE is None:
             self.skipTest("Node.js is not on PATH; the syntax check needs `node`.")
-        result = subprocess.run([NODE, "--check", str(SITE / "walkthrough.js")], capture_output=True, text=True, timeout=60)
-        self.assertEqual(0, result.returncode, result.stderr)
+        for name in SCRIPTS:
+            with self.subTest(script=name):
+                result = subprocess.run([NODE, "--check", str(SITE / name)], capture_output=True, text=True, timeout=60)
+                self.assertEqual(0, result.returncode, result.stderr)
+
+
+class SiteBehaviourTests(unittest.TestCase):
+    """Run site/site.js under node:vm with a fake DOM and the real exported evidence (tests/ui/site_contract.js)."""
+
+    def run_case(self, case):
+        if NODE is None:
+            self.skipTest("Node.js is not on PATH; the site.js behaviour tests need `node`.")
+        result = subprocess.run([NODE, str(ROOT / "tests" / "ui" / "site_contract.js"), case], cwd=ROOT,
+                                capture_output=True, text=True, timeout=60)
+        self.assertEqual(0, result.returncode, result.stdout + result.stderr)
+
+    def test_inspector_relationships_follow_the_stage(self):
+        self.run_case("inspector_relationships_follow_the_stage")
+
+    def test_timing_tooltip_stays_inside_the_chart(self):
+        self.run_case("timing_tooltip_stays_inside_the_chart")
+
+    def test_thread_ends_meet_their_knots(self):
+        self.run_case("thread_ends_meet_their_knots")
+
+    def test_timing_chart_contains_its_tooltip(self):
+        # site.js measures the tooltip from the chart box, so the box must be its containing block.
+        css = (SITE / "style.css").read_text(encoding="utf-8")
+        rules = dict(re.findall(r"^(\.timing(?:__tip)?)\{([^}]*)\}", css, re.MULTILINE))
+        self.assertIn("position:relative", rules[".timing"])
+        self.assertIn("position:absolute", rules[".timing__tip"])
 
 
 class RenderBlueprintTests(unittest.TestCase):
