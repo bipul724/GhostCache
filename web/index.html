@@ -122,6 +122,7 @@
       <section class="checks-card" aria-labelledby="checks-title">
         <div class="panel-head"><div><p class="eyebrow">Verification</p><h2 id="checks-title">Cleanup checks</h2></div><span id="checks-score" class="count-tag">NOT RUN</span></div>
         <p id="checks-summary" class="checks-summary">Run verification after cleanup to check what was removed and what remains.</p>
+        <p id="evaluator-retention" class="evaluator-retention" hidden><strong>The evaluator still keeps the expected marker.</strong> It remains in <code>scenario.canary</code>, returned by <code>/api/state</code>, and in saved reports. Cleanup covers the assistant's managed artifact titles, bodies and retrieval; it does not erase evaluator or evidence data.</p>
         <div id="checks-list" class="checks-list"></div>
         <details class="scope-details"><summary>What does verification cover?</summary><p>GhostCache's managed artifact store and retrieval: titles and bodies, recorded provenance, four defined questions, and the facts that must survive. Evaluator state, saved reports, browser history, logs, backups and model weights are outside this experiment. The full command-line evaluation adds two checks that the source-only failure really happened.</p></details>
       </section>
@@ -131,7 +132,7 @@
       </section>
     </section>
 
-    <footer class="lab-footer"><span>GhostCache local lab · single-user, localhost only · fictional data</span><span>Recorded runs, methodology and setup: <a href="https://ghostcache-walkthrough.onrender.com/">the public walkthrough ↗</a> · <a href="https://github.com/bipul724/GhostCache">source ↗</a></span></footer>
+    <footer class="lab-footer"><span>GhostCache local lab · single-user, localhost only · fictional data</span><span>Recorded runs, methodology and setup: <a href="https://ghostcache.bipulchamoli.tech/">the public walkthrough ↗</a> · <a href="https://ghostcache.bipulchamoli.tech/method.html#project-evidence">project evidence ↗</a> · <a href="https://github.com/bipul724/GhostCache">source ↗</a></span></footer>
   </div>
   <div id="busy-indicator" class="busy-indicator" role="status" hidden><span class="busy-indicator__thread" aria-hidden="true"></span><span class="busy-indicator__text"><span id="busy-text">Working…</span><small id="busy-detail"></small></span></div>
   <script src="/app.js" defer></script>

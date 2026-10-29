@@ -288,6 +288,8 @@ code,pre{font-family:var(--gc-mono)}
 .checks-card,.ledger-card{padding:16px}
 .checks-card h2,.ledger-card h2{margin-top:4px;font:400 24px/1.15 var(--gc-serif)}
 .checks-summary{margin-top:10px;font-size:14px;color:var(--gc-ink-2)}
+.evaluator-retention{margin-top:10px;padding:12px;border:1px solid var(--gc-violet-line);border-radius:var(--gc-radius);background:var(--gc-violet-wash);font-size:13.5px;line-height:1.6;overflow-wrap:anywhere}
+.evaluator-retention strong{display:block;margin-bottom:3px;color:var(--gc-violet-ink)}
 .checks-list{margin-top:8px}
 .checks-empty{padding:14px;border:1px dashed var(--gc-line-2);border-radius:var(--gc-radius);font-size:14px;color:var(--gc-ink-2)}
 .checks-group{padding:8px 0;border-top:1px solid var(--gc-line)}
