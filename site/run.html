@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#FAFAF8">
+  <meta name="description" content="Run GhostCache's local lab: fixture mode with nothing installed, or live Gemma inference through Ollama. Requirements, commands and troubleshooting.">
+  <title>Open the archive · Run GhostCache locally</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="site.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <a class="wordmark" href="./" aria-label="GhostCache, home">
+        <svg class="wordmark__svg" viewBox="0 0 168 32" aria-hidden="true" focusable="false"><g transform="translate(1 1)"><path class="emblem__after" d="M11 2H21L27 8V22a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V4a2 2 0 0 1 2-2Z"/><path class="emblem__body" d="M6 5H16L22 11V25a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V7a2 2 0 0 1 2-2Z"/><path class="emblem__fold" d="M16 5V9.5A1.5 1.5 0 0 0 17.5 11H22Z"/></g><text class="wordmark__text" x="37" y="23.5" textLength="128" lengthAdjust="spacing">GhostCache</text></svg>
+      </a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="walkthrough.html">Walkthrough</a>
+        <a href="method.html">Methodology</a>
+        <a href="run.html" aria-current="page">Run locally</a>
+        <a href="https://github.com/bipul724/GhostCache">Source<span class="ext" aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-head">
+      <div class="wrap">
+        <p class="eyebrow">Run locally</p>
+        <h1>Open the archive.</h1>
+        <p class="lede">This site can only replay what was recorded. To seed your own ghost, delete its source and watch it come back, run the local lab on your machine: in fixture mode with nothing installed, or with live Gemma through Ollama.</p>
+      </div>
+    </header>
+
+    <div class="wrap doc-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="eyebrow">On this page</p>
+        <ol>
+          <li><a href="#requirements"><span>01</span>Requirements</a></li>
+          <li><a href="#fixture"><span>02</span>Fixture mode</a></li>
+          <li><a href="#live"><span>03</span>Live Gemma mode</a></li>
+          <li><a href="#evaluate"><span>04</span>Full evaluation and tests</a></li>
+          <li><a href="#modes"><span>05</span>What each mode does</a></li>
+          <li><a href="#troubleshooting"><span>06</span>Troubleshooting</a></li>
+        </ol>
+      </nav>
+
+      <article class="doc">
+        <section class="doc-section" id="requirements" aria-labelledby="requirements-title">
+          <p class="eyebrow">01 · Requirements</p>
+          <h2 id="requirements-title">What you need.</h2>
+          <p>The core is standard-library Python with SQLite and a plain HTML, CSS and JavaScript front end. There is no build step and nothing to install for fixture mode.</p>
+          <dl class="reqs">
+            <div><dt>Python<small>Required</small></dt><dd>Python 3.12 or newer (<code>requires-python = "&gt;=3.12"</code>). Verified with 3.12.6; newer versions are untested.</dd></div>
+            <div><dt>Python packages<small>None</small></dt><dd>The core uses only the standard library. The optional <code>sentry-sdk==2.72.0</code> extra is needed only for metadata-only tracing.</dd></div>
+            <div><dt>Ollama + Gemma<small>Live mode only</small></dt><dd><a href="https://ollama.com">Ollama</a> running locally with <code>gemma4:e2b-it-qat</code> pulled (about 4.3 GB). GhostCache calls it at the fixed local address shown below and nowhere else.</dd></div>
+            <div><dt>Node.js<small>Optional</small></dt><dd>Only for the JavaScript syntax checks and the UI contract tests that run the lab's script under Node; those skip without it.</dd></div>
+            <div><dt>Browser<small>Any recent</small></dt><dd>The lab is a single page served by the same local process. It works offline and loads no external assets.</dd></div>
+          </dl>
+        </section>
+
+        <section class="doc-section" id="fixture" aria-labelledby="fixture-title">
+          <p class="eyebrow">02 · Fixture mode</p>
+          <h2 id="fixture-title">Start with no model at all.</h2>
+          <p>Fixture mode is the default. It is a deterministic simulation: explicit string rules stand in for the model, so the storage, provenance, retrieval and cleanup logic can run anywhere. It never claims to be AI output.</p>
+          <ol class="steps">
+            <li class="step">
+              <h3>Get the code</h3>
+              <p>Clone the repository and work from its root, the folder that holds <code>pyproject.toml</code>.</p>
+              <div class="command"><div class="command__head"><span class="command__label">Terminal</span><button class="copy-btn" type="button" data-copy-target="cmd-clone" aria-label="Copy the clone commands">Copy</button></div><pre id="cmd-clone">git clone https://github.com/bipul724/GhostCache.git
+cd GhostCache</pre></div>
+            </li>
+            <li class="step">
+              <h3>Start the local lab</h3>
+              <p>This serves the lab on the loopback address only, in fixture mode.</p>
+              <div class="command"><div class="command__head"><span class="command__label">Terminal</span><button class="copy-btn" type="button" data-copy-target="cmd-serve" aria-label="Copy the serve command">Copy</button></div><pre id="cmd-serve">python3.12 -m ghostcache serve --port 8765</pre></div>
+              <p class="warn-box"><strong>It resets a disposable database.</strong> Starting the server, and every successful Seed or Reset, replaces the contents of the demo database (by default <code>.local/assistant.sqlite</code>) with a freshly seeded experiment. Never point <code>--database</code> at a file you want to keep.</p>
+            </li>
+            <li class="step">
+              <h3>Open the working bench</h3>
+              <p>Visit the address the server prints, <code>http://127.0.0.1:8765</code>, in your browser. The banner should read <em>Fixture — deterministic simulation</em>. Then follow the five guided steps and verify the cleanup.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="live" aria-labelledby="live-title">
+          <p class="eyebrow">03 · Live Gemma mode</p>
+          <h2 id="live-title">Run the experiment with real local inference.</h2>
+          <p>Live mode sends the same experiment to Gemma through your local Ollama at <code>127.0.0.1:11434</code>. Nothing is sent to a hosted model. If anything goes wrong it reports the error instead of quietly using fixture output.</p>
+          <ol class="steps">
+            <li class="step">
+              <h3>Check that the model is installed</h3>
+              <p>Pull it once if it is missing. Start <code>ollama serve</code> in another terminal only if Ollama isn't already running.</p>
+              <div class="command"><div class="command__head"><span class="command__label">Terminal</span><button class="copy-btn" type="button" data-copy-target="cmd-ollama" aria-label="Copy the Ollama commands">Copy</button></div><pre id="cmd-ollama">ollama list                    # should list gemma4:e2b-it-qat
+ollama pull gemma4:e2b-it-qat  # only if it is missing</pre></div>
+            </li>
+            <li class="step">
+              <h3>Start the lab in live mode</h3>
+              <p>Or start in fixture mode and switch with the lab's <em>Mode</em> menu once Live Gemma shows as available. Changing mode starts a fresh experiment.</p>
+              <div class="command"><div class="command__head"><span class="command__label">Terminal</span><button class="copy-btn" type="button" data-copy-target="cmd-live" aria-label="Copy the live serve command">Copy</button></div><pre id="cmd-live">python3.12 -m ghostcache serve --port 8765 --mode live --model gemma4:e2b-it-qat</pre></div>
+            </li>
+            <li class="step">
+              <h3>The first call can be slow</h3>
+              <p>Seeding makes four model calls: three summaries and a saved answer. In the recorded runs, the first call took 40.41 s in the run made just after Ollama was started, 2.28 s in the run straight after it, and 81.25 s in the separate October 27 run; later calls took a few seconds each. That is consistent with Ollama loading the model on its first request, but the reports record call durations, not Ollama's load time, so the cause is inferred, not measured. The lab shows elapsed time while it waits; it can't predict how long a local model will take.</p>
+            </li>
+          </ol>
+        </section>
+
+        <section class="doc-section" id="evaluate" aria-labelledby="evaluate-title">
+          <p class="eyebrow">04 · Evaluation and tests</p>
+          <h2 id="evaluate-title">Record a run of your own.</h2>
+          <p>The command-line evaluation runs the whole experiment on a fresh in-memory database, applies all ten checks and writes a JSON report. It exits 0 only if every check passes. Write each report to a new file name.</p>
+          <div class="command"><div class="command__head"><span class="command__label">Terminal</span><button class="copy-btn" type="button" data-copy-target="cmd-eval" aria-label="Copy the evaluation commands">Copy</button></div><pre id="cmd-eval">python3.12 -m ghostcache evaluate --mode fixture --output results/my-fixture-run.json
+python3.12 -m ghostcache evaluate --mode live --model gemma4:e2b-it-qat --output results/my-live-run.json</pre></div>
+          <p>The test suite runs offline, with no network or model:</p>
+          <div class="command"><div class="command__head"><span class="command__label">Terminal</span><button class="copy-btn" type="button" data-copy-target="cmd-tests" aria-label="Copy the test command">Copy</button></div><pre id="cmd-tests">python3.12 -m unittest discover -s tests -v</pre></div>
+        </section>
+
+        <section class="doc-section" id="modes" aria-labelledby="modes-title">
+          <p class="eyebrow">05 · The two modes</p>
+          <h2 id="modes-title">Always labelled, never mixed.</h2>
+          <div class="modes">
+            <div class="mode-card">
+              <span class="chip">Fixture</span>
+              <h3>Fixture — deterministic simulation</h3>
+              <ul>
+                <li>String rules write the summaries and answers; no model is called.</li>
+                <li>Works offline with nothing installed; CI uses it.</li>
+                <li>A pass supports the storage, provenance, retrieval and preservation logic, not model behaviour.</li>
+                <li>Token counts are empty, because nothing is generated.</li>
+              </ul>
+            </div>
+            <div class="mode-card mode-card--live">
+              <span class="chip chip--live">Live Gemma</span>
+              <h3>Live Gemma — local model inference</h3>
+              <ul>
+                <li>Gemma writes the summaries and answers through your local Ollama.</li>
+                <li>Answers show the model name, duration and token counts.</li>
+                <li>A pass supports the same logic plus that model's behaviour in that run.</li>
+                <li>Errors stay errors: there is no fallback to fixture output.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="doc-section" id="troubleshooting" aria-labelledby="troubleshooting-title">
+          <p class="eyebrow">06 · Troubleshooting</p>
+          <h2 id="troubleshooting-title">When the archive won't open.</h2>
+          <div class="trouble">
+            <details class="disclosure"><summary><span>Live Gemma shows as unavailable<small class="symptom">Ollama is unavailable (connection failed). Fixture mode still works.</small></span></summary><div class="disclosure__body"><p>GhostCache checks Ollama's model list before offering live mode. Start Ollama, confirm that <code>ollama list</code> shows the model, then reload the lab. If the message reads <em>Install gemma4:e2b-it-qat in Ollama to enable live mode</em>, Ollama is running but the model isn't pulled. To use a different installed model, pass <code>--model</code> or set <code>GHOSTCACHE_MODEL</code>.</p></div></details>
+            <details class="disclosure"><summary><span>A live action fails with a model error<small class="symptom">Local model call failed (timed out). No fixture fallback was used.</small></span></summary><div class="disclosure__body"><p>A failed or malformed model response is reported, never replaced with fixture text. If seeding fails, the previous experiment stays current and nothing partial is published; if only the summary rebuild after cleanup fails, the cleanup itself stays complete and the lab says so. Errors name only a fixed category, such as <em>connection failed</em> or <em>timed out</em>, never the underlying text. Check that Ollama is still running and try again.</p></div></details>
+            <details class="disclosure"><summary><span>The page says the local lab is not connected<small class="symptom">Start the GhostCache server, then reload this page.</small></span></summary><div class="disclosure__body"><p>The lab's page needs the Python process that serves it. Start <code>python3.12 -m ghostcache serve</code> from the repository root and open the address it prints.</p></div></details>
+            <details class="disclosure"><summary><span>The port is already in use<small class="symptom">Address already in use</small></span></summary><div class="disclosure__body"><p>If a GhostCache server is already running on that port, use its page. Otherwise choose another port with <code>--port</code>. Don't start a second server on the same port.</p></div></details>
+            <details class="disclosure"><summary><span>The lab refuses the request from another hostname<small class="symptom">This prototype serves localhost only.</small></span></summary><div class="disclosure__body"><p>The server binds to the loopback address and accepts only <code>localhost</code> or <code>127.0.0.1</code> as the host, which protects against DNS rebinding. It is single-user and must not be exposed as a shared service.</p></div></details>
+            <details class="disclosure"><summary><span>A reset reports a storage problem<small class="symptom">Experiment storage could not be restored; reset to recover.</small></span></summary><div class="disclosure__body"><p>If a failed reset leaves a database that can't be verified as unchanged and writable, the lab clears the experiment instead of serving a mismatched one. Reset again to recover.</p></div></details>
+            <details class="disclosure"><summary><span>python3 runs a different version<small class="symptom">python3 --version</small></span></summary><div class="disclosure__body"><p>Run every command with <code>python3.12</code>, the verified interpreter. Other versions of Python 3 are untested.</p></div></details>
+          </div>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__grid">
+      <div class="site-footer__brand">
+        <svg class="wordmark__svg" viewBox="0 0 168 32" aria-hidden="true" focusable="false"><g transform="translate(1 1)"><path class="emblem__after" d="M11 2H21L27 8V22a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V4a2 2 0 0 1 2-2Z"/><path class="emblem__body" d="M6 5H16L22 11V25a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V7a2 2 0 0 1 2-2Z"/><path class="emblem__fold" d="M16 5V9.5A1.5 1.5 0 0 0 17.5 11H22Z"/></g><text class="wordmark__text" x="37" y="23.5" textLength="128" lengthAdjust="spacing">GhostCache</text></svg>
+        <p>A small, local testbed for residual AI application memory. Fictional data only; cleanup covers GhostCache's application-managed memory and retrieval.</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="./">Home</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache">Repository ↗</a></li>
+          <li><a href="walkthrough.html">Recorded walkthrough</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache#readme">Full README ↗</a></li>
+          <li><a href="method.html">Evidence &amp; methodology</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache/blob/main/LICENSE">MIT license ↗</a></li>
+        </ul>
+      </nav>
+      <p class="site-footer__meta">Static site · recorded evidence only · no live inference, no storage, nothing deleted</p>
+    </div>
+  </footer>
+</body>
+</html>

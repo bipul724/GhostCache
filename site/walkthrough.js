@@ -1,313 +1,497 @@
 "use strict";
-// Static, read-only walkthrough of recorded GhostCache evaluations.
-// Loads data/evidence.json from this site and nothing else: no /api calls, no model, no storage.
+// Static, read-only walkthrough of recorded GhostCache evaluations, read from data/evidence.json
+// through site.js. Choosing a run or a stage only changes the view: no model, no API, no deletion.
 
-const DATA_URL = "data/evidence.json";
+(function () {
+  const GC = window.GC;
+  const {el, clear, ms, shortId} = GC;
 
-const STEPS = [
-  {key: "setup", button: "View the setup", eyebrow: "STAGE 1 · SEEDED MEMORY", title: "One secret, many copies.",
-   text: (r) => `The run seeded five fictional documents. The withdrawn source, ${r.source_id}, holds the marker ${r.marker}. One search chunk, three model-written summaries and one saved answer were derived from it, directly or through each other. ${r.stages.initial_audit.matched_canary} stored items held the marker.`},
-  {key: "source_only", button: "View source-only result", eyebrow: "STAGE 2 · SOURCE-ONLY DELETION", title: "Delete the document, keep its echoes.",
-   text: (r) => `Deleting only ${r.source_id} is the deliberately incomplete control. ${r.stages.source_only_audit.stale_descendants} derived items still depended on the deleted source, and ${r.stages.source_only_audit.matched_canary} of them still held the marker.`},
-  {key: "leak", button: "View the leaked answer", eyebrow: "STAGE 3 · THE GHOST ANSWERS", title: "The model repeats a deleted secret.",
-   text: () => "After the source-only deletion, the evaluation asked the question in different words. Retrieval supplied the surviving copies as context, and Gemma repeated the marker."},
-  {key: "cleanup", button: "View cleanup result", eyebrow: "STAGE 4 · PROVENANCE-AWARE CLEANUP", title: "Follow the trail, clear every copy.",
-   text: (r) => `Cascade cleanup followed provenance from the source to every descendant: ${r.stages.cleaned_audit.invalidated_artifacts} derived items were purged, and a fresh summary was rebuilt only from surviving original documents. ${r.stages.cleaned_audit.matched_canary} stored items hold the marker afterwards.`},
-  {key: "verify", button: "View verification", eyebrow: "STAGE 5 · RECORDED VERIFICATION", title: "Gone, and nothing else lost.",
-   text: (r) => `The recorded checks: ${r.checks.filter((c) => c.passed).length} of ${r.checks.length} passed. The secret questions no longer return the marker, while the unrelated garden schedule and the independently sourced shared fact stay answerable.`},
-];
+  const count = (n, one, many) => `${n} ${n === 1 ? one : many || `${one}s`}`;
+  const rebuiltIds = (r) => r.stages.cleaned_audit.active_ids.filter((id) => !r.stages.initial_audit.active_ids.includes(id));
+  const rebuildEvent = (r) => r.events.find((e) => e.name === "summary.generated" && rebuiltIds(r).includes(e.artifact_id));
+  const passedChecks = (r) => r.checks.filter((c) => c.passed).length;
 
-const ANSWER_LABELS = {
-  before: "Before deletion · secret question",
-  source_only: "After source-only deletion · reworded question",
-  secret: "After cleanup · secret question",
-  paraphrase: "After cleanup · reworded question",
-  retained: "After cleanup · unrelated fact",
-  shared: "After cleanup · shared fact",
-};
+  const STAGES = [
+    {key: "setup", tab: "Seeded memory", eyebrow: "Stage 1 · Seeded memory", title: "One secret, many copies.", answer: "before",
+     text: (r) => `The run seeded five fictional documents. The source, ${r.source_id}, holds the marker ${r.marker}. A search chunk, three model-written summaries and a saved answer were derived from it, directly or through each other: ${count(r.stages.initial_audit.matched_canary, "stored item")} held the marker.`,
+     caption: (r) => `Seeded memory: ${count(r.stages.initial_audit.total_artifacts, "artifact")}, ${r.stages.initial_audit.matched_canary} of them holding the marker (◆). On the right, the recorded answer to the secret question; amber threads show the context retrieval gave it.`},
+    {key: "source_only", tab: "Source deleted", eyebrow: "Stage 2 · Source-only deletion", title: "Delete the document, keep its echoes.",
+     text: (r) => `Deleting only ${r.source_id} is the deliberately incomplete control. Its body was emptied and its title replaced, but ${count(r.stages.source_only_audit.stale_descendants, "derived item")} still depended on it, and ${r.stages.source_only_audit.matched_canary} of them still held the marker.`,
+     caption: (r) => `After source-only deletion: ${r.source_id} is a tombstone (dashed outline); ${GC.joinList(r.stages.source_only_audit.stale_ids.map(shortId))} stay active and stale.`},
+    {key: "leak", tab: "The ghost answers", eyebrow: "Stage 3 · The ghost answers", title: "The model repeats a deleted secret.", answer: "source_only",
+     text: (r) => {
+       const a = r.answers.source_only;
+       const stale = a.context_ids.filter((id) => r.stages.source_only_audit.stale_ids.includes(id)).length;
+       return `With the source deleted, the evaluation asked in different words: “${a.question}” Retrieval supplied ${count(a.context_ids.length, "artifact")}, ${stale} of them stale copies, and Gemma ${a.contains_marker ? "repeated the marker" : "did not repeat the marker"}.`;
+     },
+     caption: () => "The recorded leak: amber threads show the context supplied to the answer that revealed the marker. Solid threads were cited by the model; dotted ones were supplied but not cited."},
+    {key: "cleanup", tab: "Cleanup", eyebrow: "Stage 4 · Provenance-aware cleanup", title: "Follow the trail, clear every copy.",
+     text: (r) => {
+       const rebuilt = rebuildEvent(r);
+       const from = rebuilt ? ` (${GC.joinList(rebuilt.parent_ids)})` : "";
+       return `Cascade cleanup followed provenance from ${r.source_id} to every descendant: ${count(r.stages.cleaned_audit.invalidated_artifacts, "derived item")} purged and a summary rebuilt only from surviving original documents${from}. ${count(r.stages.cleaned_audit.matched_canary, "stored item")} held the marker afterwards.`;
+     },
+     caption: (r) => `After cleanup: the source and its ${r.stages.cleaned_audit.invalidated_artifacts} descendants are content-free tombstones that keep their IDs and links; ${GC.joinList(rebuiltIds(r))} was rebuilt (teal).`},
+    {key: "verify", tab: "Verified", eyebrow: "Stage 5 · Recorded verification", title: "Gone, and nothing else lost.", answer: "secret",
+     text: (r) => `${passedChecks(r)} of ${r.checks.length} recorded checks passed. The secret questions no longer return the marker, while the unrelated garden time and the independently sourced reading-room name stay answerable.`,
+     caption: () => "After verification: the recorded answer to the secret question. Teal threads show its context, and none of it holds the marker."},
+  ];
 
-const KIND_GROUPS = [
-  {prefix: "d-", title: "Original documents"},
-  {prefix: "c-", title: "Search chunks"},
-  {prefix: "s-", title: "Model-written summaries"},
-  {prefix: "conversation-", title: "Saved answer"},
-];
+  const state = {data: null, run: null, stage: "setup", view: "diagram", selected: null, hover: null, trail: null};
 
-const state = {data: null, run: null, step: "setup", answer: "source_only"};
-
-function el(tag, className, text) {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined && text !== null) node.textContent = String(text);
-  return node;
-}
-
-function clear(node) {
-  while (node.firstChild) node.removeChild(node.firstChild);
-  return node;
-}
-
-function shortId(id) {
-  return id.startsWith("conversation-") ? `conversation-${id.slice(13, 21)}…` : id;
-}
-
-function ms(value) {
-  return value >= 1000 ? `${(value / 1000).toFixed(2)} s` : `${value} ms`;
-}
-
-function eventsNamed(run, name) {
-  return run.events.filter((e) => e.name === name);
-}
-
-// Where each artifact came from, labelled by how we know it.
-function origins(run, legend) {
-  const map = {};
-  for (const id of Object.keys(legend.documents)) map[id] = {parents: [], how: "original document"};
-  for (const id of Object.keys(legend.documents)) map[`c-${id.slice(2)}`] = {parents: [id], how: "seed design"};
-  for (const event of eventsNamed(run, "summary.generated")) {
-    map[event.artifact_id] = {parents: event.parent_ids || [], how: "recorded"};
+  function stageInfo() { return STAGES.find((s) => s.key === state.stage); }
+  function probe() {
+    const info = stageInfo();
+    if (!info.answer) return null;
+    const answer = state.run.answers[info.answer];
+    return {label: `Recorded answer · stage ${STAGES.indexOf(info) + 1}`, question: answer.question, answer: answer.answer,
+            context: answer.context_ids, citations: answer.citations, containsMarker: answer.contains_marker};
   }
-  const seeded = run.events.find((e) => e.answer_key === "seeded_conversation");
-  const conversation = run.stages.initial_audit.active_ids.find((id) => id.startsWith("conversation-"));
-  if (seeded && conversation) map[conversation] = {parents: seeded.parent_ids || [], how: "inferred"};
-  return map;
-}
 
-function statusFor(run, step, id) {
-  const s = run.stages;
-  const removedSource = s.initial_audit.active_ids.filter((x) => !s.source_only_audit.active_ids.includes(x));
-  const purged = (eventsNamed(run, "delete.propagated")[0] || {}).affected_ids || [];
-  if (step === "setup") {
-    if (!s.initial_audit.active_ids.includes(id)) return null;
-    return s.initial_audit.matched_canary_ids.includes(id) ? "marker" : "active";
-  }
-  if (step === "source_only" || step === "leak") {
-    if (!s.initial_audit.active_ids.includes(id)) return null;
-    if (removedSource.includes(id)) return "removed";
-    if (s.source_only_audit.stale_ids.includes(id)) {
-      return s.source_only_audit.matched_canary_ids.includes(id) ? "stale-marker" : "stale";
+  // ---- Run picker ----
+  function renderRuns() {
+    const box = clear(document.getElementById("run-options"));
+    for (const run of state.data.runs) {
+      const label = el("label", "run-option");
+      const input = el("input", "run-option__input");
+      input.type = "radio";
+      input.name = "run";
+      input.value = run.id;
+      input.checked = run === state.run;
+      input.addEventListener("change", () => { if (input.checked) chooseRun(run); });
+      const card = el("span", "run-option__card");
+      const calls = GC.modelCalls(run);
+      card.append(el("span", "run-option__title", run.label),
+                  el("span", "run-option__meta", `${run.model} · ${passedChecks(run)}/${run.checks.length} checks · ${calls.length} model calls · ${ms(run.model_call_total_ms)}`));
+      label.append(input, card);
+      box.append(label);
     }
-    return s.source_only_audit.matched_canary_ids.includes(id) ? "marker" : "active";
+    renderRunSource();
   }
-  if (s.cleaned_audit.active_ids.includes(id)) {
-    return s.initial_audit.active_ids.includes(id) ? "active" : "rebuilt";
+
+  function renderRunSource() {
+    const run = state.run;
+    const source = clear(document.getElementById("run-source"));
+    source.append("Source report: ");
+    const link = el("a", null, run.source_file);
+    link.href = `${state.data.repository}/blob/main/${run.source_file}`;
+    source.append(link, ` · SHA-256 ${run.source_sha256.slice(0, 12)}… · ${run.passed ? "passed" : "failed"}`);
   }
-  if (removedSource.includes(id)) return "removed";
-  return purged.includes(id) ? "removed-purged" : null;
-}
 
-const STATUS_TEXT = {active: "Active", marker: "Holds marker", stale: "Stale", "stale-marker": "Stale · holds marker",
-                     removed: "Deleted", "removed-purged": "Purged · content emptied", rebuilt: "Rebuilt"};
-
-function renderRuns() {
-  const box = clear(document.getElementById("run-buttons"));
-  for (const run of state.data.runs) {
-    const button = el("button", "run-button");
-    button.type = "button";
-    button.setAttribute("aria-pressed", String(run === state.run));
-    button.append(el("strong", null, run.label), el("small", null, `${run.model} · ${run.mode} · ${run.passed ? "passed" : "failed"}`));
-    button.addEventListener("click", () => { state.run = run; renderAll(); });
-    box.append(button);
+  function chooseRun(run) {
+    state.run = run;
+    state.selected = null;
+    state.trail.setRun(run, state.data.seed_legend);
+    renderRunSource();
+    renderStage();
+    renderAnswers();
+    renderDetails();
+    writeHash();
   }
-  const run = state.run;
-  document.getElementById("run-result").textContent =
-    `${run.checks.filter((c) => c.passed).length} / ${run.checks.length} CHECKS PASSED`;
-  const source = clear(document.getElementById("run-source"));
-  source.append("Source: ");
-  const link = el("a", null, run.source_file);
-  link.href = `${state.data.repository}/blob/main/${run.source_file}`;
-  source.append(link, ` · SHA-256 ${run.source_sha256.slice(0, 16)}… · ${run.model_call_count} model calls, ${ms(run.model_call_total_ms)} in total · date from ${run.date_source}`);
-  if (run.sentry_trace) source.append(` · Sentry trace ${run.sentry_trace.slice(0, 12)}…`);
-}
 
-function renderSteps() {
-  const box = clear(document.getElementById("step-buttons"));
-  STEPS.forEach((step, index) => {
-    const button = el("button", "step-button");
-    button.type = "button";
-    button.dataset.step = step.key;
-    button.setAttribute("aria-pressed", String(step.key === state.step));
-    button.append(el("span", "step-number", String(index + 1).padStart(2, "0")), el("span", null, step.button));
-    button.addEventListener("click", () => { state.step = step.key; renderStage(); renderSteps(); });
-    box.append(button);
-  });
-}
-
-function counts(stage) {
-  return [["Stored items", stage.total_artifacts], ["Active", stage.active_artifacts],
-          ["Hold the marker", stage.matched_canary], ["Stale descendants", stage.stale_descendants],
-          ["Deleted sources", stage.deleted_artifacts], ["Purged", stage.invalidated_artifacts]];
-}
-
-function renderAnswer(container, run, key) {
-  const answer = run.answers[key];
-  clear(container).hidden = false;
-  const top = el("div", "answer-top");
-  top.append(el("span", "tiny-label", ANSWER_LABELS[key]),
-             el("span", answer.contains_marker ? "badge leak" : "badge clean",
-                answer.contains_marker ? "Marker revealed" : "No marker"));
-  container.append(top, el("p", "answer-question", `Q: ${answer.question}`), el("p", "answer-text", answer.answer));
-  const meta = el("p", "answer-meta",
-    `Recorded ${answer.mode} answer from ${answer.provider} · ${ms(answer.duration_ms)}` +
-    (answer.input_tokens !== null ? ` · ${answer.input_tokens} in / ${answer.output_tokens} out tokens` : ""));
-  const ctx = el("div", "id-row");
-  ctx.append(el("span", "id-label", "Context supplied"));
-  for (const id of answer.context_ids) ctx.append(el("code", answer.citations.includes(id) ? "id-chip cited" : "id-chip", shortId(id)));
-  container.append(meta, ctx, el("p", "id-hint", answer.citations.length
-    ? "Highlighted IDs were cited by the model." : "The model cited nothing."));
-}
-
-function renderStage() {
-  const run = state.run;
-  const step = STEPS.find((s) => s.key === state.step);
-  document.getElementById("stage-eyebrow").textContent = step.eyebrow;
-  document.getElementById("stage-tag").textContent = "RECORDED · NOT A LIVE ACTION";
-  document.getElementById("stage-title").textContent = step.title;
-  document.getElementById("stage-text").textContent = step.text(run);
-  const stageKey = {setup: "initial_audit", source_only: "source_only_audit", leak: "source_only_audit"}[step.key] || "cleaned_audit";
-  const box = clear(document.getElementById("stage-counts"));
-  for (const [label, value] of counts(run.stages[stageKey])) {
-    const item = el("div", "count");
-    item.append(el("strong", null, value), el("span", null, label));
-    box.append(item);
+  // ---- Stage tabs ----
+  function renderTabs() {
+    const box = clear(document.getElementById("stage-tabs"));
+    STAGES.forEach((stage, index) => {
+      const tab = el("button", "stage-tab");
+      tab.type = "button";
+      tab.id = `tab-${stage.key}`;
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", "stage-panel");
+      tab.append(el("span", "stage-tab__num", String(index + 1).padStart(2, "0")), el("span", "stage-tab__label", stage.tab));
+      tab.addEventListener("click", () => setStage(stage.key));
+      tab.addEventListener("keydown", (event) => {
+        const keys = {ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1};
+        let next = null;
+        if (event.key in keys) next = (index + keys[event.key] + STAGES.length) % STAGES.length;
+        if (event.key === "Home") next = 0;
+        if (event.key === "End") next = STAGES.length - 1;
+        if (next === null) return;
+        event.preventDefault();
+        setStage(STAGES[next].key);
+        document.getElementById(`tab-${STAGES[next].key}`).focus();
+      });
+      box.append(tab);
+    });
+    updateTabs();
   }
-  const answer = document.getElementById("stage-answer");
-  if (step.key === "leak") renderAnswer(answer, run, "source_only");
-  else if (step.key === "setup") renderAnswer(answer, run, "before");
-  else answer.hidden = true;
-  const checks = clear(document.getElementById("stage-checks"));
-  checks.hidden = step.key !== "verify";
-  if (step.key === "verify") {
-    for (const check of run.checks) {
-      const row = el("div", check.passed ? "check" : "check failed");
-      row.append(el("span", "check-icon", check.passed ? "✓" : "✕"));
-      const body = el("div");
-      body.append(el("div", "check-name", check.name), el("div", "check-detail", check.detail));
-      row.append(body);
-      checks.append(row);
+
+  function updateTabs() {
+    for (const stage of STAGES) {
+      const tab = document.getElementById(`tab-${stage.key}`);
+      const selected = stage.key === state.stage;
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+    }
+    document.getElementById("stage-panel").setAttribute("aria-labelledby", `tab-${state.stage}`);
+    const index = STAGES.findIndex((s) => s.key === state.stage);
+    document.getElementById("stage-prev").disabled = index === 0;
+    document.getElementById("stage-next").disabled = index === STAGES.length - 1;
+  }
+
+  function setStage(key) {
+    state.stage = key;
+    updateTabs();
+    renderStage();
+    writeHash();
+  }
+
+  // ---- The stage: explanation, counts, trail, evidence ----
+  function renderStage() {
+    const run = state.run;
+    const info = stageInfo();
+    const index = STAGES.indexOf(info);
+    document.getElementById("stage-eyebrow").textContent = info.eyebrow;
+    document.getElementById("stage-title").textContent = info.title;
+    document.getElementById("stage-text").textContent = info.text(run);
+    renderCounts();
+    document.getElementById("fig-num").textContent = `Fig. ${index + 1}`;
+    document.getElementById("fig-name").textContent = `The memory trail · ${info.tab.toLowerCase()}`;
+    document.getElementById("trail-caption").textContent = info.caption(run);
+    state.trail.setStage(info.key, probe());
+    state.selected = state.trail.selected;
+    renderList();
+    renderDetail();
+    renderEvidence();
+  }
+
+  function renderCounts() {
+    const audit = state.run.stages[{setup: "initial_audit", source_only: "source_only_audit", leak: "source_only_audit"}[state.stage] || "cleaned_audit"];
+    const after = !["setup"].includes(state.stage);
+    const rows = [
+      ["Stored items", audit.total_artifacts, ""],
+      ["Active", audit.active_artifacts, ""],
+      ["Hold the marker", audit.matched_canary, audit.matched_canary ? "is-warn" : after ? "is-ok" : ""],
+      ["Stale descendants", audit.stale_descendants, audit.stale_descendants ? "is-warn" : after ? "is-ok" : ""],
+      ["Withdrawn sources", audit.deleted_artifacts, audit.deleted_artifacts ? "is-removed" : ""],
+      ["Purged descendants", audit.invalidated_artifacts, ""],
+    ];
+    const box = clear(document.getElementById("stage-counts"));
+    for (const [label, value, cls] of rows) {
+      const item = el("div", cls);
+      item.append(el("dt", null, label), el("dd", null, value));
+      box.append(item);
     }
   }
-  renderTrail();
-}
 
-function renderTrail() {
-  const run = state.run;
-  const legend = state.data.seed_legend;
-  const from = origins(run, legend);
-  const all = [...new Set([...run.stages.initial_audit.active_ids, ...run.stages.cleaned_audit.active_ids])];
-  const highlight = state.step === "leak" ? run.answers.source_only.context_ids : [];
-  const trail = clear(document.getElementById("trail"));
-  let shown = 0;
-  for (const group of KIND_GROUPS) {
-    const ids = all.filter((id) => id.startsWith(group.prefix));
-    const column = el("div", "trail-group");
-    column.append(el("p", "eyebrow", group.title.toUpperCase()));
-    for (const id of ids) {
-      const status = statusFor(run, state.step, id);
-      if (!status) continue;
-      shown += 1;
-      const node = el("div", `node ${status.split("-")[0]}${highlight.includes(id) ? " context" : ""}`);
-      const top = el("div", "node-top");
-      top.append(el("code", "node-id", shortId(id)), el("span", "node-status", STATUS_TEXT[status]));
-      node.append(top);
-      if (legend.documents[id]) node.append(el("div", "node-title", legend.documents[id]));
-      const origin = from[id];
-      if (origin && origin.parents.length) {
-        node.append(el("div", "node-from", `from ${origin.parents.map(shortId).join(", ")} · ${origin.how}`));
+  function renderList() {
+    const p = probe();
+    const list = document.getElementById("trail-list");
+    const hadFocus = list.contains(document.activeElement);
+    GC.renderTrailList(list, state.run, state.data.seed_legend, state.stage, {
+      selected: state.selected, context: p ? p.context : [], cited: p ? p.citations : [], clean: Boolean(p && !p.containsMarker),
+      onSelect: (id) => { state.trail.select(id); },
+    });
+    if (hadFocus) {
+      const button = [...list.querySelectorAll("button")].find((b) => b.getAttribute("data-id") === state.selected);
+      if (button) button.focus();
+    }
+  }
+
+  function renderDetail() {
+    const id = state.hover || state.selected || state.run.source_id;
+    const box = clear(document.getElementById("artifact-detail"));
+    const d = GC.describe(state.run, state.data.seed_legend, state.stage, id);
+    const head = el("div", "artifact-detail__head");
+    head.append(GC.kindIcon(d.kind), el("span", "artifact-detail__id", d.id));
+    if (d.status) head.append(el("span", `chip ${GC.chipClass(d.status)}`, d.status === "active" ? "Active" : GC.STATUS[d.status].chip));
+    const source = state.stage === "setup" ? "The source document" : "The withdrawn source";
+    const mode = state.hover && state.hover !== state.selected ? "Previewing" : state.selected ? "Selected" : `${source} · select any artifact to inspect it`;
+    head.append(el("span", "fine", mode));
+    const kindText = d.title ? `${GC.KINDS[d.kind].label} · ${d.title}` : GC.KINDS[d.kind].label;
+    box.append(head, el("p", "artifact-detail__desc", `${kindText}. ${d.statusLabel}.`));
+    const facts = el("dl", "artifact-detail__facts");
+    const fact = (label, content) => { const wrap = el("div"); wrap.append(el("dt", null, label)); const dd = el("dd"); dd.append(content); wrap.append(dd); facts.append(wrap); };
+    const ids = (list, empty) => {
+      if (!list.length) return document.createTextNode(empty);
+      const row = el("span", "id-list");
+      for (const item of list) row.append(el("code", "id-chip", shortId(item)));
+      return row;
+    };
+    const how = {"seed design": "seed design: one chunk per document in GhostCache's seeding code",
+                 recorded: "recorded: the summary event in this report", inferred: "inferred from the order of recorded events"}[d.how];
+    const from = el("span");
+    from.append(ids(d.parents, !d.status ? "Not created yet at this stage" : d.kind === "document" ? "An original document" : "No recorded parents"));
+    if (how && d.parents.length) from.append(el("span", "fine", ` ${how}`));
+    fact("Derived from", from);
+    fact("Fed into", ids(d.children, "Nothing in the recorded trail at this stage"));
+    const marker = el("ul", "marker-history");
+    for (const m of d.marker) {
+      const item = el("li");
+      item.append(el("span", null, m.label), el("b", m.held ? "is-held" : m.existed ? null : "is-none", m.held ? "◆ YES" : m.existed ? "NO" : "NOT CREATED"));
+      marker.append(item);
+    }
+    fact("Held the marker", marker);
+    box.append(facts);
+  }
+
+  function answerCard(key, options) {
+    const run = state.run;
+    const a = run.answers[key];
+    const card = el("article", "answer-card");
+    const top = el("div", "answer-card__top");
+    top.append(el("span", "eyebrow", GC.ANSWER_LABELS[key]),
+               el("span", a.contains_marker ? "chip chip--marker" : "chip chip--ok", a.contains_marker ? "◆ Marker revealed" : "✓ No marker"));
+    const question = el("p", "answer-card__q", `“${a.question}”`);
+    const answer = el("p", "answer-card__a");
+    answer.append(GC.markText(a.answer, run.marker));
+    const meta = el("dl", "answer-card__meta");
+    const row = (label, content) => { meta.append(el("dt", null, label)); const dd = el("dd"); dd.append(content); meta.append(dd); };
+    const ctx = el("span", "id-list");
+    for (const id of a.context_ids) {
+      const chip = el("code", a.citations.includes(id) ? "id-chip is-cited" : "id-chip is-uncited", shortId(id));
+      chip.title = a.citations.includes(id) ? "Supplied and cited" : "Supplied, not cited";
+      ctx.append(chip);
+    }
+    row("Context", ctx);
+    row("Cited", document.createTextNode(a.citations.length ? `${a.citations.length} of ${a.context_ids.length} supplied artifacts (solid outline; dashed were supplied, not cited)` : "Nothing; every supplied artifact has a dashed outline"));
+    row("Recorded", document.createTextNode(`${a.mode} answer from ${a.provider} · ${ms(a.duration_ms)}${a.input_tokens !== null ? ` · ${a.input_tokens} in / ${a.output_tokens} out tokens` : ""}`));
+    if (options && options.heading === false) top.firstChild.remove();
+    card.append(top, question, answer, meta);
+    return card;
+  }
+
+  function renderEvidence() {
+    const run = state.run;
+    const box = clear(document.getElementById("stage-evidence"));
+    const info = stageInfo();
+    if (info.key === "setup" || info.key === "leak") { box.append(answerCard(info.answer)); return; }
+    if (info.key === "source_only") {
+      const card = el("div", "notice notice--warn");
+      card.append(el("strong", null, "Incomplete, on purpose. "),
+                  document.createTextNode(`After ${run.source_id} was deleted, the audit still found ${count(run.stages.source_only_audit.stale_ids.length, "active descendant")} depending on it: `));
+      const ids = el("span", "id-list");
+      for (const id of run.stages.source_only_audit.stale_ids) ids.append(el("code", "id-chip", shortId(id)));
+      card.append(ids);
+      box.append(card);
+      return;
+    }
+    if (info.key === "cleanup") {
+      const card = el("div", "notice notice--ok");
+      const purged = (run.events.find((e) => e.name === "delete.propagated") || {}).affected_ids || [];
+      const rebuilt = rebuildEvent(run);
+      card.append(el("strong", null, "Cleanup recorded. "),
+                  document.createTextNode(`The cascade changed ${count(purged.length, "descendant")} (`));
+      card.append(GC.joinList(purged.map(shortId)), `), left ${count(run.stages.cleaned_audit.stale_descendants, "stale artifact")}`);
+      if (rebuilt) card.append(`, and rebuilt ${rebuilt.artifact_id} from ${GC.joinList(rebuilt.parent_ids)} (recorded parents)`);
+      card.append(`. ${count(run.stages.cleaned_audit.active_artifacts, "artifact")} stay active.`);
+      box.append(card);
+      return;
+    }
+    box.append(checksList(run.checks), answerCard("secret"));
+  }
+
+  function checksList(checks) {
+    const groups = [
+      ["The failure was real", (name) => /Source-only control|Pre-deletion/.test(name)],
+      ["Nothing else was lost", (name) => /Unrelated roof garden|Shared fact/.test(name)],
+      ["The secret is gone", () => true],
+    ];
+    const box = el("div", "checks");
+    const used = new Set();
+    for (const [title, match] of groups) {
+      const members = checks.filter((check) => !used.has(check) && match(check.name));
+      if (!members.length) continue;
+      members.forEach((check) => used.add(check));
+      const group = el("section", "checks__group");
+      group.append(el("h3", null, `${title} · ${members.filter((c) => c.passed).length}/${members.length}`));
+      const list = el("ul");
+      for (const check of members) {
+        const item = el("li", check.passed ? "check" : "check is-failed");
+        const icon = el("span", "check__icon", check.passed ? "✓" : "✕");
+        icon.setAttribute("aria-hidden", "true");
+        const body = el("div");
+        const name = el("div", "check__name", check.name);
+        name.append(el("span", "check__verdict", check.passed ? "PASS" : "FAIL"));
+        body.append(name, el("div", "check__detail", check.detail));
+        item.append(icon, body);
+        list.append(item);
       }
-      if (highlight.includes(id)) node.append(el("div", "node-flag", "Supplied to the model for the leaked answer"));
-      column.append(node);
+      group.append(list);
+      box.append(group);
     }
-    trail.append(column);
+    return box;
   }
-  document.getElementById("trail-count").textContent = `${shown} ITEMS SHOWN`;
-}
 
-function renderQuestions() {
-  const box = clear(document.getElementById("question-buttons"));
-  for (const key of Object.keys(ANSWER_LABELS)) {
-    const button = el("button", "question-button", ANSWER_LABELS[key]);
-    button.type = "button";
-    button.setAttribute("aria-pressed", String(key === state.answer));
-    button.addEventListener("click", () => { state.answer = key; renderQuestions(); });
-    box.append(button);
-  }
-  renderAnswer(document.getElementById("question-answer"), state.run, state.answer);
-}
-
-function callLabel(event) {
-  if (event.name === "summary.generated") {
-    return event.artifact_id.startsWith("s-rebuilt") ? `Rebuild summary ${event.artifact_id}` : `Summarize into ${event.artifact_id}`;
-  }
-  if (event.answer_key === "seeded_conversation") return "Seeding answer (saved to memory)";
-  return `Answer · ${ANSWER_LABELS[event.answer_key] || event.answer_key}`;
-}
-
-function renderTiming() {
-  const runs = state.data.runs;
-  const cold = runs.find((r) => r.id === "cold");
-  const warm = runs.find((r) => r.id === "warm");
-  const table = clear(document.getElementById("timing-table"));
-  if (!cold || !warm) return;
-  const coldCalls = cold.events.filter((e) => "duration_ms" in e);
-  const warmCalls = warm.events.filter((e) => "duration_ms" in e);
-  const max = Math.max(...coldCalls.map((e) => e.duration_ms), ...warmCalls.map((e) => e.duration_ms));
-  const head = el("tr");
-  head.append(el("th", null, "Model call (in recorded order)"), el("th", null, "Cold"), el("th", null, "Warm"));
-  table.append(head);
-  coldCalls.forEach((event, index) => {
-    const other = warmCalls[index];
-    const row = el("tr");
-    row.append(el("td", null, callLabel(event)));
-    for (const call of [event, other]) {
-      const cell = el("td");
-      if (call) {
-        const wrap = el("div", "bar-cell");
-        const track = el("span", "bar-track");
-        const bar = el("span", "bar");
-        bar.style.width = `${Math.max(3, (call.duration_ms / max) * 100)}%`;
-        track.append(bar);
-        wrap.append(el("span", "bar-value", ms(call.duration_ms)), track);
-        cell.append(wrap);
+  // ---- Recorded questions ----
+  function renderAnswers() {
+    const box = clear(document.getElementById("answers"));
+    const groups = [["Before deletion", ["before"]], ["After source-only deletion", ["source_only"]],
+                    ["After cleanup", ["secret", "paraphrase", "retained", "shared"]]];
+    for (const [title, keys] of groups) {
+      const group = el("section", "answers__group");
+      group.append(el("h3", null, title));
+      const list = el("ul", "answers__list");
+      for (const key of keys) {
+        const a = state.run.answers[key];
+        const item = el("li");
+        const details = el("details", "qa");
+        if (key === "source_only") details.open = true;
+        const summary = el("summary");
+        summary.append(el("span", "qa__q", `“${a.question}”`),
+                       el("span", a.contains_marker ? "chip chip--marker" : "chip chip--ok", a.contains_marker ? "◆ Marker" : "✓ No marker"),
+                       el("span", "qa__a", `${GC.ANSWER_LABELS[key].split(" · ")[1]} · ${a.answer.length > 70 ? `${a.answer.slice(0, 68)}…` : a.answer}`));
+        const body = el("div", "qa__body");
+        body.append(answerCard(key, {heading: false}));
+        details.append(summary, body);
+        item.append(details);
+        list.append(item);
       }
-      row.append(cell);
+      group.append(list);
+      box.append(group);
     }
-    table.append(row);
-  });
-  const total = el("tr", "total");
-  total.append(el("td", null, `Total across ${coldCalls.length} calls`), el("td", null, ms(cold.model_call_total_ms)), el("td", null, ms(warm.model_call_total_ms)));
-  table.append(total);
-  const first = coldCalls[0].duration_ms - warmCalls[0].duration_ms;
-  const diff = cold.model_call_total_ms - warm.model_call_total_ms;
-  const oct27 = runs.find((r) => r.id === "oct27");
-  const oct27First = oct27 && oct27.events.find((e) => "duration_ms" in e);
-  document.getElementById("timing-text").textContent =
-    `The two October 28 runs used the same model on the same laptop, one after the other. The first call took ${ms(coldCalls[0].duration_ms)} cold and ${ms(warmCalls[0].duration_ms)} warm: ${ms(first)} of the ${ms(diff)} difference in total model time. Every later call took about 1–3 s in both.` +
-    (oct27First ? ` The October 27 run shows the same shape: its first call took ${ms(oct27First.duration_ms)}.` : "");
-}
+  }
 
-function renderAll() {
-  renderRuns();
-  renderSteps();
-  renderStage();
-  renderQuestions();
-  document.getElementById("marker-inline").textContent = state.run.marker;
-  document.getElementById("footer-source").textContent = `Data: ${state.data.runs.map((r) => r.source_file).join(", ")}`;
-}
+  // ---- Timing and technical details ----
+  function renderTiming() {
+    const cold = state.data.runs.find((r) => r.id === "cold");
+    const warm = state.data.runs.find((r) => r.id === "warm");
+    const box = document.getElementById("timing");
+    if (!cold || !warm) {
+      clear(box).append(el("p", "notice", "The cold and warm reports are not both in the evidence file, so there is no timing comparison to show."));
+      return;
+    }
+    GC.renderTiming(box, [cold, warm]);
+    const c = GC.modelCalls(cold), w = GC.modelCalls(warm);
+    const later = [...c.slice(1), ...w.slice(1)].map((e) => e.duration_ms);
+    const oct27 = state.data.runs.find((r) => r.id === "oct27");
+    const oct27First = oct27 && GC.modelCalls(oct27)[0];
+    document.getElementById("timing-dek").textContent =
+      `The two October 28 runs used the same model on the same laptop, one straight after the other. The first call took ${ms(c[0].duration_ms)} cold and ${ms(w[0].duration_ms)} warm: ${ms(c[0].duration_ms - w[0].duration_ms)} of the ${ms(cold.model_call_total_ms - warm.model_call_total_ms)} difference in summed model-call time. Every later call took between ${ms(Math.min(...later))} and ${ms(Math.max(...later))}.` +
+      (oct27First ? ` The October 27 run has the same shape: its first call took ${ms(oct27First.duration_ms)}.` : "") +
+      " The slow first call is consistent with Ollama loading the model after a server start, but the reports don't record load time, so that cause is inferred, not measured.";
+  }
 
-async function start() {
-  try {
-    const response = await fetch(DATA_URL, {cache: "no-cache"});
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const data = await response.json();
-    if (!data || !Array.isArray(data.runs) || !data.runs.length) throw new Error("no runs");
+  function disclosure(title, subtitle, content, open) {
+    const details = el("details", "disclosure");
+    if (open) details.open = true;
+    const summary = el("summary");
+    const label = el("span", null, title);
+    label.append(el("small", null, subtitle));
+    summary.append(label);
+    const body = el("div", "disclosure__body");
+    body.append(content);
+    details.append(summary, body);
+    return details;
+  }
+
+  function renderDetails() {
+    const run = state.run;
+    const box = clear(document.getElementById("details"));
+    const kv = el("dl", "kv");
+    const add = (k, v) => { kv.append(el("dt", null, k)); const dd = el("dd"); dd.append(v); kv.append(dd); };
+    const link = el("a", null, run.source_file);
+    link.href = `${state.data.repository}/blob/main/${run.source_file}`;
+    add("Run", document.createTextNode(run.label));
+    add("Date", document.createTextNode(`${run.date} (from ${run.date_source}; the report stores times of day only)`));
+    add("Model and mode", document.createTextNode(`${run.model} · ${run.mode} · ${run.kind}`));
+    add("Report", link);
+    add("Report SHA-256", el("code", null, run.source_sha256));
+    add("Result", document.createTextNode(`${run.passed ? "Passed" : "Failed"}: ${passedChecks(run)} of ${run.checks.length} checks`));
+    add("Model calls", document.createTextNode(`${run.model_call_count} calls, ${ms(run.model_call_total_ms)} summed`));
+    if (run.sentry_trace) add("Sentry trace", el("code", null, run.sentry_trace));
+    if (run.scope) add("Recorded scope", document.createTextNode(run.scope));
+    box.append(disclosure("Run metadata", "Where this run's evidence comes from", kv, true));
+
+    const table = el("table", "table");
+    const head = el("tr");
+    for (const h of ["#", "Time", "Event", "Artifacts", "Parents", "Duration", "Tokens in / out"]) head.append(el("th", h === "#" || h === "Duration" ? "num" : null, h));
+    const thead = el("thead"); thead.append(head);
+    const tbody = el("tbody");
+    run.events.forEach((e, i) => {
+      const tr = el("tr");
+      const artifacts = e.artifact_id ? shortId(e.artifact_id) : e.affected_ids ? e.affected_ids.map(shortId).join(", ") : e.answer_key ? `answer: ${e.answer_key}` : "";
+      tr.append(el("td", "num", i + 1), el("td", "num", e.time), el("td", null, e.name), el("td", null, artifacts),
+                el("td", null, (e.parent_ids || []).map(shortId).join(", ")), el("td", "num", "duration_ms" in e ? ms(e.duration_ms) : ""),
+                el("td", "num", "input_tokens" in e && e.input_tokens !== null ? `${e.input_tokens} / ${e.output_tokens}` : ""));
+      tbody.append(tr);
+    });
+    table.append(thead, tbody);
+    const wrap = el("div", "table-wrap"); wrap.append(table);
+    box.append(disclosure("Recorded event log", `${run.events.length} events, times of day as recorded`, wrap, false));
+
+    const audits = el("table", "table");
+    const ah = el("tr");
+    for (const h of ["Stage", "Active IDs", "Stale IDs", "IDs holding the marker"]) ah.append(el("th", null, h));
+    const athead = el("thead"); athead.append(ah);
+    const atbody = el("tbody");
+    for (const [label, key] of [["Seeded", "initial_audit"], ["After source-only deletion", "source_only_audit"], ["After cleanup", "cleaned_audit"]]) {
+      const a = run.stages[key];
+      const tr = el("tr");
+      tr.append(el("td", null, label), el("td", null, a.active_ids.map(shortId).join(", ")), el("td", null, a.stale_ids.map(shortId).join(", ") || "none"),
+                el("td", null, a.matched_canary_ids.map(shortId).join(", ") || "none"));
+      atbody.append(tr);
+    }
+    audits.append(athead, atbody);
+    const awrap = el("div", "table-wrap"); awrap.append(audits);
+    box.append(disclosure("Audit IDs by stage", "The audits every status in the trail is read from", awrap, false));
+  }
+
+  // ---- View toggle, deep links, start ----
+  function setView(view) {
+    state.view = view;
+    document.getElementById("trail").hidden = view !== "diagram";
+    document.getElementById("trail-list").hidden = view !== "list";
+    document.getElementById("trail-legend").hidden = view !== "diagram";
+    for (const button of document.querySelectorAll("#trail-view button")) button.setAttribute("aria-pressed", String(button.getAttribute("data-view") === view));
+    // Labels are fitted by measuring them, which only works while the diagram is displayed.
+    if (view === "diagram") state.trail.setStage(state.stage, probe());
+  }
+
+  function readHash() {
+    const params = new URLSearchParams(window.location.hash.slice(1));
+    const run = state.data.runs.find((r) => r.id === params.get("run"));
+    if (run) state.run = run;
+    if (STAGES.some((s) => s.key === params.get("stage"))) state.stage = params.get("stage");
+  }
+
+  // A link to another run or stage on this page (for example from the home page) re-renders the view.
+  function followHash() {
+    const before = state.run;
+    readHash();
+    for (const input of document.querySelectorAll("#run-options input")) input.checked = input.value === state.run.id;
+    updateTabs();
+    if (state.run !== before) chooseRun(state.run);
+    else renderStage();
+  }
+
+  function writeHash() {
+    if (window.history && window.history.replaceState) window.history.replaceState(null, "", `#run=${state.run.id}&stage=${state.stage}`);
+  }
+
+  function init(data) {
     state.data = data;
     state.run = data.runs[0];
-    renderAll();
+    readHash();
+    state.trail = GC.createTrail(document.getElementById("trail"), {
+      interactive: true, probe: true, label: "Recorded memory trail. Each artifact is a button; select one to see its provenance.",
+      onSelect: (id) => { state.selected = id; state.hover = null; renderDetail(); renderList(); },
+      onHover: (id) => { state.hover = id; renderDetail(); },
+    });
+    GC.renderLegend(document.getElementById("trail-legend"), true);
+    renderRuns();
+    renderTabs();
+    state.trail.setRun(state.run, data.seed_legend);
+    renderStage();
+    renderAnswers();
     renderTiming();
-  } catch (error) {
-    document.getElementById("load-error").hidden = false;
+    renderDetails();
+    for (const button of document.querySelectorAll("#trail-view button")) button.addEventListener("click", () => setView(button.getAttribute("data-view")));
+    setView(window.matchMedia && window.matchMedia("(max-width: 640px)").matches ? "list" : "diagram");
+    document.getElementById("stage-prev").addEventListener("click", () => { const i = STAGES.findIndex((s) => s.key === state.stage); if (i > 0) setStage(STAGES[i - 1].key); });
+    document.getElementById("stage-next").addEventListener("click", () => { const i = STAGES.findIndex((s) => s.key === state.stage); if (i < STAGES.length - 1) setStage(STAGES[i + 1].key); });
+    document.getElementById("footer-source").textContent = `Static site · recorded evidence only · data: ${data.runs.map((r) => r.source_file).join(", ")}`;
+    window.addEventListener("hashchange", followHash);
   }
-}
 
-if (typeof document !== "undefined") document.addEventListener("DOMContentLoaded", start);
+  function fail() {
+    document.getElementById("load-error").hidden = false;
+    for (const id of ["run-options", "trail"]) {
+      const box = document.getElementById(id);
+      if (box) clear(box).append(el("p", "trail-frame__status", "Recorded evidence unavailable."));
+    }
+    document.getElementById("stage-title").textContent = "Recorded evidence unavailable";
+  }
+
+  GC.onReady(() => { GC.loadEvidence().then(init, fail); });
+})();

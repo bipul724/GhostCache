@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#FAFAF8">
+  <meta name="description" content="What GhostCache demonstrates and where its claims stop: source-only deletion versus provenance cleanup, the fictional corpus, the recorded local Gemma results, timings and limits.">
+  <title>The paper trail · GhostCache evidence and methodology</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="site.js" defer></script>
+  <script src="method.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <a class="wordmark" href="./" aria-label="GhostCache, home">
+        <svg class="wordmark__svg" viewBox="0 0 168 32" aria-hidden="true" focusable="false"><g transform="translate(1 1)"><path class="emblem__after" d="M11 2H21L27 8V22a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V4a2 2 0 0 1 2-2Z"/><path class="emblem__body" d="M6 5H16L22 11V25a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V7a2 2 0 0 1 2-2Z"/><path class="emblem__fold" d="M16 5V9.5A1.5 1.5 0 0 0 17.5 11H22Z"/></g><text class="wordmark__text" x="37" y="23.5" textLength="128" lengthAdjust="spacing">GhostCache</text></svg>
+      </a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="walkthrough.html">Walkthrough</a>
+        <a href="method.html" aria-current="page">Methodology</a>
+        <a href="run.html">Run locally</a>
+        <a href="https://github.com/bipul724/GhostCache">Source<span class="ext" aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <header class="page-head">
+      <div class="wrap">
+        <p class="eyebrow">Evidence &amp; methodology</p>
+        <h1>The paper trail.</h1>
+        <p class="lede">What the experiment demonstrates, how it was measured, and where its claims stop. Every result on this page is read from the same recorded reports as the walkthrough; the diagrams are labelled as drawings.</p>
+      </div>
+    </header>
+
+    <div class="wrap doc-grid">
+      <nav class="toc" aria-label="On this page">
+        <p class="eyebrow">On this page</p>
+        <ol>
+          <li><a href="#two-deletions"><span>01</span>Two ways to delete</a></li>
+          <li><a href="#corpus"><span>02</span>The fictional corpus</a></li>
+          <li><a href="#results"><span>03</span>Recorded results</a></li>
+          <li><a href="#balance"><span>04</span>Remove the secret, keep the facts</a></li>
+          <li><a href="#timing"><span>05</span>Timing evidence</a></li>
+          <li><a href="#limits"><span>06</span>Scope and limits</a></li>
+          <li><a href="#sources"><span>07</span>Reports and code</a></li>
+        </ol>
+      </nav>
+
+      <article class="doc">
+        <section class="doc-section" id="two-deletions" aria-labelledby="two-deletions-title">
+          <p class="eyebrow">01 · The comparison</p>
+          <h2 id="two-deletions-title">Two ways to delete a document.</h2>
+          <p>GhostCache runs the same deletion two ways: once naively, as a deliberately broken control, and once by following provenance. The source document is emptied either way. The difference is everything that was derived from it.</p>
+          <figure class="figure">
+            <div class="compare">
+              <div class="compare__panel">
+                <p class="compare__label"><span class="chip chip--stale">Broken control</span>Source-only deletion</p>
+                <svg viewBox="0 0 400 262" role="img" aria-labelledby="sch-a-title">
+                  <title id="sch-a-title">Source-only deletion. The source d-vault is withdrawn. Its chunk, three summaries and saved answer stay active and stale, still holding the marker. A reworded question retrieves them and the answer reveals the marker.</title>
+                  <path class="sch-line sch-line--stale" d="M70 40V60M70 88V108M70 136V156M70 184V204M128 170H152"/>
+                  <path class="sch-line sch-line--ctx" d="M128 74C204 74 214 116 270 116M128 122C200 122 224 124 270 124M128 170C196 170 230 132 270 132M128 218C206 218 236 140 270 140"/>
+                  <rect class="sch-out" x="12" y="12" width="116" height="28" rx="4"/><text class="sch-id" x="21" y="30">d-vault</text><text class="sch-note sch-note--out" x="73" y="29">WITHDRAWN</text>
+                  <rect class="sch-stale" x="12" y="60" width="116" height="28" rx="4"/><text class="sch-id" x="21" y="78">c-vault</text><path class="sch-mark" d="M114 69l5 5-5 5-5-5z"/>
+                  <rect class="sch-layer" x="17" y="113" width="116" height="28" rx="4"/><rect class="sch-stale" x="12" y="108" width="116" height="28" rx="4"/><text class="sch-id" x="21" y="126">s-vault</text><path class="sch-mark" d="M114 117l5 5-5 5-5-5z"/>
+                  <rect class="sch-layer" x="17" y="161" width="116" height="28" rx="4"/><rect class="sch-stale" x="12" y="156" width="116" height="28" rx="4"/><text class="sch-id" x="21" y="174">s-mixed</text><path class="sch-mark" d="M114 165l5 5-5 5-5-5z"/>
+                  <rect class="sch-layer" x="17" y="209" width="116" height="28" rx="4"/><rect class="sch-stale" x="12" y="204" width="116" height="28" rx="4"/><text class="sch-id" x="21" y="222">s-handoff</text><path class="sch-mark" d="M114 213l5 5-5 5-5-5z"/>
+                  <path class="sch-stale" d="M156 156h96a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H178l-8 7 1-7h-15a4 4 0 0 1-4-4v-20a4 4 0 0 1 4-4z"/><text class="sch-id" x="162" y="174">saved answer</text><path class="sch-mark" d="M244 165l5 5-5 5-5-5z"/>
+                  <rect class="sch-doc" x="290" y="12" width="98" height="28" rx="4"/><text class="sch-id" x="299" y="30">d-garden</text>
+                  <rect class="sch-doc" x="290" y="204" width="98" height="28" rx="4"/><text class="sch-id" x="299" y="222">d-archive</text>
+                  <rect class="sch-probe" x="270" y="86" width="122" height="76" rx="6"/>
+                  <text class="sch-probe-label" x="280" y="103">REWORDED QUESTION</text>
+                  <text class="sch-probe-q" x="280" y="120">“Which access phrase</text>
+                  <text class="sch-probe-q" x="280" y="133">opens the vault?”</text>
+                  <text class="sch-probe-v" x="280" y="152">◆ MARKER REVEALED</text>
+                  <g class="sch-badge"><circle cx="144" cy="26" r="9"/><text x="141" y="29.5">1</text></g>
+                  <g class="sch-badge"><circle cx="144" cy="146" r="9"/><text x="141" y="149.5">2</text></g>
+                  <g class="sch-badge"><circle cx="384" cy="84" r="9"/><text x="381" y="87.5">3</text></g>
+                </svg>
+                <ol class="callouts">
+                  <li>The source is emptied and its title replaced. Only the document changes.</li>
+                  <li>Its chunk, three summaries and the saved answer stay active: stale, and still holding the marker.</li>
+                  <li>A reworded question retrieves those copies, and the model repeats the marker.</li>
+                </ol>
+              </div>
+              <div class="compare__panel compare__panel--fixed">
+                <p class="compare__label"><span class="chip chip--ok">Cleanup</span>Provenance-aware cleanup</p>
+                <svg viewBox="0 0 400 262" role="img" aria-labelledby="sch-b-title">
+                  <title id="sch-b-title">Provenance-aware cleanup. Cleanup walks every recorded descendant of d-vault and turns each into a content-free tombstone. One summary is rebuilt from the surviving documents d-garden, d-maintenance and d-shuttle. The independent d-archive keeps the reading-room fact.</title>
+                  <path class="sch-line sch-line--gone" d="M70 40V60M70 88V108M70 136V156M70 184V204M128 170H152"/>
+                  <path class="sch-line sch-line--trace" d="M6 26V218"/>
+                  <circle class="sch-dot" cx="6" cy="26" r="3"/><circle class="sch-dot" cx="6" cy="74" r="3"/><circle class="sch-dot" cx="6" cy="122" r="3"/><circle class="sch-dot" cx="6" cy="170" r="3"/><circle class="sch-dot" cx="6" cy="218" r="3"/>
+                  <rect class="sch-out" x="12" y="12" width="116" height="28" rx="4"/><text class="sch-id" x="21" y="30">d-vault</text><text class="sch-note sch-note--out" x="73" y="29">WITHDRAWN</text>
+                  <rect class="sch-gone" x="12" y="60" width="116" height="28" rx="4"/><text class="sch-id sch-id--gone" x="21" y="78">c-vault</text><text class="sch-note" x="84" y="77">PURGED</text>
+                  <rect class="sch-gone" x="12" y="108" width="116" height="28" rx="4"/><text class="sch-id sch-id--gone" x="21" y="126">s-vault</text><text class="sch-note" x="84" y="125">PURGED</text>
+                  <rect class="sch-gone" x="12" y="156" width="116" height="28" rx="4"/><text class="sch-id sch-id--gone" x="21" y="174">s-mixed</text><text class="sch-note" x="84" y="173">PURGED</text>
+                  <rect class="sch-gone" x="12" y="204" width="116" height="28" rx="4"/><text class="sch-id sch-id--gone" x="21" y="222">s-handoff</text><text class="sch-note" x="84" y="221">PURGED</text>
+                  <path class="sch-gone" d="M156 156h96a4 4 0 0 1 4 4v20a4 4 0 0 1-4 4H178l-8 7 1-7h-15a4 4 0 0 1-4-4v-20a4 4 0 0 1 4-4z"/><text class="sch-id sch-id--gone" x="162" y="174">saved answer</text>
+                  <path class="sch-line sch-line--new" d="M290 26C270 26 268 70 256 74M290 74H256M290 122C270 122 268 80 256 76"/>
+                  <rect class="sch-layer" x="157" y="65" width="104" height="28" rx="4"/><rect class="sch-new" x="152" y="60" width="104" height="28" rx="4"/><text class="sch-id sch-id--new" x="161" y="78">↻ s-rebuilt</text>
+                  <rect class="sch-keep" x="290" y="12" width="98" height="28" rx="4"/><text class="sch-id" x="299" y="30">d-garden</text>
+                  <rect class="sch-keep" x="290" y="60" width="98" height="28" rx="4"/><text class="sch-id" x="299" y="78">d-maintenance</text>
+                  <rect class="sch-keep" x="290" y="108" width="98" height="28" rx="4"/><text class="sch-id" x="299" y="126">d-shuttle</text>
+                  <rect class="sch-keep" x="290" y="204" width="98" height="28" rx="4"/><text class="sch-id" x="299" y="222">d-archive</text>
+                  <text class="sch-note sch-note--ok" x="290" y="250">✓ LANTERN HALL ANSWERS</text>
+                  <g class="sch-badge"><circle cx="20" cy="248" r="9"/><text x="17" y="251.5">1</text></g>
+                  <g class="sch-badge"><circle cx="144" cy="122" r="9"/><text x="141" y="125.5">2</text></g>
+                  <g class="sch-badge"><circle cx="204" cy="48" r="9"/><text x="201" y="51.5">3</text></g>
+                  <g class="sch-badge"><circle cx="276" cy="218" r="9"/><text x="273" y="221.5">4</text></g>
+                </svg>
+                <ol class="callouts">
+                  <li>Cleanup walks every recorded descendant of the source, in one transaction.</li>
+                  <li>Bodies are emptied and titles replaced; IDs, links and roots stay as inspectable tombstones.</li>
+                  <li>One summary is rebuilt from the surviving original documents, never from the old mixed prose.</li>
+                  <li>An independent source keeps a shared fact answerable.</li>
+                </ol>
+              </div>
+            </div>
+            <figcaption class="figcap"><b>Fig. 1</b> Diagram drawn from GhostCache's seed design (the same in every run), simplified: the other documents' chunks and some links are omitted. Not recorded data. <span class="tag tag--illustration">Diagram</span></figcaption>
+          </figure>
+        </section>
+
+        <section class="doc-section" id="corpus" aria-labelledby="corpus-title">
+          <p class="eyebrow">02 · The controlled corpus</p>
+          <h2 id="corpus-title">Five fictional documents, one fresh secret.</h2>
+          <p>Every run seeds the same five fictional documents about an observatory. Only the passphrase changes: each reset generates a new <code>MOTH-</code> marker, so a pass can never rely on an old one.</p>
+          <ul class="corpus">
+            <li class="specimen specimen--source"><span class="kicon-slot" data-kind="document"></span><span class="specimen__id">d-vault</span><span class="specimen__title">Vault access note</span><p class="specimen__role">The source that is withdrawn. Holds the fictional passphrase and names the reading room.</p></li>
+            <li class="specimen specimen--keep"><span class="kicon-slot" data-kind="document"></span><span class="specimen__id">d-garden</span><span class="specimen__title">Roof garden timetable</span><p class="specimen__role">An unrelated opening time, 07:40, that must stay answerable.</p></li>
+            <li class="specimen specimen--keep"><span class="kicon-slot" data-kind="document"></span><span class="specimen__id">d-archive</span><span class="specimen__title">Independent archive directory</span><p class="specimen__role">Names the reading room, Lantern Hall, independently of the vault note, so that fact must survive.</p></li>
+            <li class="specimen"><span class="kicon-slot" data-kind="document"></span><span class="specimen__id">d-maintenance</span><span class="specimen__title">Telescope maintenance plan</span><p class="specimen__role">An unrelated schedule. Its chunk feeds the handoff summary.</p></li>
+            <li class="specimen"><span class="kicon-slot" data-kind="document"></span><span class="specimen__id">d-shuttle</span><span class="specimen__title">Visitor shuttle guide</span><p class="specimen__role">An unrelated departure that retrieval pulls in beside the vault question.</p></li>
+          </ul>
+          <p class="derived-note">From them, seeding derives five search chunks (one per document), three model-written summaries chained <code>s-vault</code> → <code>s-mixed</code> → <code>s-handoff</code>, and one saved answer: fourteen artifacts. Every generated artifact records every artifact it was given as a parent. The summary prompt asks the model to keep the passphrase on purpose, which builds a known, traceable propagation path; GhostCache does not measure how often secrets leak naturally.</p>
+        </section>
+
+        <section class="doc-section" id="results" aria-labelledby="results-title">
+          <p class="eyebrow">03 · Recorded results</p>
+          <h2 id="results-title">Three live runs, read straight from their reports.</h2>
+          <p>Each recorded run is a full ten-check evaluation of local Gemma (<code>gemma4:e2b-it-qat</code> through Ollama) on a fresh in-memory database. The counts below are the reports' own audits at each stage.</p>
+          <div class="table-wrap" id="results-table"><p class="fine">Loading the recorded results…</p></div>
+          <p class="fine">Three runs on one laptop over two days are not a success rate. A deterministic fixture report (string rules, no model call) also passed all ten checks; it stays in the repository and is never shown here as AI output.</p>
+        </section>
+
+        <section class="doc-section" id="balance" aria-labelledby="balance-title">
+          <p class="eyebrow">04 · The balance</p>
+          <h2 id="balance-title">Remove the secret. Keep the facts.</h2>
+          <p>A cleanup that destroys everything would pass a "secret is gone" test trivially. So every evaluation asks six recorded questions: two must reveal the marker (proving the failure was real), two must not, and two must still answer facts that should survive.</p>
+          <div class="table-wrap" id="balance-matrix"><p class="fine">Loading the recorded answers…</p></div>
+          <div id="balance-quotes"></div>
+        </section>
+
+        <section class="doc-section" id="timing" aria-labelledby="timing-title">
+          <p class="eyebrow">05 · Timing evidence</p>
+          <h2 id="timing-title">What the clock recorded.</h2>
+          <p>Each report records the duration of every model call. The October 28 runs came one after the other: the first right after Ollama was started (cold), the second straight afterwards (warm). The October 27 run was a separate session.</p>
+          <div id="method-timing"><p class="fine">Loading the recorded timings…</p></div>
+          <p class="fine">The pass/fail result hides this: all three runs passed every check. The slow first call is consistent with Ollama loading the model on its first request after starting, but the reports don't record Ollama's load time, so the cause is inferred, not measured.</p>
+        </section>
+
+        <section class="doc-section" id="limits" aria-labelledby="limits-title">
+          <p class="eyebrow">06 · Scope and limits</p>
+          <h2 id="limits-title">Where the claims stop.</h2>
+          <ul class="limits">
+            <li><strong>Application-managed memory only</strong><span>Cleanup covers GhostCache's SQLite titles and bodies, its recorded provenance and its retrieval. It is not model-weight unlearning or secure disk erasure.</span></li>
+            <li><strong>The evaluator keeps the marker</strong><span>The expected marker stays in evaluator state, saved reports, screenshots and this site, on purpose: they are the evidence.</span></li>
+            <li><strong>Bounded, exact-match checks</strong><span>One literal marker across four fixed questions. That is not proof that every paraphrase or inference is gone.</span></li>
+            <li><strong>Lexical retrieval</strong><span>Term overlap, not embeddings; the reworded question still shares words with its target.</span></li>
+            <li><strong>A deliberate propagation path</strong><span>The summary prompt asks the model to keep the passphrase, so the copies are expected, not discovered.</span></li>
+            <li><strong>Three runs are not a rate</strong><span>One model, one laptop, two days. Failures from future runs belong in the record too.</span></li>
+            <li><strong>Provenance has to be captured</strong><span>A copy made outside the store is outside the graph, and no traversal can find it.</span></li>
+            <li><strong>Fictional data only</strong><span>No uploads, no real documents, no connectors to other RAG systems, and no claim about any other product.</span></li>
+          </ul>
+        </section>
+
+        <section class="doc-section" id="sources" aria-labelledby="sources-title">
+          <p class="eyebrow">07 · Reports and code</p>
+          <h2 id="sources-title">Check the paper trail yourself.</h2>
+          <ul class="link-grid">
+            <li><a href="https://github.com/bipul724/GhostCache/tree/main/results"><strong>Saved reports ↗</strong><span>The recorded JSON reports and screenshots</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache/blob/main/ghostcache/store.py"><strong>The provenance store ↗</strong><span>Lineage, both deletion policies, retrieval and audit</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache/blob/main/ghostcache/app.py"><strong>The experiment controller ↗</strong><span>Seeding, questions, cleanup and the checks</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache/blob/main/EVALUATION.md"><strong>Evaluation protocol ↗</strong><span>The ten checks and how to read them</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache/blob/main/scripts/export_site_data.py"><strong>This site's data export ↗</strong><span>How reports become data/evidence.json</span></a></li>
+            <li><a href="run.html"><strong>Run it locally</strong><span>Fixture and live Gemma setup</span></a></li>
+          </ul>
+          <h3>Prior work</h3>
+          <p>Source-aware invalidation is established practice; these DEV articles describe it, and GhostCache makes the failure and the fix visible in one small experiment.</p>
+          <ul class="link-grid">
+            <li><a href="https://dev.to/vectorlinklabs/stale-rag-vs-expensive-rag-how-to-cache-rag-context-without-serving-outdated-answers-335f"><strong>Stale RAG vs. expensive RAG ↗</strong><span>vectorlinklabs, on DEV</span></a></li>
+            <li><a href="https://dev.to/fusionaldev/where-retrieval-assistants-leak-the-title-the-summary-and-the-cache-4po4"><strong>Where retrieval assistants leak ↗</strong><span>fusionaldev, on DEV</span></a></li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap site-footer__grid">
+      <div class="site-footer__brand">
+        <svg class="wordmark__svg" viewBox="0 0 168 32" aria-hidden="true" focusable="false"><g transform="translate(1 1)"><path class="emblem__after" d="M11 2H21L27 8V22a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V4a2 2 0 0 1 2-2Z"/><path class="emblem__body" d="M6 5H16L22 11V25a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V7a2 2 0 0 1 2-2Z"/><path class="emblem__fold" d="M16 5V9.5A1.5 1.5 0 0 0 17.5 11H22Z"/></g><text class="wordmark__text" x="37" y="23.5" textLength="128" lengthAdjust="spacing">GhostCache</text></svg>
+        <p>A small, local testbed for residual AI application memory. Fictional data only; cleanup covers GhostCache's application-managed memory and retrieval.</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="./">Home</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache">Repository ↗</a></li>
+          <li><a href="walkthrough.html">Recorded walkthrough</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache/tree/main/results">Saved reports ↗</a></li>
+          <li><a href="run.html">Run locally</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache/blob/main/LICENSE">MIT license ↗</a></li>
+        </ul>
+      </nav>
+      <p class="site-footer__meta">Static site · recorded evidence only · no live inference, no storage, nothing deleted</p>
+    </div>
+  </footer>
+</body>
+</html>

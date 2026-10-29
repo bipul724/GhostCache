@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#FAFAF8">
+  <meta name="description" content="A recorded walkthrough of GhostCache: one fictional secret, a source-only deletion that leaves copies behind, the model repeating the secret, and provenance-aware cleanup. Recorded local Gemma runs; no live inference.">
+  <title>Follow one ghost · GhostCache recorded walkthrough</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script src="site.js" defer></script>
+  <script src="walkthrough.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="masthead">
+    <div class="wrap wrap--wide masthead__inner">
+      <a class="wordmark" href="./" aria-label="GhostCache, home">
+        <svg class="wordmark__svg" viewBox="0 0 168 32" aria-hidden="true" focusable="false"><g transform="translate(1 1)"><path class="emblem__after" d="M11 2H21L27 8V22a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V4a2 2 0 0 1 2-2Z"/><path class="emblem__body" d="M6 5H16L22 11V25a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V7a2 2 0 0 1 2-2Z"/><path class="emblem__fold" d="M16 5V9.5A1.5 1.5 0 0 0 17.5 11H22Z"/></g><text class="wordmark__text" x="37" y="23.5" textLength="128" lengthAdjust="spacing">GhostCache</text></svg>
+      </a>
+      <nav class="primary-nav" aria-label="Primary">
+        <a href="walkthrough.html" aria-current="page">Walkthrough</a>
+        <a href="method.html">Methodology</a>
+        <a href="run.html">Run locally</a>
+        <a href="https://github.com/bipul724/GhostCache">Source<span class="ext" aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="record-bar" role="note" aria-label="Recorded evaluation notice">
+    <div class="wrap wrap--wide record-bar__inner">
+      <span class="record-bar__mark" aria-hidden="true"></span>
+      <strong>Recorded evaluation · No live inference</strong>
+      <span class="record-bar__detail">Recorded local Gemma evaluation — no live inference. Choosing a run or a stage only changes the view.</span>
+    </div>
+  </div>
+
+  <main id="main">
+    <section class="wt-intro" aria-labelledby="wt-title">
+      <div class="wrap wrap--wide wt-intro__grid">
+        <div>
+          <p class="eyebrow">Recorded walkthrough</p>
+          <h1 id="wt-title">Follow one ghost.</h1>
+          <p class="lede">Five recorded stages of one experiment: a fictional secret is seeded, its source deleted, the secret repeated anyway, the trail cleaned up and the result checked. Every count, answer and check below is copied from a saved report written by GhostCache running Gemma locally through Ollama.</p>
+        </div>
+        <fieldset class="run-picker">
+          <legend class="eyebrow">Recorded run</legend>
+          <div class="run-picker__options" id="run-options"><p class="fine">Loading the recorded runs…</p></div>
+          <p class="run-picker__source fine" id="run-source"></p>
+        </fieldset>
+      </div>
+    </section>
+
+    <div class="wrap wrap--wide">
+      <div id="load-error" class="notice notice--error" role="alert" hidden><strong>The recorded evidence could not be loaded.</strong> It lives in <code>data/evidence.json</code> beside this page; the saved reports are also in the <a href="https://github.com/bipul724/GhostCache/tree/main/results">repository</a>. Nothing else is fetched.</div>
+      <noscript><p class="notice">This walkthrough needs JavaScript to read the recorded evidence in <code>data/evidence.json</code>. The saved reports are also in the <a href="https://github.com/bipul724/GhostCache/tree/main/results">repository</a>.</p></noscript>
+    </div>
+
+    <section class="wt-body" aria-label="Recorded stages">
+      <div class="wrap wrap--wide wt-grid">
+        <aside class="wt-aside">
+          <div class="stage-tabs" id="stage-tabs" role="tablist" aria-label="Experiment stages"></div>
+          <div class="stage-panel" id="stage-panel" role="tabpanel" tabindex="0">
+            <p class="eyebrow" id="stage-eyebrow">Stage</p>
+            <h2 class="stage-panel__title" id="stage-title">Loading…</h2>
+            <p class="stage-panel__text" id="stage-text"></p>
+            <dl class="counts" id="stage-counts"></dl>
+            <p class="stage-panel__note fine"><span class="chip">Recorded</span><span>A saved state, not a live action. Nothing is asked or deleted now.</span></p>
+            <div class="pager">
+              <button type="button" id="stage-prev" aria-label="Previous stage"><span aria-hidden="true">←</span> Previous</button>
+              <button type="button" id="stage-next" aria-label="Next stage">Next <span aria-hidden="true">→</span></button>
+            </div>
+          </div>
+        </aside>
+
+        <div class="wt-main">
+          <figure class="figure" aria-labelledby="fig-title">
+            <div class="figure__bar">
+              <p class="figure__title" id="fig-title"><b id="fig-num">Fig. 1</b><span id="fig-name">The memory trail</span></p>
+              <div class="segmented" role="group" aria-label="Trail view" id="trail-view">
+                <button type="button" data-view="diagram" aria-pressed="true">Diagram</button>
+                <button type="button" data-view="list" aria-pressed="false">List</button>
+              </div>
+            </div>
+            <ul class="trail-legend" id="trail-legend" aria-label="Legend"></ul>
+            <div class="trail-frame" id="trail"><p class="trail-frame__status">Loading the recorded trail…</p></div>
+            <div class="tlist" id="trail-list" hidden></div>
+            <figcaption class="figcap" id="trail-caption"></figcaption>
+          </figure>
+          <section class="artifact-detail" id="artifact-detail" aria-live="polite" aria-label="Selected artifact"></section>
+          <section class="stage-evidence" id="stage-evidence" aria-label="Recorded evidence for this stage"></section>
+          <p class="provenance-note fine">How each link is known: <b>recorded</b> (a summary event in the report's log), <b>seed design</b> (each document gets one chunk in GhostCache's fixed seeding code) or <b>inferred</b> (the saved answer's parents, from the order of recorded events). This is not a complete, run-specific provenance graph.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="wt-answers band" aria-labelledby="answers-title">
+      <div class="wrap wrap--wide">
+        <div class="section-head section-head--split">
+          <div>
+            <p class="eyebrow">Recorded questions</p>
+            <h2 id="answers-title">What the model actually said.</h2>
+          </div>
+          <p class="section-dek">The six questions the evaluation asked, with Gemma's recorded answers, the context each one was given and what it cited. You can't ask new questions here: nothing on this page can reach a model.</p>
+        </div>
+        <div class="answers" id="answers"></div>
+      </div>
+    </section>
+
+    <section class="wt-timing" aria-labelledby="timing-title">
+      <div class="wrap wrap--wide">
+        <div class="section-head section-head--split">
+          <div>
+            <p class="eyebrow">Cold start vs warm</p>
+            <h2 id="timing-title">One call explains most of the wait.</h2>
+          </div>
+          <p class="section-dek" id="timing-dek">Recorded model-call durations from the two October 28 runs.</p>
+        </div>
+        <div id="timing"></div>
+      </div>
+    </section>
+
+    <section class="wt-details band" aria-labelledby="details-title">
+      <div class="wrap wrap--wide">
+        <div class="section-head">
+          <p class="eyebrow">Technical details</p>
+          <h2 id="details-title">The report behind this run.</h2>
+        </div>
+        <div class="details-stack" id="details"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap wrap--wide site-footer__grid">
+      <div class="site-footer__brand">
+        <svg class="wordmark__svg" viewBox="0 0 168 32" aria-hidden="true" focusable="false"><g transform="translate(1 1)"><path class="emblem__after" d="M11 2H21L27 8V22a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V4a2 2 0 0 1 2-2Z"/><path class="emblem__body" d="M6 5H16L22 11V25a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V7a2 2 0 0 1 2-2Z"/><path class="emblem__fold" d="M16 5V9.5A1.5 1.5 0 0 0 17.5 11H22Z"/></g><text class="wordmark__text" x="37" y="23.5" textLength="128" lengthAdjust="spacing">GhostCache</text></svg>
+        <p>A small, local testbed for residual AI application memory. Fictional data only; cleanup covers GhostCache's application-managed memory and retrieval.</p>
+      </div>
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="./">Home</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache">Repository ↗</a></li>
+          <li><a href="method.html">Evidence &amp; methodology</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache/tree/main/results">Saved reports ↗</a></li>
+          <li><a href="run.html">Run locally</a></li>
+          <li><a href="https://github.com/bipul724/GhostCache/blob/main/LICENSE">MIT license ↗</a></li>
+        </ul>
+      </nav>
+      <p class="site-footer__meta" id="footer-source">Static site · recorded evidence only · no live inference, no storage, nothing deleted</p>
+    </div>
+  </footer>
+</body>
+</html>
