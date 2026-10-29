@@ -1,0 +1,2 @@
+7343f8b6c41b9ee906accb64c700d0aa77cbc05304c91b08e872a56e919b440c  01-hacktoberfest-tech-offer-redacted.png
+4db19885805874276df7f4528f4984350466ac6c7a34be030d3ce2f5ebd5ea18  02-domain-registration-confirmation.png
