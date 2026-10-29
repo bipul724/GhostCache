@@ -1,0 +1,25 @@
+{
+  "total_count": 1,
+  "artifacts": [
+    {
+      "id": 12893963182,
+      "node_id": "MDg6QXJ0aWZhY3QxMjg5Mzk2MzE4Mg==",
+      "name": "ghostcache-synthetic-evaluation",
+      "size_in_bytes": 2111,
+      "url": "https://api.github.com/repos/bipul724/GhostCache/actions/artifacts/12893963182",
+      "archive_download_url": "https://api.github.com/repos/bipul724/GhostCache/actions/artifacts/12893963182/zip",
+      "expired": false,
+      "digest": "sha256:c13599b5a2b2969fc6c0c5eccc5dcd7419bef4e1c383927267b297a8437248bf",
+      "created_at": "2026-10-29T11:45:05Z",
+      "updated_at": "2026-10-29T11:45:05Z",
+      "expires_at": "2026-11-01T11:45:03Z",
+      "workflow_run": {
+        "id": 40867758385,
+        "repository_id": 1436188437,
+        "head_repository_id": 1436188437,
+        "head_branch": "main",
+        "head_sha": "f66977d78da58c0f71fd9d57f9c5a6289629c73e"
+      }
+    }
+  ]
+}
