@@ -24,6 +24,8 @@ QUESTIONS = {
 }
 
 MEMORY_STORE = "ghostcache-sqlite"  # gen_ai.memory.store.id in traces
+EVENT_WINDOW = 50  # state() returns only the latest events; current outcomes live outside them
+NO_REBUILD = {"status": "not_attempted"}
 
 
 def _question_kind(question: str) -> str:
@@ -42,7 +44,7 @@ class Experiment:
 
     # Everything a reset replaces together; restored as a unit if a reset fails.
     _RUN_STATE = ("store", "provider", "scenario", "events", "stage", "seed_checks", "_attached",
-                  "conversation_id")
+                  "conversation_id", "rebuild")
 
     def __init__(self, db_path: str | Path = ":memory:", model: str | None = None) -> None:
         self.path = str(db_path)
@@ -63,6 +65,10 @@ class Experiment:
         self.seed_checks: list[dict[str, Any]] = []
         # Random per reset; groups this experiment's traces. Never derived from content.
         self.conversation_id: str | None = None
+        # The latest cascade rebuild's outcome: not_attempted, succeeded or failed. Operational
+        # state, not assistant memory, and kept apart from the bounded event window so that an
+        # unresolved failure stays visible however many events follow it.
+        self.rebuild: dict[str, Any] = dict(NO_REBUILD)
 
     def _event(self, name: str, result: dict[str, Any] | None = None, **details: Any) -> None:
         result = result or {}
@@ -155,6 +161,7 @@ class Experiment:
                 self.store = candidate
                 self.provider = self.live if mode == "live" else FixtureProvider()
                 self.events, self.seed_checks, self.stage = [], [], "seeding"
+                self.rebuild = dict(NO_REBUILD)
                 self.conversation_id = uuid.uuid4().hex
                 telemetry.set_conversation(self.conversation_id)
                 with telemetry.span("ghostcache.reset", "reset experiment", {"ghostcache.mode": mode}):
@@ -222,6 +229,7 @@ class Experiment:
             self._close_all([self.store])
             self.store, self._attached = Store(), False
             self.scenario, self.events, self.seed_checks = {}, [], []
+            self.rebuild = dict(NO_REBUILD)
             self.stage = "storage_failed"
             raise StorageError(StorageError.MESSAGE) from exc
 
@@ -264,8 +272,9 @@ class Experiment:
                              "active_provider": self.provider.model},
                 "artifacts": self.store.list_artifacts(), "graph": self.store.lineage(),
                 "audit": self.store.audit(self.scenario.get("canary")),
-                "scenario": self.scenario, "events": self.events[-50:],
+                "scenario": self.scenario, "events": self.events[-EVENT_WINDOW:],
                 "seed_checks": self.seed_checks,
+                "rebuild": {k: list(v) if isinstance(v, list) else v for k, v in self.rebuild.items()},
                 "summary": "Controlled five-document testbed. Source-only deletion is intentionally incomplete; this is not a third-party vulnerability claim.",
             }
 
@@ -333,11 +342,22 @@ class Experiment:
                     if roots and result["affected_ids"]:
                         replacement_id = f"s-rebuilt-{self.generation_number}-{len(self.events)}"
                         try:
-                            self._summary(replacement_id, "Rebuilt from surviving sources", roots)
+                            rebuilt = self._summary(replacement_id, "Rebuilt from surviving sources", roots)
                         except ProviderError as exc:
                             self._event("summary.rebuild_failed", error_type=type(exc).__name__)
                             # Do not silently insert fixture output into a live run.
                             result["rebuild_error"] = str(exc)
+                            # A fixed category only: never the message, response or context.
+                            self.rebuild = {"status": "failed", "parent_ids": list(roots),
+                                            "error_category": error_category(exc)}
+                        except Exception:
+                            # Still a newer, unresolved failure: an older success must not stand.
+                            self.rebuild = {"status": "failed", "parent_ids": list(roots),
+                                            "error_category": "not_stored"}
+                            raise
+                        else:
+                            self.rebuild = {"status": "succeeded", "artifact_id": rebuilt["id"],
+                                            "parent_ids": list(roots)}
                 else:
                     raise ValueError("Deletion mode must be source_only or cascade.")
                 affected = len(result["affected_ids"])
