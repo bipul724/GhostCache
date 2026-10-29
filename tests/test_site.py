@@ -22,6 +22,7 @@ PAGES = ("index.html", "walkthrough.html", "method.html", "run.html")
 SCRIPTS = ("site.js", "home.js", "walkthrough.js", "method.js")
 # The only external destinations the public pages link to.
 EXTERNAL = ("https://github.com/bipul724/GhostCache", "https://ollama.com",
+            "https://ghostcache.bipulchamoli.tech/", "https://ghostcache-walkthrough.onrender.com/",
             "https://dev.to/vectorlinklabs/stale-rag-vs-expensive-rag-how-to-cache-rag-context-without-serving-outdated-answers-335f",
             "https://dev.to/fusionaldev/where-retrieval-assistants-leak-the-title-the-summary-and-the-cache-4po4")
 
@@ -32,6 +33,7 @@ class LocalRefs(HTMLParser):
     def __init__(self):
         super().__init__()
         self.refs, self.ids, self.nav, self.blocked = [], set(), [], []
+        self.text = []
         self.h1 = 0
         self.current = []
         self._in_nav = 0
@@ -61,6 +63,9 @@ class LocalRefs(HTMLParser):
     def handle_endtag(self, tag):
         if tag == "nav":
             self._in_nav -= 1
+
+    def handle_data(self, data):
+        self.text.append(data)
 
 
 def parse(path):
@@ -233,6 +238,26 @@ class PublicSafetyTests(unittest.TestCase):
                     self.assertTrue((SITE / target).is_file(), ref)
                     if anchor:
                         self.assertIn(anchor, pages[target].ids, f"{target} has no id {anchor!r}")
+
+        # Current project evidence is kept outside the immutable recorded-result tables.
+        method = (SITE / "method.html").read_text(encoding="utf-8")
+        section = re.search(r'<section\b[^>]*\bid="project-evidence"[^>]*>(.*?)</section>', method, re.DOTALL)
+        self.assertIsNotNone(section, "the current project evidence needs its own section")
+        evidence = LocalRefs()
+        evidence.feed(section.group(1))
+        repo = "https://github.com/bipul724/GhostCache"
+        for source in ("/blob/main/TESTING.md", "/blob/main/CATEGORIES.md", "/actions",
+                       "/tree/main/screenshots/custom-domain-2026-10-29"):
+            self.assertTrue(any(ref.startswith(repo + source) for ref in evidence.refs), source)
+        self.assertRegex(" ".join(evidence.text).lower(), r"intended[\s,]+not entered")
+
+        # Match the published list to the accepted category scope, rather than pinning stale copy.
+        category_list = re.search(r'<ul\b[^>]*\bid="intended-categories"[^>]*>(.*?)</ul>', section.group(1), re.DOTALL)
+        self.assertIsNotNone(category_list, "the five intended categories must be inspectable without JavaScript")
+        scope = (ROOT / "CATEGORIES.md").read_text(encoding="utf-8").split("## Current scope", 1)[1].split("### ", 1)[0]
+        expected = re.findall(r"^\|\s*\*\*(.+?)\*\*\s*\|", scope, re.MULTILINE)
+        self.assertTrue(expected, "CATEGORIES.md must declare its current scope")
+        self.assertEqual(expected, re.findall(r"<strong>([^<]+)</strong>", category_list.group(1)))
 
     def test_pages_share_navigation_and_landmarks(self):
         for page in PAGES:
