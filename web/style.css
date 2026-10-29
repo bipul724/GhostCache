@@ -4,7 +4,7 @@
 :root{color-scheme:light;
 --gc-canvas:#FAFAF8;--gc-surface:#FFFFFF;--gc-paper:#FCFCFA;--gc-sunken:#F3F3F0;
 --gc-ink:#20202A;--gc-ink-2:#646474;--gc-line:#E6E6EB;--gc-line-2:#D3D3DB;--gc-quiet:#8E8E9E;
---gc-violet:#6854D9;--gc-violet-ink:#5141BE;--gc-violet-wash:#F1EFFC;--gc-violet-line:#CBC3F4;
+--gc-violet:#2563EB;--gc-violet-ink:#1E40AF;--gc-violet-wash:#EFF6FF;--gc-violet-line:#BFDBFE;
 --gc-teal:#237665;--gc-teal-wash:#E8F3F0;--gc-teal-line:#A8CFC5;
 --gc-amber:#8C5A00;--gc-amber-mark:#C98416;--gc-amber-glow:#F0B95A;--gc-amber-wash:#FBF3E1;--gc-amber-line:#E8C88C;
 --gc-terra:#A54B33;--gc-terra-wash:#F9EDE8;--gc-terra-line:#E3B5A6;
@@ -188,8 +188,8 @@ code,pre{font-family:var(--gc-mono)}
 .deletion-warning{margin-top:14px;padding:10px 12px;border-left:3px solid var(--gc-amber-mark);border-radius:0 var(--gc-radius-sm) var(--gc-radius-sm) 0;background:var(--gc-amber-wash);font-size:13px}
 .deletion-warning strong{color:var(--gc-amber)}
 .deletion-warning p{margin-top:3px}
-.btn-verify{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:46px;margin-top:16px;border:0;border-radius:var(--gc-radius);background:var(--gc-violet);color:#fff;font-size:14.5px;font-weight:650;box-shadow:0 10px 22px -14px rgba(104,84,217,.9);transition:background var(--gc-fast) var(--gc-ease)}
-.btn-verify:hover:not(:disabled){background:var(--gc-violet-ink)}
+.btn-verify{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:46px;margin-top:16px;border:0;border-radius:var(--gc-radius);background:var(--gc-violet);color:#fff;font-size:14.5px;font-weight:650;box-shadow:0 10px 22px -14px rgba(37,99,235,.9);transition:background var(--gc-fast) var(--gc-ease)}
+.btn-verify:hover:not(:disabled){background:#1D4ED8}
 .btn-verify svg{width:18px;height:18px}
 .scope-note{margin-top:14px;padding-top:12px;border-top:1px solid var(--gc-line);font-size:12.5px;color:var(--gc-ink-2)}
 .stage-status{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:11px 14px;border:1px solid var(--gc-line);border-left:3px solid var(--gc-quiet);border-radius:var(--gc-radius);background:var(--gc-surface);font-size:14px;transition:background var(--gc-slow) var(--gc-ease),border-color var(--gc-slow) var(--gc-ease)}
