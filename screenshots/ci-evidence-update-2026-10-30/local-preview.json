@@ -1,0 +1,734 @@
+{
+  "checkedAt": "2026-10-29T19:32:32.431Z",
+  "browser": "Chrome/156.0.8078.73",
+  "origin": "http://127.0.0.1:8894",
+  "height": 812,
+  "widths": [
+    320,
+    360,
+    375,
+    390,
+    414,
+    768,
+    980,
+    981,
+    1280
+  ],
+  "emulation": "Emulation.setDeviceMetricsOverride, deviceScaleFactor 1, mobile false (classic scrollbars)",
+  "summary": {
+    "measurements": 36,
+    "overflowing": 0,
+    "problems": 0
+  },
+  "evidence": {
+    "eyebrow": "07 · Current project evidence · October 30, 2026",
+    "githubActions": "GitHub ActionsArchived CI evidence: run #17 on 00cfb10The workflow runs the offline regression tests and a fresh fixture evaluation, then uploads that evaluation's report. The report downloaded from hosted run #3 ↗ passed 10/10 checks with the earlier 62-test suite. Hosted run #16 ↗ on commit f66977d and run #17 ↗ on commit 00cfb10 reported success for every step. Both uploaded reports are archived, each matching GitHub's artifact digest: each is a deterministic fixture evaluation, with no model call, that passed all ten checks. Commit 00cfb10 contains the October 29 content refresh and the failed-mode-switch fix, so run #17 tested them; it did not test later commits, including this October 30 update. Neither run's log was read, so the number of tests run on GitHub is unverified. Run #16 evidence ↗ · Run #17 evidence ↗ · Workflow ↗ · Run history ↗",
+    "githubLinks": [
+      {
+        "text": "run #3 ↗",
+        "href": "https://github.com/bipul724/GhostCache/actions/runs/40573873485"
+      },
+      {
+        "text": "run #16 ↗",
+        "href": "https://github.com/bipul724/GhostCache/actions/runs/40867758385"
+      },
+      {
+        "text": "run #17 ↗",
+        "href": "https://github.com/bipul724/GhostCache/actions/runs/40922048949"
+      },
+      {
+        "text": "Run #16 evidence ↗",
+        "href": "https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-16-2026-10-29"
+      },
+      {
+        "text": "Run #17 evidence ↗",
+        "href": "https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-17-2026-10-29"
+      },
+      {
+        "text": "Workflow ↗",
+        "href": "https://github.com/bipul724/GhostCache/blob/main/.github/workflows/checks.yml"
+      },
+      {
+        "text": "Run history ↗",
+        "href": "https://github.com/bipul724/GhostCache/actions"
+      }
+    ],
+    "localSuite": "Local regression suite126 tests passedThe latest local check, on October 30, passed all 126 tests with Node and the optional Sentry SDK installed. Without the SDK, six telemetry tests skip. This tests storage, provenance, model-error handling, HTTP boundaries and UI behaviour; it is separate from each recorded run's ten evaluation checks. Test record ↗",
+    "staleNotDownloaded": false,
+    "saysLatestHostedRun": false
+  },
+  "labels": {
+    "index.html": {
+      "recordedGemmaNoLive": true,
+      "footerNoLiveInference": true,
+      "recordBar": null
+    },
+    "walkthrough.html": {
+      "recordedGemmaNoLive": true,
+      "footerNoLiveInference": false,
+      "recordBar": "Recorded evaluation · No live inference"
+    },
+    "method.html": {
+      "recordedGemmaNoLive": false,
+      "footerNoLiveInference": true,
+      "recordBar": null
+    },
+    "run.html": {
+      "recordedGemmaNoLive": false,
+      "footerNoLiveInference": true,
+      "recordBar": null
+    }
+  },
+  "runGuide": "Latest local verification, October 30, 2026: 126 tests passed with Node and the optional Sentry SDK installed. Without the SDK, the suite still runs 126 tests with six telemetry tests skipped. These are regression tests, separate from a recorded evaluation's ten checks. Current project evidence",
+  "controls": [
+    {
+      "width": 375,
+      "steps": [
+        {
+          "action": "initial",
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "01Seeded memory",
+          "stageTitle": "One secret, many copies.",
+          "view": "list",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click second run",
+          "clicked": true,
+          "run": "warm",
+          "runSource": "Source report: results/sentry-live-warm.json · SHA-256 828c5e498fac… · passed",
+          "stageTab": "01Seeded memory",
+          "stageTitle": "One secret, many copies.",
+          "view": "list",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click third run",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "01Seeded memory",
+          "stageTitle": "One secret, many copies.",
+          "view": "list",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click fourth stage tab",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "04Cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "view": "list",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click next stage",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "05Verified",
+          "stageTitle": "Gone, and nothing else lost.",
+          "view": "list",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click previous stage",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "04Cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "view": "list",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click list view",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "04Cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "view": "list",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click diagram view",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "04Cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "view": "diagram",
+          "runOptions": 3,
+          "stageTabs": 5
+        }
+      ],
+      "afterInteraction": {
+        "scrollWidth": 360,
+        "clientWidth": 360
+      }
+    },
+    {
+      "width": 1280,
+      "steps": [
+        {
+          "action": "initial",
+          "run": "cold",
+          "runSource": "Source report: results/sentry-live-cold.json · SHA-256 d46bd854eecb… · passed",
+          "stageTab": "01Seeded memory",
+          "stageTitle": "One secret, many copies.",
+          "view": "diagram",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click second run",
+          "clicked": true,
+          "run": "warm",
+          "runSource": "Source report: results/sentry-live-warm.json · SHA-256 828c5e498fac… · passed",
+          "stageTab": "01Seeded memory",
+          "stageTitle": "One secret, many copies.",
+          "view": "diagram",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click third run",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "01Seeded memory",
+          "stageTitle": "One secret, many copies.",
+          "view": "diagram",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click fourth stage tab",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "04Cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "view": "diagram",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click next stage",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "05Verified",
+          "stageTitle": "Gone, and nothing else lost.",
+          "view": "diagram",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click previous stage",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "04Cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "view": "diagram",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click list view",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "04Cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "view": "list",
+          "runOptions": 3,
+          "stageTabs": 5
+        },
+        {
+          "action": "click diagram view",
+          "clicked": true,
+          "run": "oct27",
+          "runSource": "Source report: results/live-gemma.json · SHA-256 1146258ea99b… · passed",
+          "stageTab": "04Cleanup",
+          "stageTitle": "Follow the trail, clear every copy.",
+          "view": "diagram",
+          "runOptions": 3,
+          "stageTabs": 5
+        }
+      ],
+      "afterInteraction": {
+        "scrollWidth": 1265,
+        "clientWidth": 1265
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "method-project-evidence-375.png",
+      "width": 375,
+      "clip": {
+        "x": 0,
+        "y": 8483.765625,
+        "width": 360,
+        "height": 3166.40625
+      }
+    },
+    {
+      "name": "method-project-evidence-1280.png",
+      "width": 1280,
+      "clip": {
+        "x": 0,
+        "y": 5437.328125,
+        "width": 1265,
+        "height": 1787.75
+      }
+    }
+  ],
+  "problems": [],
+  "layout": [
+    {
+      "page": "index.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "index.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "index.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "index.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "index.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "index.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "index.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "index.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "index.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "walkthrough.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "method.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 320,
+      "height": 812,
+      "scrollWidth": 305,
+      "clientWidth": 305,
+      "bodyScrollWidth": 305,
+      "innerWidth": 320,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 360,
+      "height": 812,
+      "scrollWidth": 345,
+      "clientWidth": 345,
+      "bodyScrollWidth": 345,
+      "innerWidth": 360,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 375,
+      "height": 812,
+      "scrollWidth": 360,
+      "clientWidth": 360,
+      "bodyScrollWidth": 360,
+      "innerWidth": 375,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 390,
+      "height": 812,
+      "scrollWidth": 375,
+      "clientWidth": 375,
+      "bodyScrollWidth": 375,
+      "innerWidth": 390,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 414,
+      "height": 812,
+      "scrollWidth": 399,
+      "clientWidth": 399,
+      "bodyScrollWidth": 399,
+      "innerWidth": 414,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 768,
+      "height": 812,
+      "scrollWidth": 753,
+      "clientWidth": 753,
+      "bodyScrollWidth": 753,
+      "innerWidth": 768,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 980,
+      "height": 812,
+      "scrollWidth": 965,
+      "clientWidth": 965,
+      "bodyScrollWidth": 965,
+      "innerWidth": 980,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 981,
+      "height": 812,
+      "scrollWidth": 966,
+      "clientWidth": 966,
+      "bodyScrollWidth": 966,
+      "innerWidth": 981,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    },
+    {
+      "page": "run.html",
+      "width": 1280,
+      "height": 812,
+      "scrollWidth": 1265,
+      "clientWidth": 1265,
+      "bodyScrollWidth": 1265,
+      "innerWidth": 1280,
+      "csp": [],
+      "scrollbar": 15,
+      "overflow": false
+    }
+  ]
+}
