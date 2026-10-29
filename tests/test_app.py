@@ -142,6 +142,23 @@ class ExperimentTests(unittest.TestCase):
         self.assertEqual([], again["deletion"]["affected_ids"])
         self.assertEqual(before, self.app.store.list_artifacts())
 
+    def test_failed_rebuild_stays_in_the_ledger_after_repeated_cleanup(self):
+        # The lab reads an unresolved rebuild failure from the state's ledger, so the record must outlive
+        # the deletion response: a repeated cleanup purges nothing and does not retry the rebuild.
+        self.app.live = ScriptedLive(fail_on=("summary", 4))  # three seeding summaries, then the rebuild
+        self.app.reset("live")
+        cleaned = self.app.delete("cascade")
+        self.assertIn("rebuild_error", cleaned["deletion"])
+        self.assertEqual(["delete.propagated", "summary.rebuild_failed"], [e["name"] for e in cleaned["events"][-2:]])
+        self.assertEqual("ProviderError", cleaned["events"][-1]["error_type"])
+        again = self.app.delete("cascade")
+        self.assertEqual([], again["deletion"]["affected_ids"])
+        self.assertNotIn("rebuild_error", again["deletion"])
+        state = self.app.state()
+        self.assertEqual(["summary.rebuild_failed", "delete.propagated"], [e["name"] for e in state["events"][-2:]])
+        self.assertFalse(any(a["id"].startswith("s-rebuilt") for a in state["artifacts"]))
+        self.assertEqual(4, self.app.live.calls.count("summary"))
+
     def test_live_request_never_silently_uses_fixture(self):
         with self.assertRaises(ProviderError):
             self.app.reset("live")
@@ -528,6 +545,131 @@ class PublicationTests(TempDatabaseCase):
             other.close()
             self.assertEqual([app.store._conn], [c for _, c in opened if not c.closed])
         self.assertEqual(b"not a database " * 64, bogus.read_bytes())
+
+
+EVENT_WINDOW = 50  # /api/state returns only the latest 50 events
+
+
+class RebuildOutcomeTests(TempDatabaseCase):
+    """The current rebuild outcome is authoritative state, not a scan of the bounded event window.
+
+    Every failure here is simulated with ScriptedLive (a deterministic stand-in that raises
+    ProviderError on a chosen call); none of this is live Gemma verification.
+    """
+
+    def fail_rebuild(self, fail_on=("summary", 4)):
+        # Seeding makes three summaries, so call 4 is the cascade's rebuild.
+        self.app.live = ScriptedLive(fail_on=fail_on)
+        self.app.reset("live")
+        return self.app.delete("cascade")
+
+    def reappear(self, artifact_id="c-vault"):
+        """Simulate a purged copy reappearing, so a later cascade has rows to purge and rebuilds
+        through the real controller path. No API produces this; it only makes a second rebuild reachable."""
+        with self.app.store._conn:
+            self.app.store._conn.execute("UPDATE artifacts SET body = 'reappeared copy' WHERE id = ?", (artifact_id,))
+
+    def assert_unresolved(self, state, roots):
+        self.assertEqual({"status": "failed", "parent_ids": roots, "error_category": "invalid_output"},
+                         state["rebuild"])
+
+    def test_failed_rebuild_is_in_state_without_its_message_or_content(self):
+        cleaned = self.fail_rebuild()
+        roots = cleaned["deletion"]["retained_root_ids"]
+        self.assertTrue(roots)
+        self.assert_unresolved(cleaned, roots)
+        self.assert_unresolved(self.app.state(), roots)
+        # The purge itself stands and no fixture text replaced the failed rebuild.
+        self.assertEqual(("cleaned", 0, 0), (cleaned["stage"], cleaned["audit"]["matched_canary"],
+                                             cleaned["audit"]["stale_descendants"]))
+        self.assertFalse(any(a["id"].startswith("s-rebuilt") for a in cleaned["artifacts"]))
+        text = str(cleaned["rebuild"])
+        for private in ("scripted", self.app.scenario["canary"], "Traceback", "observatory"):
+            self.assertNotIn(private, text)
+
+    def test_failure_outlives_the_event_window(self):
+        roots = self.fail_rebuild()["deletion"]["retained_root_ids"]
+        later = 0
+        for checkpoint in (49, 50, 51, 100, 120):
+            while later < checkpoint:
+                self.app.ask(QUESTIONS["retained"], persist=False)
+                later += 1
+            with self.subTest(later_events=later):
+                state = self.app.state()
+                self.assertEqual(EVENT_WINDOW, len(state["events"]))
+                names = [e["name"] for e in state["events"]]
+                # The failure event is evicted once 50 events follow it; the outcome is not.
+                self.assertEqual(later < EVENT_WINDOW, "summary.rebuild_failed" in names)
+                self.assert_unresolved(state, roots)
+
+    def test_thirteen_verifications_keep_the_failure(self):
+        roots = self.fail_rebuild()["deletion"]["retained_root_ids"]
+        for _ in range(13):
+            result = self.app.verify()
+        state = self.app.state()
+        self.assertNotIn("summary.rebuild_failed", [e["name"] for e in state["events"]])
+        self.assertEqual(EVENT_WINDOW, len(state["events"]))
+        self.assert_unresolved(state, roots)
+        self.assert_unresolved(result["state"], roots)
+
+    def test_repeated_cleanup_with_nothing_to_purge_keeps_the_failure(self):
+        roots = self.fail_rebuild()["deletion"]["retained_root_ids"]
+        again = self.app.delete("cascade")
+        self.assertEqual([], again["deletion"]["affected_ids"])
+        self.assertNotIn("rebuild_error", again["deletion"])
+        self.assert_unresolved(again, roots)
+        self.assertEqual(4, self.app.live.calls.count("summary"), "repeating cleanup does not retry the rebuild")
+
+    def test_successful_reset_starts_with_no_rebuild(self):
+        self.fail_rebuild()
+        self.assertEqual({"status": "not_attempted"}, self.app.reset("live")["rebuild"])
+        self.assertEqual({"status": "not_attempted"}, self.app.reset()["rebuild"])
+
+    def test_failed_reset_keeps_the_previous_experiment_and_its_failure(self):
+        roots = self.fail_rebuild(fail_on=("summary", 4))["deletion"]["retained_root_ids"]
+        canary = self.app.scenario["canary"]
+        self.app.live.fail_on = ("summary", 5)  # the next reset's first seeding summary
+        with self.assertRaises(ProviderError):
+            self.app.reset("live")
+        state = self.app.state()
+        self.assertEqual(("cleaned", canary), (state["stage"], state["scenario"]["canary"]))
+        self.assert_unresolved(state, roots)
+
+    def test_storage_failed_discards_the_failure(self):
+        self.fail_rebuild()
+        failure = sqlite3.OperationalError("injected storage failure")
+        with patch.object(Store, "replace_contents", side_effect=failure), \
+                patch.object(Store, "check_writable", side_effect=failure):
+            with self.assertRaises(StorageError):
+                self.app.reset()
+        state = self.app.state()
+        self.assertEqual(("storage_failed", {"status": "not_attempted"}), (state["stage"], state["rebuild"]))
+        self.assertEqual({"status": "not_attempted"}, self.app.reset()["rebuild"])
+
+    def test_a_later_successful_rebuild_resolves_the_failure(self):
+        roots = self.fail_rebuild(fail_on=("summary", 4))["deletion"]["retained_root_ids"]
+        self.reappear()
+        cleaned = self.app.delete("cascade")
+        self.assertEqual(["c-vault"], cleaned["deletion"]["affected_ids"])
+        rebuilt = cleaned["rebuild"]
+        self.assertEqual({"status": "succeeded", "parent_ids": roots}, {k: rebuilt[k] for k in ("status", "parent_ids")})
+        stored = self.app.store.get_artifact(rebuilt["artifact_id"])
+        self.assertEqual(("summary", "active", roots), (stored["kind"], stored["status"], stored["parent_ids"]))
+        self.assertEqual(rebuilt, self.app.state()["rebuild"])
+
+    def test_a_newer_failure_supersedes_an_older_success(self):
+        first = self.fail_rebuild(fail_on=("summary", 5))  # rebuild 4 succeeds, rebuild 5 fails
+        self.assertEqual("succeeded", first["rebuild"]["status"])
+        older = first["rebuild"]["artifact_id"]
+        self.reappear()
+        second = self.app.delete("cascade")
+        self.assertIn("rebuild_error", second["deletion"])
+        self.assertEqual("failed", second["rebuild"]["status"])
+        # The older rebuilt summary is still stored; it must not stand in for the newer outcome.
+        self.assertEqual("active", self.app.store.get_artifact(older)["status"])
+        for _ in range(60):
+            self.app.ask(QUESTIONS["shared"], persist=False)
+        self.assertEqual("failed", self.app.state()["rebuild"]["status"])
 
 
 if __name__ == "__main__":

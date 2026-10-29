@@ -11,7 +11,7 @@ from unittest.mock import patch
 
 from ghostcache.__main__ import make_handler
 from ghostcache.app import Experiment, StorageError
-from ghostcache.providers import OllamaProvider
+from ghostcache.providers import OllamaProvider, ProviderError
 from ghostcache.store import Store
 
 SENTINEL = "SENTINEL-not-a-real-key-7f3a"
@@ -104,6 +104,24 @@ class HTTPTests(HandlerCase):
         self.assertEqual(0, json.loads(body)["audit"]["matched_canary"])
         status, _, body = self.request("/api/verify", {})
         self.assertTrue(json.loads(body)["passed"])
+
+    def test_unresolved_rebuild_failure_survives_requests_and_reloads(self):
+        # Simulated failure: the fixture provider's rebuild raises; not live Gemma verification.
+        with patch.object(self.app.provider, "summarize", side_effect=ProviderError(SENTINEL)):
+            status, _, body = self.request("/api/delete", {"mode": "cascade"})
+        self.assertEqual((200, "failed"), (status, json.loads(body)["rebuild"]["status"]))
+        for _ in range(13):  # each verification records four answer events
+            self.assertEqual(200, self.request("/api/verify", {})[0])
+        self.assertEqual(200, self.request("/api/delete", {"mode": "cascade"})[0])
+        status, _, body = self.request("/api/state")  # what a page reload reads
+        state = json.loads(body)
+        self.assertEqual(50, len(state["events"]))
+        self.assertNotIn("summary.rebuild_failed", [e["name"] for e in state["events"]])
+        self.assertEqual({"status": "failed", "error_category": "invalid_output"},
+                         {k: state["rebuild"][k] for k in ("status", "error_category")})
+        self.assertNotIn(SENTINEL.encode(), body)
+        status, _, body = self.request("/api/reset", {"mode": "fixture"})
+        self.assertEqual({"status": "not_attempted"}, json.loads(body)["rebuild"])
 
     def test_cross_origin_and_dns_rebinding_requests_do_not_mutate(self):
         for headers in ({"Origin": "https://example.com"}, {"Host": "example.com"},
