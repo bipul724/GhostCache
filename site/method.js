@@ -1,6 +1,6 @@
 "use strict";
 // Methodology page: tables and timings read from data/evidence.json (loaded by site.js).
-// Every number here comes from the recorded reports; nothing is computed from a model.
+// Every number rendered by this script comes from the recorded reports; nothing is computed from a model.
 
 (function () {
   const GC = window.GC;

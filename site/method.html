@@ -32,7 +32,7 @@
       <div class="wrap">
         <p class="eyebrow">Evidence &amp; methodology</p>
         <h1>The paper trail.</h1>
-        <p class="lede">What the experiment demonstrates, how it was measured, and where its claims stop. Every result on this page is read from the same recorded reports as the walkthrough; the diagrams are labelled as drawings.</p>
+        <p class="lede">What the experiment demonstrates, how it was measured, and where its claims stop. The recorded experiment results come from the same saved reports as the walkthrough; the diagrams are labelled as drawings. Current project evidence is dated and linked separately below.</p>
       </div>
     </header>
 
@@ -46,7 +46,8 @@
           <li><a href="#balance"><span>04</span>Remove the secret, keep the facts</a></li>
           <li><a href="#timing"><span>05</span>Timing evidence</a></li>
           <li><a href="#limits"><span>06</span>Scope and limits</a></li>
-          <li><a href="#sources"><span>07</span>Reports and code</a></li>
+          <li><a href="#project-evidence"><span>07</span>Current project evidence</a></li>
+          <li><a href="#sources"><span>08</span>Reports and code</a></li>
         </ol>
       </nav>
 
@@ -176,8 +177,32 @@
           </ul>
         </section>
 
+        <section class="doc-section" id="project-evidence" aria-labelledby="project-evidence-title">
+          <p class="eyebrow">07 · Current project evidence · October 29, 2026</p>
+          <h2 id="project-evidence-title">The work behind the recorded runs.</h2>
+          <p>This is the project's development record, separate from the October 27–28 model results above. Updating the app does not change those saved answers, timings or checks.</p>
+          <dl class="reqs">
+            <div><dt>Local regression suite<small>126 tests passed</small></dt><dd>The latest October 29 local check passed all 126 tests with Node and the optional Sentry SDK installed. Without the SDK, six telemetry tests skip. This tests storage, provenance, model-error handling, HTTP boundaries and UI behaviour; it is separate from each recorded run's ten evaluation checks. <a href="https://github.com/bipul724/GhostCache/blob/main/TESTING.md">Test record ↗</a></dd></div>
+            <div><dt>Recorded Gemma runs<small>Three live evaluations</small></dt><dd>The October 27 run and October 28 cold and warm runs each passed 10/10 checks using <code>gemma4:e2b-it-qat</code> locally through Ollama. The walkthrough reads those same three reports. <a href="https://github.com/bipul724/GhostCache/tree/main/results">Saved reports ↗</a></dd></div>
+            <div><dt>GitHub Actions<small>Hosted CI evidence</small></dt><dd>The workflow runs offline tests and a fresh fixture evaluation. The report downloaded from hosted <a href="https://github.com/bipul724/GhostCache/actions/runs/40573873485">run #3 ↗</a> passed 10/10 checks with the earlier 62-test suite. The latest hosted run, <a href="https://github.com/bipul724/GhostCache/actions/runs/40867758385">run #16 ↗</a> on October 29, reported success for every step on commit <code>f66977d</code>; its report was not downloaded and its log was not read, so no hosted test count or check result is claimed for it. No hosted run has yet tested the changes made after that commit. <a href="https://github.com/bipul724/GhostCache/tree/main/screenshots/hosted-ci-run-16-2026-10-29">Run #16 evidence ↗</a> · <a href="https://github.com/bipul724/GhostCache/blob/main/.github/workflows/checks.yml">Workflow ↗</a> · <a href="https://github.com/bipul724/GhostCache/actions">Run history ↗</a></dd></div>
+            <div><dt>Sentry Agent Tracing<small>Real traces, metadata only</small></dt><dd>One fixture and two live evaluations sent traces on October 28. The first summarizer model-call (<code>chat</code>) span took 40.45 s cold and 2.28 s warm; loading is an inferred cause, not a measured load time. Another span showed the source-only leak through synthetic context IDs and a marker-present boolean, without sending the marker, document text or answers. <a href="https://github.com/bipul724/GhostCache#what-the-real-traces-showed">Two findings and screenshots ↗</a></dd></div>
+            <div><dt>Render and .tech<small>Public static walkthrough</small></dt><dd><a href="https://ghostcache.bipulchamoli.tech/">ghostcache.bipulchamoli.tech</a> points to the same Render static site as its <a href="https://ghostcache-walkthrough.onrender.com/">alternate address</a>. The saved checks show a verified hostname, an issued certificate and successful HTTPS responses. The owner's Hacktoberfest promo confirmation is supported by claimed-promo and registration screenshots; they do not show which code was applied. <a href="https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29">Domain and promo evidence ↗</a></dd></div>
+            <div><dt>Local lab recovery<small>Current controller state</small></dt><dd>An unresolved summary-rebuild warning survives a reload and later ledger events. Repeating cleanup does not retry a failed rebuild; reset starts a fresh experiment. If a cleanup request fails after the purge commits, the lab reads the server's state once, keeps the original error and does not repeat the deletion. If a mode switch fails, the run-mode menu returns to the experiment's confirmed mode. Unrestorable storage has a separate reset-to-recover state. <a href="run.html#troubleshooting">Recovery guidance</a></dd></div>
+          </dl>
+          <h3>Five intended categories</h3>
+          <ul class="limits" id="intended-categories">
+            <li><strong>Best Use of Gemma</strong><span>The local open-weight model generates summaries and answers.</span></li>
+            <li><strong>Best Use of GitHub Copilot</strong><span>Through GitHub Actions automation; no claim that Copilot wrote the project.</span></li>
+            <li><strong>Best Use of Sentry Agent Tracing</strong><span>Real metadata-only traces, screenshots and explained findings.</span></li>
+            <li><strong>Best Use of Render</strong><span>Hosting these static pages of recorded local evaluations.</span></li>
+            <li><strong>Best Use of a .tech Domain</strong><span>The public walkthrough uses the owner's Hacktoberfest-promo domain.</span></li>
+          </ul>
+          <p class="fine">These categories are intended, not entered: the DEV submission has not been published. Render's recorded-front-end interpretation and the .tech category's use of a subdomain are not organizer-confirmed eligibility. The promo-to-registration link rests on the owner's confirmation. <a href="https://github.com/bipul724/GhostCache/blob/main/CATEGORIES.md">Category evidence and limits ↗</a></p>
+          <p class="fine">Real-phone, second-browser and accessibility checks remain open. The demo video and DEV submission are still to be created. <a href="https://github.com/bipul724/GhostCache/blob/main/tasks.md">Remaining work ↗</a></p>
+        </section>
+
         <section class="doc-section" id="sources" aria-labelledby="sources-title">
-          <p class="eyebrow">07 · Reports and code</p>
+          <p class="eyebrow">08 · Reports and code</p>
           <h2 id="sources-title">Check the paper trail yourself.</h2>
           <ul class="link-grid">
             <li><a href="https://github.com/bipul724/GhostCache/tree/main/results"><strong>Saved reports ↗</strong><span>The recorded JSON reports and screenshots</span></a></li>
@@ -185,6 +210,11 @@
             <li><a href="https://github.com/bipul724/GhostCache/blob/main/ghostcache/app.py"><strong>The experiment controller ↗</strong><span>Seeding, questions, cleanup and the checks</span></a></li>
             <li><a href="https://github.com/bipul724/GhostCache/blob/main/EVALUATION.md"><strong>Evaluation protocol ↗</strong><span>The ten checks and how to read them</span></a></li>
             <li><a href="https://github.com/bipul724/GhostCache/blob/main/scripts/export_site_data.py"><strong>This site's data export ↗</strong><span>How reports become data/evidence.json</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache/blob/main/TESTING.md"><strong>Tests and verification ↗</strong><span>Current local suite and dated checks</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache#what-the-real-traces-showed"><strong>Sentry findings ↗</strong><span>Metadata-only traces and screenshots</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache/blob/main/CATEGORIES.md"><strong>Five intended categories ↗</strong><span>Working uses, evidence and limits</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29"><strong>Custom-domain evidence ↗</strong><span>Render status and saved HTTPS checks</span></a></li>
+            <li><a href="https://github.com/bipul724/GhostCache/tree/main/screenshots/custom-domain-2026-10-29/promo-claim"><strong>Domain-claim evidence ↗</strong><span>Claimed promo and registration confirmation</span></a></li>
             <li><a href="run.html"><strong>Run it locally</strong><span>Fixture and live Gemma setup</span></a></li>
           </ul>
           <h3>Prior work</h3>
@@ -206,6 +236,8 @@
       </div>
       <nav aria-label="Footer">
         <ul>
+          <li><a href="https://ghostcache.bipulchamoli.tech/">Live .tech site ↗</a></li>
+          <li><a href="https://ghostcache-walkthrough.onrender.com/">Render address ↗</a></li>
           <li><a href="./">Home</a></li>
           <li><a href="https://github.com/bipul724/GhostCache">Repository ↗</a></li>
           <li><a href="walkthrough.html">Recorded walkthrough</a></li>
@@ -214,7 +246,7 @@
           <li><a href="https://github.com/bipul724/GhostCache/blob/main/LICENSE">MIT license ↗</a></li>
         </ul>
       </nav>
-      <p class="site-footer__meta">Static site · recorded evidence only · no live inference, no storage, nothing deleted</p>
+      <p class="site-footer__meta">Static site · recorded runs and project evidence · no live inference, no storage, nothing deleted</p>
     </div>
   </footer>
 </body>
