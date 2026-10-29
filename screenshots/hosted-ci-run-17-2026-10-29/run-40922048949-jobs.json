@@ -1,0 +1,113 @@
+{
+  "total_count": 1,
+  "jobs": [
+    {
+      "id": 123617603513,
+      "run_id": 40922048949,
+      "workflow_name": "GhostCache deletion checks",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/bipul724/GhostCache/actions/runs/40922048949",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOVZp_Fc8AAAAcyC7vuQ",
+      "head_sha": "00cfb10667de5f73fc37734063909cc68eb026a8",
+      "url": "https://api.github.com/repos/bipul724/GhostCache/actions/jobs/123617603513",
+      "html_url": "https://github.com/bipul724/GhostCache/actions/runs/40922048949/job/123617603513",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-29T17:30:55Z",
+      "started_at": "2026-10-29T17:30:57Z",
+      "completed_at": "2026-10-29T17:31:10Z",
+      "name": "Tests and fresh synthetic evaluation",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-29T17:30:58Z",
+          "completed_at": "2026-10-29T17:30:59Z"
+        },
+        {
+          "name": "Check out the project",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-29T17:30:59Z",
+          "completed_at": "2026-10-29T17:31:02Z"
+        },
+        {
+          "name": "Set up Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-29T17:31:02Z",
+          "completed_at": "2026-10-29T17:31:02Z"
+        },
+        {
+          "name": "Check storage, provenance, and HTTP invariants",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-29T17:31:02Z",
+          "completed_at": "2026-10-29T17:31:04Z"
+        },
+        {
+          "name": "Evaluate a fresh synthetic deletion case",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-29T17:31:04Z",
+          "completed_at": "2026-10-29T17:31:05Z"
+        },
+        {
+          "name": "Retain the synthetic evaluation report",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-29T17:31:05Z",
+          "completed_at": "2026-10-29T17:31:06Z"
+        },
+        {
+          "name": "Check telemetry privacy with the optional Sentry SDK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-29T17:31:06Z",
+          "completed_at": "2026-10-29T17:31:07Z"
+        },
+        {
+          "name": "Post Set up Python 3.12",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-29T17:31:07Z",
+          "completed_at": "2026-10-29T17:31:08Z"
+        },
+        {
+          "name": "Post Check out the project",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-29T17:31:08Z",
+          "completed_at": "2026-10-29T17:31:08Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-29T17:31:08Z",
+          "completed_at": "2026-10-29T17:31:08Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/bipul724/GhostCache/check-runs/123617603513",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000420,
+      "runner_name": "GitHub Actions 1000000420",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}
