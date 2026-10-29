@@ -19,7 +19,7 @@ const MARKER = "MOTH-0123456789AB";
 class FakeNode {
   constructor(id = "") {
     this.id = id; this.children = []; this.textContent = ""; this.hidden = false; this.value = "";
-    this.disabled = false; this.style = {}; this.attrs = {}; this.className = ""; this.selectors = new Map();
+    this.disabled = false; this.style = {}; this.attrs = {}; this.className = ""; this.selectors = new Map(); this.listeners = {};
     const classes = new Set();
     this.classList = {
       toggle: (name, on) => ((on ?? !classes.has(name)) ? classes.add(name) : classes.delete(name)),
@@ -29,7 +29,12 @@ class FakeNode {
   append(...nodes) { this.children.push(...nodes); }
   replaceChildren(...nodes) { this.children = nodes; }
   setAttribute(key, value) { this.attrs[key] = value; }
-  addEventListener() {}
+  addEventListener(type, listener) { (this.listeners[type] ||= []).push(listener); }
+  // Runs the page's own handlers, as a user's input would; they start requests without awaiting them.
+  async dispatch(type) {
+    this.listeners[type].forEach((listener) => listener({preventDefault() {}}));
+    await new Promise((resolve) => setImmediate(resolve));
+  }
   querySelector(selector) {
     if (!this.selectors.has(selector)) this.selectors.set(selector, new FakeNode());
     return this.selectors.get(selector);
@@ -291,6 +296,7 @@ const CASES = {
 
   async graph_kinds_lineage_and_tombstones() {
     const h = await load(lineageState());
+    assert.strictEqual(h.byId("evaluator-retention").hidden, true, "the cleanup scope note is hidden before cleanup");
     const kinds = ["d-vault", "c-vault", "s-vault", CONVERSATION, "d-garden"].map((id) => /tnode--(\w+)/.exec(h.node(id).attrs.class)[1]);
     assert.deepStrictEqual(kinds, ["document", "chunk", "summary", "conversation", "document"]);
     // Selecting the chunk lights its ancestors and descendants, never the unrelated document.
@@ -306,6 +312,7 @@ const CASES = {
     h.nextDelete = lineageState({"d-vault": withdrawn, stage: "source_only", stale: ["c-vault", "s-vault", CONVERSATION],
                                  marker: ["c-vault", "s-vault", CONVERSATION]});
     await h.perform("source-only");
+    assert.strictEqual(h.byId("evaluator-retention").hidden, true, "source-only deletion has not completed cleanup");
     assert.strictEqual(h.node("c-vault"), drawn, "nodes are reused, so positions and transitions carry over");
     assert.ok(h.node("d-vault").classList.contains("is-removed") && h.node("d-vault").classList.contains("is-withdrawn"));
     assert.ok(h.node("c-vault").classList.contains("is-stale") && !h.node("c-vault").classList.contains("is-removed"));
@@ -314,6 +321,7 @@ const CASES = {
     h.nextDelete = lineageState({"d-vault": withdrawn, "c-vault": purged("chunk"), "s-vault": purged("summary"),
                                  [CONVERSATION]: purged("conversation"), stage: "cleaned", stale: [], marker: []});
     await h.perform("cascade");
+    assert.strictEqual(h.byId("evaluator-retention").hidden, false, "cleanup still retains evaluator evidence outside managed memory");
     for (const id of ["c-vault", "s-vault", CONVERSATION]) {
       assert.ok(h.node(id).classList.contains("is-purged") && !h.node(id).classList.contains("is-stale"), id);
     }
@@ -357,6 +365,7 @@ const CASES = {
     assert.strictEqual(h.byId("error-banner").textContent, message);
     assert.strictEqual(h.sent.filter((s) => s.route === "/api/state").length, 2, "state is reloaded after the 503");
     assert.strictEqual(h.byId("storage-failed").hidden, false);
+    assert.strictEqual(h.byId("evaluator-retention").hidden, true, "a discarded experiment has no confirmed cleanup state");
     assert.strictEqual(h.byId("step-count").textContent, "0 / 5");
     assert.ok(/failed/.test(h.byId("stage-status").className), h.byId("stage-status").className);
     // Nothing from the discarded experiment comes back: the server's empty ledger is authoritative.
@@ -372,6 +381,7 @@ const CASES = {
     h.state = makeState({events: [{name: "experiment.seeded", time: "10:00:00", mode: "fixture", provider: "fixture", documents: 5, baseline_exposed: true}]});
     await h.perform("reset");
     assert.strictEqual(h.byId("storage-failed").hidden, true);
+    assert.strictEqual(h.byId("evaluator-retention").hidden, true, "reset removes the previous cleanup note");
     assert.strictEqual(h.byId("ledger-count").textContent, "1 EVENT");
     assert.deepStrictEqual(ledgerTitles(h), ["Archive seeded"]);
     assert.strictEqual(h.byId("graph-nodes").children.length, 2);
@@ -384,6 +394,7 @@ const CASES = {
                     deletion: {source_id: "d-vault", affected_ids: ["d-vault", "c-vault"], retained_root_ids: ["d-garden"], rebuild_error: error}};
     await h.perform("cascade");
     let status = stageStatus(h);
+    assert.strictEqual(h.byId("evaluator-retention").hidden, false, "a failed rebuild does not undo the completed purge");
     assert.strictEqual(status.tone, "warn");
     for (const part of ["rebuild failed", error, "no fixture text was inserted", "1 source withdrawn and 3 descendants purged"]) assert.ok(status.words.includes(part), status.words);
     // Cleanup again: nothing is left to purge, so the server neither rebuilds nor reports rebuild_error.
@@ -398,6 +409,7 @@ const CASES = {
     h.state = liveSeeded();
     await h.perform("reset");
     status = stageStatus(h);
+    assert.strictEqual(h.byId("evaluator-retention").hidden, true);
     assert.notStrictEqual(status.tone, "warn", status.words);
     assert.ok(!status.words.includes("rebuild failed"), status.words);
   },
@@ -504,6 +516,7 @@ const CASES = {
     // The pre-cleanup answer and checks are not presented as results for the cleaned state.
     assert.strictEqual(h.byId("answer-content").hidden, true);
     assert.strictEqual(h.byId("checks-score").textContent, "NOT RUN");
+    assert.strictEqual(h.byId("evaluator-retention").hidden, false, "reconciliation confirmed the cleaned state despite the failed request");
     assert.ok(after.artifacts.some((a) => a.id === h.run("selectedId")));
     assertNotBusy(h);
     assertNoNullish(words);
@@ -530,6 +543,7 @@ const CASES = {
     assert.ok(words.includes("could not confirm the server's state") && !words.includes("Incomplete deletion") && !words.includes("Cleanup"), words);
     assert.strictEqual(h.byId("answer-content").hidden, true);
     assert.strictEqual(h.byId("checks-score").textContent, "NOT RUN");
+    assert.strictEqual(h.byId("evaluator-retention").hidden, true, "do not claim a confirmed cleanup when reconciliation failed");
     assertNotBusy(h);
     // Controls work again: a later successful read replaces the uncertainty with the server's state.
     h.state = lineageState({stage: "source_only", stale: ["c-vault", "s-vault"]});
@@ -565,6 +579,81 @@ const CASES = {
     assert.deepStrictEqual(h.sent.slice(sentBefore).map((s) => s.route), ["/api/ask"]);
     assert.strictEqual(h.byId("checks-score").textContent, "8 / 8 PASS");
     assert.strictEqual(h.byId("error-banner").hidden, false);
+    assertNotBusy(h);
+  },
+
+  async failed_mode_switch_keeps_the_confirmed_mode() {
+    // Fixture is confirmed and Live is offered; the user picks Live in the menu.
+    const fixture = () => makeState({provider: {...LIVE, mode: "fixture"}});
+    const h = await load(fixture());
+    await withResults(h);
+    const select = h.byId("mode-select");
+    const modeShown = () => ({menu: select.value, selected: h.run("selectedMode"), banner: h.byId("provider-title").textContent});
+    const confirmedFixture = {menu: "fixture", selected: "fixture", banner: "Fixture — deterministic simulation"};
+    // A live reset that fails before any change (the server keeps the fixture experiment): 502, no state read.
+    const error = "Local model call failed (timed out). No fixture fallback was used.";
+    h.fail = {route: "/api/reset", status: 502, reply: {error, mode: "fixture"}};
+    let sentBefore = h.sent.length;
+    select.value = "live";
+    await select.dispatch("change");
+    assert.deepStrictEqual(h.sent.slice(sentBefore), [{route: "/api/reset", body: {mode: "live"}}], "one request, not retried");
+    assert.strictEqual(h.byId("error-banner").textContent, error);
+    assert.deepStrictEqual(modeShown(), confirmedFixture, "the menu returns to the experiment's confirmed mode");
+    assert.strictEqual(h.byId("answer-content").hidden, false, "the unchanged experiment keeps its answer");
+    assert.strictEqual(h.byId("checks-score").textContent, "8 / 8 PASS");
+    assertNotBusy(h);
+    // The next Reset asks for the confirmed mode, not the one that failed.
+    sentBefore = h.sent.length;
+    await h.perform("reset");
+    assert.deepStrictEqual(h.sent.slice(sentBefore), [{route: "/api/reset", body: {mode: "fixture"}}]);
+
+    // A 503 whose state read also fails: the stale display is flagged, and the menu still matches it.
+    h.failures.push({route: "/api/reset", status: 503, reply: {error: "Experiment storage could not be restored; reset to recover."}},
+                    {route: "/api/state", reject: true});
+    select.value = "live";
+    await select.dispatch("change");
+    assert.ok(h.byId("error-banner").textContent.includes("could not reload the server's state"), h.byId("error-banner").textContent);
+    assert.ok(stageStatus(h).words.includes("could not confirm the server's state"), stageStatus(h).words);
+    assert.deepStrictEqual(modeShown(), confirmedFixture);
+    sentBefore = h.sent.length;
+    await h.perform("reset");
+    assert.deepStrictEqual(h.sent.slice(sentBefore), [{route: "/api/reset", body: {mode: "fixture"}}]);
+
+    // A 503 that leaves storage_failed: the server's restored provider decides the mode.
+    h.fail = {route: "/api/reset", status: 503, reply: {error: "Experiment storage could not be restored; reset to recover."}};
+    h.state = makeState({stage: "storage_failed", provider: {...LIVE, mode: "fixture"}, artifacts: [], graph: {nodes: [], edges: []}, scenario: {}, events: []});
+    select.value = "live";
+    await select.dispatch("change");
+    assert.strictEqual(h.byId("storage-failed").hidden, false);
+    assert.deepStrictEqual(modeShown(), confirmedFixture);
+    h.state = fixture();
+    sentBefore = h.sent.length;
+    await h.perform("reset");
+    assert.deepStrictEqual(h.sent.slice(sentBefore), [{route: "/api/reset", body: {mode: "fixture"}}]);
+    assert.strictEqual(h.byId("storage-failed").hidden, true);
+  },
+
+  async successful_mode_switch() {
+    const h = await load(makeState({provider: {...LIVE, mode: "fixture"}}));
+    const select = h.byId("mode-select");
+    h.state = liveSeeded();
+    select.value = "live";
+    await select.dispatch("change");
+    assert.strictEqual(h.byId("error-banner").hidden, true, h.byId("error-banner").textContent);
+    assert.deepStrictEqual([select.value, h.run("selectedMode"), h.byId("provider-title").textContent],
+                           ["live", "live", "Live Gemma — local model inference"]);
+    let sentBefore = h.sent.length;
+    await h.perform("reset");
+    assert.deepStrictEqual(h.sent.slice(sentBefore), [{route: "/api/reset", body: {mode: "live"}}], "Reset keeps the switched mode");
+    // And back to the fixture.
+    h.state = makeState({provider: {...LIVE, mode: "fixture"}});
+    select.value = "fixture";
+    await select.dispatch("change");
+    assert.deepStrictEqual([select.value, h.run("selectedMode"), h.byId("provider-title").textContent],
+                           ["fixture", "fixture", "Fixture — deterministic simulation"]);
+    sentBefore = h.sent.length;
+    await h.perform("reset");
+    assert.deepStrictEqual(h.sent.slice(sentBefore), [{route: "/api/reset", body: {mode: "fixture"}}]);
     assertNotBusy(h);
   },
 

@@ -98,6 +98,12 @@ class UIContractTests(NodeCase):
     def test_failed_question_does_not_read_state(self):
         self.run_case("failed_question_does_not_read_state")
 
+    def test_failed_mode_switch_keeps_the_confirmed_mode(self):
+        self.run_case("failed_mode_switch_keeps_the_confirmed_mode")
+
+    def test_successful_mode_switch(self):
+        self.run_case("successful_mode_switch")
+
     def test_paraphrase_fallback_matches_backend_question(self):
         # The no-state fallback in app.js must stay the controller's own paraphrase.
         self.assertIn(f"paraphrase:{json.dumps(QUESTIONS['paraphrase'])}",
