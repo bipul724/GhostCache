@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#FAFAF8">
-  <meta name="description" content="Run GhostCache's local lab: fixture mode with nothing installed, or live Gemma inference through Ollama. Requirements, commands and troubleshooting.">
+  <meta name="description" content="Run GhostCache's local lab: fixture mode with no extra Python packages, or live Gemma inference through Ollama. Requirements, tests, optional tracing and recovery guidance.">
   <title>Open the archive · Run GhostCache locally</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
@@ -31,7 +31,7 @@
       <div class="wrap">
         <p class="eyebrow">Run locally</p>
         <h1>Open the archive.</h1>
-        <p class="lede">This site can only replay what was recorded. To seed your own ghost, delete its source and watch it come back, run the local lab on your machine: in fixture mode with nothing installed, or with live Gemma through Ollama.</p>
+        <p class="lede">This site replays recorded runs and links their supporting project evidence. To seed your own ghost, delete its source and watch it come back, run the local lab on your machine: with Python and no extra packages in fixture mode, or with live Gemma through Ollama.</p>
       </div>
     </header>
 
@@ -43,8 +43,9 @@
           <li><a href="#fixture"><span>02</span>Fixture mode</a></li>
           <li><a href="#live"><span>03</span>Live Gemma mode</a></li>
           <li><a href="#evaluate"><span>04</span>Full evaluation and tests</a></li>
-          <li><a href="#modes"><span>05</span>What each mode does</a></li>
-          <li><a href="#troubleshooting"><span>06</span>Troubleshooting</a></li>
+          <li><a href="#tracing"><span>05</span>Optional Sentry tracing</a></li>
+          <li><a href="#modes"><span>06</span>What each mode does</a></li>
+          <li><a href="#troubleshooting"><span>07</span>Troubleshooting</a></li>
         </ol>
       </nav>
 
@@ -52,12 +53,12 @@
         <section class="doc-section" id="requirements" aria-labelledby="requirements-title">
           <p class="eyebrow">01 · Requirements</p>
           <h2 id="requirements-title">What you need.</h2>
-          <p>The core is standard-library Python with SQLite and a plain HTML, CSS and JavaScript front end. There is no build step and nothing to install for fixture mode.</p>
+          <p>The core is standard-library Python with SQLite and a plain HTML, CSS and JavaScript front end. There is no build step. Fixture mode needs Python, but no extra Python packages, model or network.</p>
           <dl class="reqs">
             <div><dt>Python<small>Required</small></dt><dd>Python 3.12 or newer (<code>requires-python = "&gt;=3.12"</code>). Verified with 3.12.6; newer versions are untested.</dd></div>
             <div><dt>Python packages<small>None</small></dt><dd>The core uses only the standard library. The optional <code>sentry-sdk==2.72.0</code> extra is needed only for metadata-only tracing.</dd></div>
             <div><dt>Ollama + Gemma<small>Live mode only</small></dt><dd><a href="https://ollama.com">Ollama</a> running locally with <code>gemma4:e2b-it-qat</code> pulled (about 4.3 GB). GhostCache calls it at the fixed local address shown below and nowhere else.</dd></div>
-            <div><dt>Node.js<small>Optional</small></dt><dd>Only for the JavaScript syntax checks and the UI contract tests that run the lab's script under Node; those skip without it.</dd></div>
+            <div><dt>Node.js<small>Optional for tests</small></dt><dd>Needed by 23 of the 24 lab UI tests and four public-site tests: 27 tests skip without Node. The remaining lab UI test is pure Python. Running the lab itself needs no Node or npm packages.</dd></div>
             <div><dt>Browser<small>Any recent</small></dt><dd>The lab is a single page served by the same local process. It works offline and loads no external assets.</dd></div>
           </dl>
         </section>
@@ -117,10 +118,24 @@ ollama pull gemma4:e2b-it-qat  # only if it is missing</pre></div>
 python3.12 -m ghostcache evaluate --mode live --model gemma4:e2b-it-qat --output results/my-live-run.json</pre></div>
           <p>The test suite runs offline, with no network or model:</p>
           <div class="command"><div class="command__head"><span class="command__label">Terminal</span><button class="copy-btn" type="button" data-copy-target="cmd-tests" aria-label="Copy the test command">Copy</button></div><pre id="cmd-tests">python3.12 -m unittest discover -s tests -v</pre></div>
+          <p class="fine">Latest local verification, October 29, 2026: 126 tests passed with Node and the optional Sentry SDK installed. Without the SDK, the suite still runs 126 tests with six telemetry tests skipped. These are regression tests, separate from a recorded evaluation's ten checks. <a href="method.html#project-evidence">Current project evidence</a></p>
+        </section>
+
+        <section class="doc-section" id="tracing" aria-labelledby="tracing-title">
+          <p class="eyebrow">05 · Optional Sentry tracing</p>
+          <h2 id="tracing-title">Trace the work without exporting the content.</h2>
+          <p>Tracing is off by default. The core needs no Sentry account or SDK. To send traces to your own project, install the optional SDK in a virtual environment and set your project's DSN explicitly; GhostCache does not load <code>.env</code> automatically.</p>
+          <div class="command"><div class="command__head"><span class="command__label">Terminal · replace the DSN placeholder</span><button class="copy-btn" type="button" data-copy-target="cmd-tracing" aria-label="Copy the optional tracing commands">Copy</button></div><pre id="cmd-tracing">python3.12 -m venv .venv
+.venv/bin/python -m pip install "sentry-sdk==2.72.0"
+export GHOSTCACHE_SENTRY_DSN="https://&lt;public-key&gt;@&lt;org&gt;.ingest.sentry.io/&lt;project-id&gt;"
+.venv/bin/python -m ghostcache evaluate --mode fixture --output results/my-traced-fixture-run.json</pre></div>
+          <p>Choose a report filename that does not already exist. With the SDK installed, run the full local suite with <code>.venv/bin/python -m unittest discover -s tests -v</code>. Node is still needed for the Node-based tests.</p>
+          <p>Allowed metadata includes model names, timings, token counts, synthetic artifact IDs and marker-present booleans. Document titles and bodies, prompts, questions, answers and the marker are excluded, and error events are dropped. The hosted walkthrough sends no Sentry traces. <a href="https://github.com/bipul724/GhostCache#optional-sentry-tracing">Tracing setup and privacy boundary ↗</a></p>
+          <p class="fine">Real traces from October 28 are already archived with two explained findings. Those historical traces are evidence, not a claim that tracing is enabled in your local run. <a href="method.html#project-evidence">View the project evidence</a></p>
         </section>
 
         <section class="doc-section" id="modes" aria-labelledby="modes-title">
-          <p class="eyebrow">05 · The two modes</p>
+          <p class="eyebrow">06 · The two modes</p>
           <h2 id="modes-title">Always labelled, never mixed.</h2>
           <div class="modes">
             <div class="mode-card">
@@ -128,7 +143,7 @@ python3.12 -m ghostcache evaluate --mode live --model gemma4:e2b-it-qat --output
               <h3>Fixture — deterministic simulation</h3>
               <ul>
                 <li>String rules write the summaries and answers; no model is called.</li>
-                <li>Works offline with nothing installed; CI uses it.</li>
+                <li>Works offline with Python and no extra packages; CI uses it.</li>
                 <li>A pass supports the storage, provenance, retrieval and preservation logic, not model behaviour.</li>
                 <li>Token counts are empty, because nothing is generated.</li>
               </ul>
@@ -147,11 +162,13 @@ python3.12 -m ghostcache evaluate --mode live --model gemma4:e2b-it-qat --output
         </section>
 
         <section class="doc-section" id="troubleshooting" aria-labelledby="troubleshooting-title">
-          <p class="eyebrow">06 · Troubleshooting</p>
+          <p class="eyebrow">07 · Troubleshooting</p>
           <h2 id="troubleshooting-title">When the archive won't open.</h2>
           <div class="trouble">
             <details class="disclosure"><summary><span>Live Gemma shows as unavailable<small class="symptom">Ollama is unavailable (connection failed). Fixture mode still works.</small></span></summary><div class="disclosure__body"><p>GhostCache checks Ollama's model list before offering live mode. Start Ollama, confirm that <code>ollama list</code> shows the model, then reload the lab. If the message reads <em>Install gemma4:e2b-it-qat in Ollama to enable live mode</em>, Ollama is running but the model isn't pulled. To use a different installed model, pass <code>--model</code> or set <code>GHOSTCACHE_MODEL</code>.</p></div></details>
-            <details class="disclosure"><summary><span>A live action fails with a model error<small class="symptom">Local model call failed (timed out). No fixture fallback was used.</small></span></summary><div class="disclosure__body"><p>A failed or malformed model response is reported, never replaced with fixture text. If seeding fails, the previous experiment stays current and nothing partial is published; if only the summary rebuild after cleanup fails, the cleanup itself stays complete and the lab says so. Errors name only a fixed category, such as <em>connection failed</em> or <em>timed out</em>, never the underlying text. Check that Ollama is still running and try again.</p></div></details>
+            <details class="disclosure"><summary><span>A live action fails with a model error<small class="symptom">Local model call failed (timed out). No fixture fallback was used.</small></span></summary><div class="disclosure__body"><p>A failed or malformed model response is reported, never replaced with fixture text. If seeding fails, the previous experiment stays current and nothing partial is published, and the run-mode menu returns to that experiment's mode, so the next reset does not repeat the failed one; if only the summary rebuild after cleanup fails, the cleanup itself stays complete and the lab says so. Errors name only a fixed category, such as <em>connection failed</em> or <em>timed out</em>, never the underlying text. Check that Ollama is still running and try again.</p></div></details>
+            <details class="disclosure"><summary><span>Cleanup finished, but the rebuilt summary failed<small class="symptom">The rebuild warning stays until the outcome is resolved.</small></span></summary><div class="disclosure__body"><p>The purge and summary rebuild have separate outcomes. A failed rebuild does not restore the purged content. The lab reads the controller's current rebuild outcome, so the warning survives a page reload, repeated cleanup and later events leaving the 50-event ledger window. Repeating cleanup does not retry the rebuild, because nothing is left to purge; reset starts a fresh experiment, which clears the outcome. It is in-memory controller state and does not survive a server restart; starting the server seeds a new experiment.</p></div></details>
+            <details class="disclosure"><summary><span>A failed cleanup request may still have changed the experiment<small class="symptom">The lab reads the server state back without repeating the deletion.</small></span></summary><div class="disclosure__body"><p>The purge can commit before storing a rebuilt summary fails. After any failed cleanup request, the lab fetches the current state once, keeps the original error and drops the old answer and checks if the experiment changed. If that read also fails, it says the state could not be confirmed and withdraws the old answer and checks. Read the resulting status before deciding what to do next; the lab does not automatically repeat the mutation.</p></div></details>
             <details class="disclosure"><summary><span>The page says the local lab is not connected<small class="symptom">Start the GhostCache server, then reload this page.</small></span></summary><div class="disclosure__body"><p>The lab's page needs the Python process that serves it. Start <code>python3.12 -m ghostcache serve</code> from the repository root and open the address it prints.</p></div></details>
             <details class="disclosure"><summary><span>The port is already in use<small class="symptom">Address already in use</small></span></summary><div class="disclosure__body"><p>If a GhostCache server is already running on that port, use its page. Otherwise choose another port with <code>--port</code>. Don't start a second server on the same port.</p></div></details>
             <details class="disclosure"><summary><span>The lab refuses the request from another hostname<small class="symptom">This prototype serves localhost only.</small></span></summary><div class="disclosure__body"><p>The server binds to the loopback address and accepts only <code>localhost</code> or <code>127.0.0.1</code> as the host, which protects against DNS rebinding. It is single-user and must not be exposed as a shared service.</p></div></details>
@@ -171,6 +188,8 @@ python3.12 -m ghostcache evaluate --mode live --model gemma4:e2b-it-qat --output
       </div>
       <nav aria-label="Footer">
         <ul>
+          <li><a href="https://ghostcache.bipulchamoli.tech/">Live .tech site ↗</a></li>
+          <li><a href="https://ghostcache-walkthrough.onrender.com/">Render address ↗</a></li>
           <li><a href="./">Home</a></li>
           <li><a href="https://github.com/bipul724/GhostCache">Repository ↗</a></li>
           <li><a href="walkthrough.html">Recorded walkthrough</a></li>
@@ -179,7 +198,7 @@ python3.12 -m ghostcache evaluate --mode live --model gemma4:e2b-it-qat --output
           <li><a href="https://github.com/bipul724/GhostCache/blob/main/LICENSE">MIT license ↗</a></li>
         </ul>
       </nav>
-      <p class="site-footer__meta">Static site · recorded evidence only · no live inference, no storage, nothing deleted</p>
+      <p class="site-footer__meta">Static site · recorded runs and project evidence · no live inference, no storage, nothing deleted</p>
     </div>
   </footer>
 </body>
