@@ -3,74 +3,137 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#151b1b">
-  <title>GhostCache · Follow the memory</title>
+  <meta name="theme-color" content="#FAFAF8">
+  <title>GhostCache · Local lab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M11 3H21L27 9V23a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V5a2 2 0 0 1 2-2Z' fill='%23CBC3F4'/%3E%3Cpath d='M6 7H16L22 13V27a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V9a2 2 0 0 1 2-2Z' fill='%2320202A'/%3E%3Cpath d='M16 7V11.5A1.5 1.5 0 0 0 17.5 13H22Z' fill='%23FAFAF8'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-  <div class="app-shell">
-    <header class="masthead">
-      <a class="brand" href="/" aria-label="GhostCache home">
-        <svg class="brand-ghost" viewBox="0 0 40 44" aria-hidden="true"><path d="M8 38V19a12 12 0 0 1 24 0v19l-6-4-6 4-6-4-6 4Z" fill="currentColor"/><path d="M15 20v4m10-4v4" stroke="#172020" stroke-width="3" stroke-linecap="round"/></svg>
-        <span>GhostCache<span class="brand-dot">.</span></span>
+  <a class="skip-link" href="#bench">Skip to the experiment</a>
+  <div class="lab">
+    <header class="lab-bar">
+      <a class="wordmark" href="/" aria-label="GhostCache local lab, reload">
+        <svg class="wordmark__svg" viewBox="0 0 168 32" aria-hidden="true" focusable="false"><g transform="translate(1 1)"><path class="emblem__after" d="M11 2H21L27 8V22a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V4a2 2 0 0 1 2-2Z"/><path class="emblem__body" d="M6 5H16L22 11V25a3 3 0 0 1-6 0a3 3 0 0 1-6 0a3 3 0 0 1-6 0V7a2 2 0 0 1 2-2Z"/><path class="emblem__fold" d="M16 5V9.5A1.5 1.5 0 0 0 17.5 11H22Z"/></g><text class="wordmark__text" x="37" y="23.5" textLength="128" lengthAdjust="spacing">GhostCache</text></svg>
       </a>
-      <div class="header-meta"><span class="local-label"><span class="status-dot"></span> Local experiment</span><span class="header-divider"></span><span class="edition">GHOST IN THE MACHINE / 2026</span></div>
-      <div class="mode-control"><label for="mode-select">RUN MODE</label><select id="mode-select"><option value="fixture">Controlled fixture</option><option value="live" disabled>Live Gemma · checking…</option></select></div>
+      <h1 class="lab-title">Local lab <span>· the working bench</span></h1>
+      <div class="lab-bar__tools">
+        <div class="mode-control"><label for="mode-select">Mode</label><select id="mode-select"><option value="fixture">Fixture — deterministic</option><option value="live" disabled>Live Gemma — checking…</option></select></div>
+        <button type="button" class="btn-quiet" data-action="reset"><span aria-hidden="true">↻</span> Reset</button>
+      </div>
     </header>
 
-    <section class="intro">
-      <div><p class="eyebrow"><span class="small-star">✳</span> A field guide to things an agent remembers</p><h1>Gone from the source.<br><span>Still in the machine.</span></h1></div>
-      <div class="intro-note"><p>Deleting a document is only the beginning.<br>Follow its echoes through an agent’s memory,<br>then clean up the trail.</p><span class="intro-index">01 — TRACE / DELETE / VERIFY</span></div>
+    <div id="provider-banner" class="provider-banner" role="status">
+      <span class="provider-banner__glyph" aria-hidden="true"></span>
+      <div class="provider-banner__text"><strong id="provider-title">Connecting to the local lab</strong><span id="provider-message">Loading the archive and its provenance.</span><span id="provider-availability" class="provider-banner__availability"></span></div>
+      <span id="model-label" class="model-label">LOCAL API</span>
+    </div>
+    <div id="error-banner" class="error-banner" role="alert" hidden></div>
+    <section id="storage-failed" class="storage-failed" hidden aria-labelledby="storage-failed-title">
+      <div><strong id="storage-failed-title">Experiment storage could not be restored.</strong><p>A reset failed and the database could not be verified as unchanged, so the lab cleared the experiment instead of serving a mismatched one. Reset to recover.</p></div>
+      <button type="button" class="btn-verify" data-action="reset">↻ Reset to recover</button>
     </section>
 
-    <div id="provider-banner" class="provider-banner" role="status"><span class="banner-symbol">◈</span><div><strong id="provider-title">Connecting to the local lab</strong><span id="provider-message">Loading the archive and its provenance.</span></div><span id="model-label" class="model-label">LOCAL API</span></div>
-    <div id="error-banner" class="error-banner" role="alert" hidden></div>
-
-    <main class="workspace">
-      <aside class="experiment-panel">
-        <div class="panel-heading"><p class="eyebrow">THE EXPERIMENT</p><span id="step-count" class="tiny-label">0 / 5</span></div>
-        <h2>Make a ghost.<br> Follow its trail.</h2>
-        <p class="panel-description">A fictional private detail, a few derived artifacts, and a deletion that doesn’t go far enough.</p>
-        <div class="steps" aria-label="Experiment steps">
-          <button class="step-button" data-action="seed"><span class="step-number">01</span><span><strong>Seed the archive</strong><small>Create a fresh, linked memory set</small></span><span class="step-check" aria-hidden="true"></span></button>
-          <button class="step-button" data-action="ask-secret"><span class="step-number">02</span><span><strong>Ask for the private detail</strong><small>See what the agent can retrieve</small></span><span class="step-check" aria-hidden="true"></span></button>
-          <button class="step-button" data-action="source-only"><span class="step-number">03</span><span><strong>Delete just the source</strong><small>Intentionally leave derived copies</small></span><span class="step-check" aria-hidden="true"></span></button>
-          <button class="step-button" data-action="inspect"><span class="step-number">04</span><span><strong>Look for the echo</strong><small>Ask again in different words</small></span><span class="step-check" aria-hidden="true"></span></button>
-          <button class="step-button" data-action="cascade"><span class="step-number">05</span><span><strong>Clean up the whole trail</strong><small>Propagate through descendants</small></span><span class="step-check" aria-hidden="true"></span></button>
-        </div>
-        <div id="deletion-warning" class="deletion-warning" hidden><strong>Incomplete deletion, on purpose.</strong><p>The original is removed. Derived artifacts may still contain its private detail. This is the failure we’re testing.</p></div>
-        <button id="verify-button" class="verify-button" data-action="verify"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 10 4 4 8-8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>Verify the cleanup<span>↗</span></button>
-        <button class="reset-button" data-action="reset">↻ &nbsp; Reset experiment</button>
-        <div class="scope-note"><span>⌁</span><p>Tests stored documents and memory.<br>Does not alter model weights.</p></div>
+    <main id="bench" class="bench">
+      <aside class="steps-panel" aria-labelledby="steps-title">
+        <div class="panel-head"><p class="eyebrow">The experiment</p><span id="step-count" class="count-tag">0 / 5</span></div>
+        <h2 id="steps-title" class="steps-title">Make a ghost. Follow its trail.</h2>
+        <p class="panel-note">A fictional secret, a few derived artifacts, and a deletion that doesn't go far enough.</p>
+        <ol class="steps" aria-label="Experiment steps">
+          <li><button type="button" class="step-button" data-action="seed"><span class="step-number">01</span><span class="step-text"><strong>Seed the archive</strong><small>Five documents and their derived memories</small></span><span class="step-check" aria-hidden="true"></span></button></li>
+          <li><button type="button" class="step-button" data-action="ask-secret"><span class="step-number">02</span><span class="step-text"><strong>Ask for the private detail</strong><small>See what the assistant can retrieve</small></span><span class="step-check" aria-hidden="true"></span></button></li>
+          <li><button type="button" class="step-button" data-action="source-only"><span class="step-number">03</span><span class="step-text"><strong>Delete just the source</strong><small>Deliberately leave derived copies</small></span><span class="step-check" aria-hidden="true"></span></button></li>
+          <li><button type="button" class="step-button" data-action="inspect"><span class="step-number">04</span><span class="step-text"><strong>Look for the echo</strong><small>Ask again in different words</small></span><span class="step-check" aria-hidden="true"></span></button></li>
+          <li><button type="button" class="step-button" data-action="cascade"><span class="step-number">05</span><span class="step-text"><strong>Clean up the whole trail</strong><small>Follow provenance through every descendant</small></span><span class="step-check" aria-hidden="true"></span></button></li>
+        </ol>
+        <div id="deletion-warning" class="deletion-warning" hidden><strong>Incomplete deletion, on purpose.</strong><p>The original is gone, but derived copies may still hold its secret. This is the failure under test.</p></div>
+        <button type="button" id="verify-button" class="btn-verify" data-action="verify"><svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="m4 10 4 4 8-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Verify the cleanup</button>
+        <button type="button" class="btn-quiet btn-block" data-action="reset"><span aria-hidden="true">↻</span> Reset experiment</button>
+        <p class="scope-note">Tests GhostCache's own stored memory and retrieval. It does not touch model weights, backups or disk pages.</p>
       </aside>
 
-      <section class="main-panel">
-        <div class="graph-card">
-          <div class="graph-heading"><div><p class="eyebrow">FOLLOW THE PROVENANCE</p><h2>The memory trail</h2></div><span id="artifact-count" class="count-pill">— artifacts</span></div>
-          <div class="graph-key"><span><i class="legend-dot active-dot"></i>Active</span><span><i class="legend-dot deleted-dot"></i>Removed</span><span class="graph-hint">Select an artifact to inspect it <span>↗</span></span></div>
-          <div id="graph-viewport" class="graph-viewport"><div id="graph-canvas" class="graph-canvas"><svg id="graph-edges" class="graph-edges" aria-hidden="true"></svg><div id="graph-nodes" class="graph-nodes"></div></div><div id="graph-empty" class="empty-state"><span>⌁</span><p>The archive is waiting.</p><small>Seed the experiment to reveal its memory trail.</small></div></div>
-          <div class="graph-footer"><span id="graph-summary">Sources → derived memories → cached answers</span><span class="footnote">PROVENANCE, NOT MODEL WEIGHTS</span></div>
-        </div>
+      <section class="center" aria-label="Memory trail and questions">
+        <div id="stage-status" class="stage-status" role="status"><strong>Opening the local archive…</strong><span>Waiting for the GhostCache server.</span></div>
 
-        <div class="query-card">
-          <div class="query-heading"><p class="eyebrow">QUESTION THE ARCHIVE</p><span id="answer-provider" class="tiny-label">NO QUERY YET</span></div>
-          <form id="question-form" class="question-form"><label class="sr-only" for="question-input">Ask a question about the archive</label><input id="question-input" type="text" placeholder="Ask about a detail in the archive…" autocomplete="off"><button id="ask-button" type="submit" aria-label="Ask the archive">Ask <span>↗</span></button></form>
-          <div class="question-shortcuts"><button data-action="ask-secret">Private detail</button><button data-action="ask-retained">Retained fact</button><button data-action="ask-shared">Shared-source fact</button></div>
+        <section class="graph-card" aria-labelledby="graph-title">
+          <div class="graph-head">
+            <div><p class="eyebrow">Follow the provenance</p><h2 id="graph-title">The memory trail</h2></div>
+            <div class="graph-tools">
+              <span id="artifact-count" class="count-tag">— artifacts</span>
+              <div class="segmented" role="group" aria-label="Trail view"><button type="button" id="view-graph" aria-pressed="true">Graph</button><button type="button" id="view-list" aria-pressed="false">List</button></div>
+            </div>
+          </div>
+          <ul class="graph-legend" aria-label="Legend">
+            <li><span class="kicon-slot" data-kind="document"></span>Document</li>
+            <li><span class="kicon-slot" data-kind="chunk"></span>Search chunk</li>
+            <li><span class="kicon-slot" data-kind="summary"></span>Summary</li>
+            <li><span class="kicon-slot" data-kind="conversation"></span>Saved answer</li>
+            <li><span class="chip chip--marker">◆</span>Holds the marker</li>
+            <li><span class="chip chip--stale">Stale</span>Depends on a withdrawn source</li>
+            <li><span class="chip chip--removed">Tombstone</span>Content emptied, ID kept</li>
+            <li><span class="chip chip--rebuilt">↻</span>Rebuilt</li>
+          </ul>
+          <div id="graph-viewport" class="graph-viewport">
+            <div id="graph-canvas" class="trail graph-canvas"><svg id="graph-svg" class="trail-svg graph-svg" viewBox="0 0 800 360" role="group" aria-label="Memory trail. Each artifact is a button; select one to inspect it."><g id="graph-columns" aria-hidden="true"></g><g id="graph-edges" aria-hidden="true"></g><g id="graph-nodes"></g></svg></div>
+            <div id="graph-empty" class="graph-empty"><span class="graph-empty__mark" aria-hidden="true"></span><p>The archive is waiting.</p><small>Seed the experiment to reveal its memory trail.</small></div>
+          </div>
+          <div id="graph-list" class="graph-list" hidden></div>
+          <div class="graph-foot"><span id="graph-summary">Sources → derived memories → saved answers</span><span>Provenance, not model weights</span></div>
+        </section>
+
+        <section class="query-card" aria-labelledby="query-title">
+          <div class="panel-head"><h2 id="query-title" class="eyebrow">Question the archive</h2><span id="answer-provider" class="count-tag">NO QUERY YET</span></div>
+          <form id="question-form" class="question-form"><label class="sr-only" for="question-input">Ask a question about the archive</label><input id="question-input" type="text" maxlength="1000" placeholder="Ask about a detail in the archive…" autocomplete="off"><button id="ask-button" type="submit">Ask <span aria-hidden="true">→</span></button></form>
+          <div class="shortcuts" role="group" aria-label="Preset questions"><button type="button" data-action="ask-secret">Private detail</button><button type="button" data-action="ask-retained">Retained fact</button><button type="button" data-action="ask-shared">Shared-source fact</button></div>
           <div id="answer-empty" class="answer-empty">An answer is evidence. Its citations tell you where to look.</div>
-          <div id="answer-content" class="answer-content" hidden><p id="answer-question" class="answer-question"></p><p id="answer-text" class="answer-text"></p><div id="answer-citations" class="answer-citations"></div><div id="answer-trace" class="answer-trace"></div></div>
-        </div>
+          <div id="answer-content" class="answer" hidden>
+            <div class="answer__top"><p id="answer-question" class="answer__q"></p><span id="answer-verdict" class="answer__verdict"></span></div>
+            <p id="answer-text" class="answer__a"></p>
+            <div class="answer__row"><span class="answer__label">Cited</span><div id="answer-citations" class="id-list"></div></div>
+            <p id="answer-trace" class="answer__trace"></p>
+          </div>
+        </section>
       </section>
 
-      <aside class="inspection-panel">
-        <section class="inspector-card"><div class="panel-heading"><p class="eyebrow">ARTIFACT INSPECTOR</p><span class="inspector-icon">↗</span></div><label class="sr-only" for="artifact-select">Choose an artifact to inspect</label><select id="artifact-select" class="artifact-select" aria-label="Choose an artifact to inspect"><option value="">No artifacts yet</option></select><div id="inspector-empty" class="inspector-empty">Select a node to see what it contains and where it came from.</div><div id="inspector-content" hidden><div class="inspector-type-line"><span id="inspector-kind" class="tiny-label"></span><span id="inspector-status" class="status-chip"></span></div><h2 id="inspector-title"></h2><code id="inspector-id" class="artifact-id"></code><pre id="inspector-body" class="artifact-body"></pre><div class="inspector-links"><p class="eyebrow">DERIVED FROM</p><div id="inspector-parents"></div><p class="eyebrow">ORIGINAL SOURCES</p><div id="inspector-sources"></div></div></div></section>
-        <section class="checks-card"><div class="panel-heading"><p class="eyebrow">CLEANUP CHECKS</p><span id="checks-score" class="tiny-label">NOT RUN</span></div><div id="checks-list" class="checks-list"><p class="checks-empty">Run verification after cleanup to check what was removed and what remains.</p></div><details class="scope-details"><summary>What does verification cover?</summary><p>The app’s managed artifact store and retrieval. Browser history, evaluator references, logs, backups, and model weights are outside this experiment.</p></details></section>
+      <aside class="inspector-panel" aria-labelledby="inspector-heading">
+        <section id="inspector-card" class="inspector-card">
+          <div class="panel-head"><h2 id="inspector-heading" class="eyebrow">Artifact inspector</h2><button type="button" id="inspector-toggle" class="inspector-toggle" aria-expanded="true" aria-controls="inspector-panel-body">Hide</button></div>
+          <div id="inspector-panel-body" class="inspector-panel-body">
+            <label class="sr-only" for="artifact-select">Choose an artifact to inspect</label>
+            <select id="artifact-select" class="artifact-select"><option value="">No artifacts yet</option></select>
+            <div id="inspector-empty" class="inspector-empty">Select an artifact in the trail to see what it holds and where it came from.</div>
+            <div id="inspector-content" hidden>
+              <div class="inspector-kind"><span id="inspector-icon" class="inspector-icon"></span><span id="inspector-kind" class="kind-label"></span><span id="inspector-status" class="chip"></span></div>
+              <h3 id="inspector-title" class="inspector-title"></h3>
+              <code id="inspector-id" class="artifact-id"></code>
+              <div id="inspector-flags" class="inspector-flags"></div>
+              <pre id="inspector-body" class="artifact-body"></pre>
+              <dl class="lineage">
+                <div><dt>Derived from</dt><dd id="inspector-parents"></dd></div>
+                <div><dt>Original sources</dt><dd id="inspector-sources"></dd></div>
+                <div><dt>Feeds into</dt><dd id="inspector-children"></dd></div>
+              </dl>
+            </div>
+          </div>
+        </section>
       </aside>
     </main>
 
-    <section class="ledger"><div class="ledger-heading"><div><p class="eyebrow">THE PAPER TRAIL</p><h2>Experiment ledger</h2></div><span id="ledger-count" class="tiny-label">0 EVENTS</span></div><div id="event-list" class="event-list"><p class="ledger-empty">Every operation leaves a trace here.</p></div></section>
-    <footer class="site-footer"><span>GhostCache <span class="brand-dot">/</span> A local memory-provenance experiment</span><span>Observe the failure. Verify the fix.</span></footer>
+    <section class="results" aria-label="Verification and ledger">
+      <section class="checks-card" aria-labelledby="checks-title">
+        <div class="panel-head"><div><p class="eyebrow">Verification</p><h2 id="checks-title">Cleanup checks</h2></div><span id="checks-score" class="count-tag">NOT RUN</span></div>
+        <p id="checks-summary" class="checks-summary">Run verification after cleanup to check what was removed and what remains.</p>
+        <div id="checks-list" class="checks-list"></div>
+        <details class="scope-details"><summary>What does verification cover?</summary><p>GhostCache's managed artifact store and retrieval: titles and bodies, recorded provenance, four defined questions, and the facts that must survive. Evaluator state, saved reports, browser history, logs, backups and model weights are outside this experiment. The full command-line evaluation adds two checks that the source-only failure really happened.</p></details>
+      </section>
+      <section class="ledger-card" aria-labelledby="ledger-title">
+        <div class="panel-head"><div><p class="eyebrow">The paper trail</p><h2 id="ledger-title">Experiment ledger</h2></div><span id="ledger-count" class="count-tag">0 EVENTS</span></div>
+        <ol id="event-list" class="event-list"><li class="ledger-empty">Every operation leaves a trace here.</li></ol>
+      </section>
+    </section>
+
+    <footer class="lab-footer"><span>GhostCache local lab · single-user, localhost only · fictional data</span><span>Recorded runs, methodology and setup: <a href="https://ghostcache-walkthrough.onrender.com/">the public walkthrough ↗</a> · <a href="https://github.com/bipul724/GhostCache">source ↗</a></span></footer>
   </div>
-  <div id="busy-indicator" class="busy-indicator" role="status" hidden><span class="spinner"></span><span id="busy-text">Working…</span></div>
+  <div id="busy-indicator" class="busy-indicator" role="status" hidden><span class="busy-indicator__thread" aria-hidden="true"></span><span class="busy-indicator__text"><span id="busy-text">Working…</span><small id="busy-detail"></small></span></div>
   <script src="/app.js" defer></script>
 </body>
 </html>
