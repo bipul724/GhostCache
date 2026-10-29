@@ -12,11 +12,11 @@ ghostcache/            # application root = Git repository root (bipul724/GhostC
 │   ├── store.py       # SQLite artifacts and provenance, deletion, retrieval, audit
 │   ├── providers.py   # FixtureProvider, OllamaProvider, ProviderError
 │   └── telemetry.py   # optional metadata-only Sentry tracing (ALLOWED_KEYS)
-├── web/               # index.html, app.js, style.css (no build step)
+├── web/               # the local lab: index.html, app.js, style.css (no build step; served only by the local server)
 ├── tests/             # test_store.py, test_app.py, test_http.py, test_providers.py, test_ui.py, test_telemetry.py, test_site.py (unittest)
-│   └── ui/            # app_contract.js: web/app.js contract cases under node:vm (Node built-ins only)
+│   └── ui/            # app_contract.js and site_contract.js: web/app.js and site/site.js cases under node:vm (Node built-ins only)
 ├── results/           # saved evidence: do not overwrite
-├── site/              # public static recorded walkthrough (D-13); data/evidence.json is generated
+├── site/              # public static site of recorded runs (D-13, D-21): four pages, site.js, style.css; data/evidence.json is generated
 ├── scripts/           # export_site_data.py: results/*.json → site/data/evidence.json
 ├── screenshots/       # Render deployment and walkthrough screenshots (evidence: do not edit); SHA256SUMS.txt
 ├── render.yaml        # Render static-site Blueprint for site/ (deployed October 28, 2026)
@@ -46,6 +46,7 @@ python3.12 scripts/export_site_data.py --check         # public walkthrough data
 ## Keep the architecture
 
 - Keep the zero-dependency, standard-library design unless a task needs an integration. Make any new dependency optional, so that fixture mode and the tests still run with nothing installed.
+- Front ends stay plain HTML, CSS and JavaScript with system fonts. The deployed CSP blocks font loads, inline scripts, inline styles and event-handler attributes, and `tests/test_site.py` checks every page for them. The `<gc-shared>` block (design tokens and the memory-trail styles) must stay byte-identical in `site/style.css` and `web/style.css` (D-21).
 - Keep the module boundaries:
   - the store owns persistence and lineage rules,
   - the controller owns experiment flow,
@@ -78,6 +79,7 @@ python3.12 scripts/export_site_data.py --check         # public walkthrough data
 - `Experiment.scenario` (including `canary`), saved reports, screenshots and recordings are **evaluator or evidence data**. Do not feed them into model context, and do not store them as artifacts.
 - They intentionally keep the marker. `/api/state` returns it. Do not "fix" that silently. If a change affects it, update the docs that describe this boundary.
 - Never claim model unlearning, secure disk erasure, or deletion from logs, backups, the browser or reports.
+- `Experiment.rebuild` (the current rebuild outcome, returned as `state.rebuild`) is operational state, not assistant memory. Keep it out of artifacts and model context, keep it in `_RUN_STATE`, and keep it metadata only: a status, artifact IDs and a fixed `error_category`. Never derive a current outcome from `state.events`: that window holds only the latest 50 events (D-22). A failed `/api/delete` can follow a committed purge, so the lab reads `/api/state` back after one (without repeating it); keep that.
 
 ## Secrets, privacy and telemetry
 
@@ -100,7 +102,7 @@ python3.12 scripts/export_site_data.py --check         # public walkthrough data
 
 ## Tests
 
-- Add or adjust a test that would fail without your change: store tests for lineage and deletion, controller tests for flow and modes, HTTP tests for transport and validation, and UI contract cases in `tests/ui/app_contract.js` (registered in `tests/test_ui.py`) for `web/app.js` rendering and requests.
+- Add or adjust a test that would fail without your change: store tests for lineage and deletion, controller tests for flow and modes, HTTP tests for transport and validation, and UI contract cases in `tests/ui/app_contract.js` (registered in `tests/test_ui.py`) for `web/app.js` rendering and requests, or in `tests/ui/site_contract.js` (registered in `tests/test_site.py`) for `site/site.js` behaviour. Check layout, real pointer and keyboard input and rendered SVG geometry in a browser with its normal scrollbars, comparing `scrollWidth` with `document.documentElement.clientWidth`.
 - Tests must stay offline. Patch `OllamaProvider.status`, `urlopen` or the provider methods, as the existing tests do.
 - Run the full suite, plus a fixture evaluation to a new path, before you finish.
 
