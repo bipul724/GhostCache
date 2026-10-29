@@ -52,9 +52,24 @@ GHOSTCACHE_APP_JS=<path to an older web/app.js> python3.12 -B -m unittest tests.
 
 Add `-B` (as in `python3.12 -B -m …`) if you do not want `__pycache__` folders written. They are git-ignored either way.
 
+## Public deployment verification, T-E9 (October 30, 2026)
+
+**Read-only checks of the live site; T-E9 done, with a stated limit.** These are checks against the two public addresses. They are not a rerun of the unit suite, a fixture evaluation or hosted CI. Evidence: [public-deploy-04407eb-2026-10-30/](screenshots/public-deploy-04407eb-2026-10-30/README.md) (four JSON reports, seven PNGs, README and manifest).
+
+| Check actually run (19:53–20:10 UTC on October 29; 01:23–01:40 IST on October 30) | Result |
+| --- | --- |
+| Python 3.12 `urllib` GET of the 11 site files on `ghostcache.bipulchamoli.tech` and `ghostcache-walkthrough.onrender.com`, default TLS verification, compared with `git show 04407eb:site/<file>` | 22 of 22: 200, no redirect, byte-identical to `04407eb`. `style.css` and `favicon.svg` differ between `04407eb` and the previous site commit `3932562`, so `04407eb`'s bytes are served |
+| `/api/state`, `/favicon.svg`, `/favicon.ico`; headers on `/` and the four pages | 404, 200, 404 on both addresses; CSP, `nosniff`, `no-referrer` and `DENY` exactly as in `render.yaml`; `/data/evidence.json` `Cache-Control: no-cache` |
+| Served `method.html#project-evidence` and `run.html` text | Dated October 30; both archived fixture reports 10/10; run #17 tied to `00cfb10` and not to later commits; hosted test count unverified; both evidence folders linked. The run guide's prerequisites, optional tracing and no-retry recovery wording as committed |
+| GET of every `<a href>` on the four served pages (114: 63 internal, 51 external) | All 200 and internal anchors resolve. GitHub's `#readme` anchor is added in the browser, so it is absent from the static HTML; not counted as broken |
+| Headless Chrome 156 (`--headless=new`) over the DevTools protocol from Node v22.23.4, classic 15 px scrollbars, `mobile: false`, height 812, real mouse and key events, no mocking | No overflow (`documentElement.scrollWidth` ≤ `clientWidth`) in 72 measurements: four pages, nine widths from 320 to 1280, two addresses. Labels present. Three runs, five stages, arrow/Home/End keys, Previous/Next (disabled at the ends), diagram/list and all six recorded answers worked at 1280 and 375 px on both addresses. Requests: only same-origin site files, with no `/api`, model, external or `/favicon.ico` request. No console, page or CSP error |
+| Direct viewport screenshots of `#project-evidence` | Three frames at 1280×812 and four at 375×812, inspected; no cropping or offset. A first full-page clipped attempt was offset at 375 px (the scrollbar disappears during capture and the page reflows), so it was discarded |
+
+**Limits:** no October 30 Render dashboard screenshot, so the commit Render built is not established. These are desktop-Chrome viewport checks, not a physical phone, Safari or Firefox, or an accessibility check (T-E6). The timing-chart tooltip was not repeated. Hosted run #19 on `04407eb` is recorded only as GitHub's `success` status; its report was not read.
+
 ## CI evidence update (October 30, 2026)
 
-**Local; uncommitted and not deployed.** The methodology page's `#project-evidence` GitHub Actions entry now reports both archived hosted reports. Run #16 on `f66977d` and run #17 on `00cfb10` each succeeded on every step, and each fixture report matches GitHub's artifact digest and passed 10/10. The entry says run #17 tested `00cfb10`, which contains the October 29 refresh and the failed-mode-switch fix, but not this later edit. The hosted test count stays unverified. The local-suite lines on `method.html` and `run.html` are redated to October 30. `tests/test_site.py` now also requires both CI evidence-folder links; against the pre-change page it fails on the run #17 link. Evidence: [ci-evidence-update-2026-10-30/](screenshots/ci-evidence-update-2026-10-30/README.md).
+**Local; uncommitted and not deployed.** *(Later status: committed in `3932562`, pushed and verified on both public addresses on October 30 as part of T-E9; see "Public deployment verification, T-E9" above.)* The methodology page's `#project-evidence` GitHub Actions entry now reports both archived hosted reports. Run #16 on `f66977d` and run #17 on `00cfb10` each succeeded on every step, and each fixture report matches GitHub's artifact digest and passed 10/10. The entry says run #17 tested `00cfb10`, which contains the October 29 refresh and the failed-mode-switch fix, but not this later edit. The hosted test count stays unverified. The local-suite lines on `method.html` and `run.html` are redated to October 30. `tests/test_site.py` now also requires both CI evidence-folder links; against the pre-change page it fails on the run #17 link. Evidence: [ci-evidence-update-2026-10-30/](screenshots/ci-evidence-update-2026-10-30/README.md).
 
 | Check actually run | Result |
 | --- | --- |
@@ -935,6 +950,7 @@ The public walkthrough (`site/`) is a separate page; its browser checks are reco
   - **Not established:** the job log was not read, so **no hosted test count is claimed**. Locally, unittest discovery of the `00cfb10` checkout finds 126 tests (discovery only), and the October 29 local runs recorded 126 on the then-uncommitted tree; neither is a hosted count. A successful run is not deployment evidence (T-E9).
   - **Not tested on GitHub:** anything committed after `00cfb10`, such as the run #16 report folder, the run #17 folder and the documentation that records them.
   - Evidence: [hosted-ci-run-17-2026-10-29/](screenshots/hosted-ci-run-17-2026-10-29/README.md) (five API responses and their manifest; the report and its own manifest in `report/`).
+- **Runs #18 and #19 (status only, checked October 30, 2026 through the public API):** run #18 on `fe04ee7` and run #19 on `04407eb` are listed as `completed`/`success`. Their reports and logs were not read, so nothing beyond that status is claimed.
 
 ## Collecting new evidence without overwriting the old
 
