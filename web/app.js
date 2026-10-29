@@ -533,6 +533,7 @@ function renderAnswer() {
 }
 function renderChecks() {
   const holder = ui("checks-list"); holder.replaceChildren();
+  ui("evaluator-retention").hidden = stateUnknown || state?.stage !== "cleaned" || !artifacts().length;
   if (!checks.length) {
     ui("checks-score").textContent = "NOT RUN";
     ui("checks-summary").textContent = "Run verification after cleanup to check what was removed and what remains.";
@@ -672,6 +673,9 @@ async function perform(action, question) {
         render();
       }
     }
+    // A failed seed or reset keeps the confirmed experiment's mode (a 502 changes nothing on the
+    // server), so the menu and the next Reset must not keep the mode that was refused.
+    if (action === "seed" || action === "reset") { selectedMode = currentMode(); renderProvider(); }
     showError(message);
   } finally {
     setBusy(false);
