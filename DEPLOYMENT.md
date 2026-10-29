@@ -10,6 +10,17 @@ Render is used only for hosting: it serves these static files and runs nothing e
 
 *(Until October 29, 2026, Render was hosting only and not one of the submission's categories.)*
 
+## Pending: the light redesign (October 29, 2026)
+
+The working tree holds a redesign of `site/` that is **not deployed**. It replaces the single walkthrough page with four static pages and their shared assets: `index.html` (home), `walkthrough.html`, `method.html`, `run.html`, `style.css`, `site.js`, `home.js`, `walkthrough.js`, `method.js`, `favicon.svg` and the unchanged `data/evidence.json`. Nothing about hosting changes: `render.yaml` still publishes `./site` with the same headers, and the pages need no font, inline script or inline style, so the existing CSP fits them.
+
+After it is pushed and Render rebuilds:
+
+- the site's root URL shows the new home page, and the walkthrough moves to `/walkthrough.html` (links to the root still work and lead to it);
+- run the [Verify a deployment](#verify-a-deployment) checks, adding `/walkthrough.html`, `/method.html`, `/run.html` and `/favicon.svg` (expect 200);
+- measure overflow as `document.documentElement.scrollWidth` against `document.documentElement.clientWidth` (not `innerWidth`) with the browser's normal scrollbars showing: the October 29 review found a 320 px overflow of the home page's illustration badge that a check with hidden scrollbars had missed (fixed in the working tree; TESTING.md, "Review fixes to the redesign");
+- record the deployed commit and the results here and in TESTING.md, and close T-E8 and T-E9 only then.
+
 ## Current deployment
 
 | Field | Value |
@@ -54,7 +65,7 @@ The page shows only `site/data/evidence.json`, exported from three saved reports
 ```sh
 python3.12 scripts/export_site_data.py          # rewrite site/data/evidence.json
 python3.12 scripts/export_site_data.py --check  # exit 1 if it is out of date (also a unit test)
-python3.12 -m unittest tests.test_site -v       # 20 walkthrough tests
+python3.12 -m unittest tests.test_site -v       # 27 walkthrough and site tests (4 need Node)
 ```
 
 Commit `site/data/evidence.json` with the change and push `main`. Review the exported data before publishing: the export keeps an allowlist of fields and refuses text matching a few selected private-string patterns, but that pattern check is an additional safeguard, not comprehensive secret detection. See README.md, "Public recorded walkthrough".
@@ -84,6 +95,8 @@ In a browser, also confirm:
 - the banner reads "Recorded local Gemma evaluation — no live inference";
 - the three run buttons, five stage buttons and six question buttons change the view;
 - the network panel shows only `style.css`, `walkthrough.js` and `data/evidence.json` (plus the browser's own `/favicon.ico` request; see Known issues).
+
+*After the redesign is deployed:* on `/walkthrough.html` the sticky bar reads "Recorded evaluation · No live inference" and the page also carries "Recorded local Gemma evaluation — no live inference"; the three run choices, five stage tabs and the diagram/list toggle change the view; and each page requests only `style.css`, `site.js`, `favicon.svg`, its own script and `data/evidence.json`, except `run.html`, which has no page script and no data request. Scrolled down to the timing chart on the walkthrough and methodology pages, hovering a segment shows its tooltip beside the pointer, inside the chart.
 
 The screenshot evidence can be checked with `(cd screenshots && shasum -a 256 -c SHA256SUMS.txt)`. The manifest holds bare file names, so the command must run inside `screenshots/`. The T-E7 captures have their own manifests: `(cd screenshots/mobile-overflow-fix && shasum -a 256 -c SHA256SUMS.txt)` (local before/after) and `(cd screenshots/mobile-overflow-fix/deployed-2a1ffb0 && shasum -a 256 -c SHA256SUMS.txt)` (deployed site).
 
@@ -128,6 +141,6 @@ The steps stay here for any future stylesheet change.
 - **Resolved: horizontal overflow on narrow screens (found October 28, 2026; fix live in `2a1ffb0`).** In headless Chrome emulation, at the tested 375 px viewport, the document's scrollWidth was 573 px, while the layout viewport stayed 375 px, so the page scrolled sideways. The cause is in `site/style.css`: below 980 px it sets `.explainers` to `grid-template-columns:1fr`, and the `white-space:pre` command block in "Run it yourself" held that column at about 557 px. The exact width at which overflow starts can vary with browser and font metrics, and no real phone was tested. This contradicts the earlier local T-E2 check, which reported no overflow at the 375×812 preset. Fix and recheck: T-E7 in [tasks.md](tasks.md).
   *Resolution in progress (October 28, 2026, about 22:30 IST): fixed and verified locally on October 28, 2026; awaiting deployment.* Two rules in `site/style.css` changed: `.explainers` uses `minmax(0,1fr)` below 980 px, and `.tiny-label` may wrap below 650 px (a second, smaller offender at 320 px). Served locally, `scrollWidth` equalled `clientWidth` at every tested width from 320 to 1280 px, and the command block scrolls inside itself. The public site keeps the old stylesheet until the change is pushed and Render rebuilds it. See [TESTING.md](TESTING.md), "Narrow-screen overflow fix T-E7", and [screenshots/mobile-overflow-fix/](screenshots/mobile-overflow-fix/README.md).
   *Resolved (deployed in `2a1ffb0`; verified October 28–29, 2026).* The served `style.css` is byte-identical to the fixed file. The user's DevTools checks on the public URL found no horizontal overflow from 320 to 1280 px. See "Verification record" above, TESTING.md "T-E7 deployed verification", and [screenshots/mobile-overflow-fix/deployed-2a1ffb0/](screenshots/mobile-overflow-fix/deployed-2a1ffb0/README.md). A real phone and other browsers remain unchecked (next item).
-- **No favicon.** Browsers request `/favicon.ico`, which returns 404 and logs one console error. Cosmetic only (T-E8).
+- **No favicon.** Browsers request `/favicon.ico`, which returns 404 and logs one console error. Cosmetic only (T-E8). The undeployed redesign links `favicon.svg`; with that link, headless Chrome made no `/favicon.ico` request in the local checks.
 - **Not checked:** a real phone, browsers other than Chrome, and assistive technology (T-E6). The click-throughs pressed each button once; they did not try every combination of run, stage and question.
 - **No live inference by design.** The page cannot show a new Gemma run. To see one, run GhostCache locally (README.md, "Run it with local Gemma").

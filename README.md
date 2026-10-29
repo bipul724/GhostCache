@@ -24,11 +24,11 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Area | Status |
 | --- | --- |
 | Local fixture and live-Gemma experiment, browser UI, provenance cleanup | **Implemented** |
-| Automated tests | **91 tests** under Python 3.12.6 with Node v22.23.4 on PATH, rerun in the documentation audit on October 28, 2026: `Ran 91 tests … OK` with the optional `sentry-sdk` in `.venv`, and `Ran 91 tests … OK (skipped=6)` with plain `python3.12` (the 6 skips are the SDK telemetry tests). Node is needed by 6 of the 7 UI contract tests (the seventh, `test_paraphrase_fallback_matches_backend_question`, is pure Python) and by 1 walkthrough syntax test; those 7 skip without Node. See [TESTING.md](TESTING.md) |
+| Automated tests | **124 tests** under Python 3.12.6 with Node v22.23.4 on PATH, rerun after the cleanup-error reconciliation fix on October 29, 2026: `Ran 124 tests … OK` with the optional `sentry-sdk` in `.venv`, and `Ran 124 tests … OK (skipped=6)` with plain `python3.12` (the 6 skips are the SDK telemetry tests). Node is needed by 21 of the 22 UI tests (the twenty-second, `test_paraphrase_fallback_matches_backend_question`, is pure Python; the two reconciliation tests check the real server first and then skip their Node half) and by 4 site tests (the script syntax test and three `site/site.js` behaviour cases), so 25 skip without Node. Historically, the 107-test suite was run without Node on October 29, 2026: `OK (skipped=24)` (18 Node-dependent tests plus 6 SDK-dependent tests). See [TESTING.md](TESTING.md) |
 | Saved evaluations | One fixture report and **three** live Gemma reports (October 27, and cold and warm runs on October 28), each 10/10 checks ([results/](results/)) |
 | GitHub Actions workflow | **Passing on GitHub.** [Run #1](https://github.com/bipul724/GhostCache/actions/runs/40570510382) (push of `6e767ee`): 62 tests, none skipped, and a fresh fixture evaluation that passed. [Run #3](https://github.com/bipul724/GhostCache/actions/runs/40573873485)'s uploaded fixture report was downloaded and inspected: 10 of 10 checks, `passed: true`. Ten runs exist as of October 28, 2026: nine succeeded, including [run #10](https://github.com/bipul724/GhostCache/actions/runs/40725375114) on the current `main` (`26a1c3e`), and run #2 was a cancelled duplicate. Runs after #1 were checked through GitHub's public API (step results only; their logs were not read). See [TESTING.md](TESTING.md#ci-github-actions) |
 | Sentry Agent Tracing | **Implemented** (optional, metadata only, off unless `GHOSTCACHE_SENTRY_DSN` is set; see [below](#optional-sentry-tracing)). **Real traces captured on October 28, 2026** from one fixture and two live evaluations, with two findings; see [What the real traces showed](#what-the-real-traces-showed). Sent from a 14-day Sentry Business trial with no payment method; the runs used 120 of its 100M spans. |
-| Public recorded walkthrough | **Deployed on Render on October 28, 2026:** <https://ghostcache-walkthrough.onrender.com/> (Blueprint-managed static site from [render.yaml](render.yaml); initial deployment from commit `8013d01`). A static page in [site/](site/) built from the recorded live reports, with no inference. See [Public recorded walkthrough](#public-recorded-walkthrough) and [DEPLOYMENT.md](DEPLOYMENT.md). The narrow-screen horizontal overflow found on October 28 (T-E7) is fixed and live from commit `2a1ffb0`: the served stylesheet matches the fixed file byte for byte, and the user's DevTools checks found no overflow from 320 to 1280 px. A real phone and other browsers are not yet checked (T-E6). Known issue: no favicon. Render only hosts these static files; no inference runs there. Since October 29, 2026, Best Use of Render is one of the four intended categories (see the next row). |
+| Public recorded walkthrough | **Deployed on Render on October 28, 2026:** <https://ghostcache-walkthrough.onrender.com/> (Blueprint-managed static site from [render.yaml](render.yaml); initial deployment from commit `8013d01`). A static page in [site/](site/) built from the recorded live reports, with no inference. See [Public recorded walkthrough](#public-recorded-walkthrough) and [DEPLOYMENT.md](DEPLOYMENT.md). The narrow-screen horizontal overflow found on October 28 (T-E7) is fixed and live from commit `2a1ffb0`: the served stylesheet matches the fixed file byte for byte, and the user's DevTools checks found no overflow from 320 to 1280 px. A real phone and other browsers are not yet checked (T-E6). Known issue: no favicon on the deployed version. **A light "Residual Archive" redesign (October 29, 2026) is implemented and tested locally but not deployed:** the public site becomes four static pages (home, walkthrough, methodology, run locally) with a favicon, and the local lab is redesigned; see [Public recorded walkthrough](#public-recorded-walkthrough). Render only hosts these static files; no inference runs there. Since October 29, 2026, Best Use of Render is one of the four intended categories (see the next row). |
 | Prize categories | **Four intended (October 29, 2026):** Best Use of Gemma, Best Use of GitHub Copilot (through GitHub Actions), Best Use of Sentry Agent Tracing and Best Use of Render. None is entered until the DEV submission lists it. Render's eligibility is our reading of the official wording, not organizer confirmation ([CATEGORIES.md](CATEGORIES.md#best-use-of-render)). Earlier, on October 28, the scope was three categories without Render. The .tech domain, Backboard, Browserbase, ElevenLabs and Entire categories were dropped on October 28, 2026 and are not entered ([DECISIONS.md](DECISIONS.md) D-14). |
 | Public repository | **Created:** [bipul724/GhostCache](https://github.com/bipul724/GhostCache) (public, MIT) |
 | Video, DEV submission | **Not created.** No category entry has been submitted yet; see [Open work](#open-work). |
@@ -49,14 +49,15 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 - **Storage:** the local server keeps its experiment in a disposable SQLite file (default `.local/assistant.sqlite`); each CLI evaluation uses a fresh in-memory SQLite database and never touches that file.
 - **Optional Sentry tracing** (metadata only) and a **GitHub Actions** workflow; see below.
 - **A static recorded walkthrough** of three live runs, published on Render; see below.
-- **Single-page browser UI** with these parts:
-  - the five guided steps,
-  - a provenance graph,
-  - an artifact inspector,
-  - a question box with shortcuts,
-  - answer citations and timing/token info,
-  - the check results,
-  - a local event ledger.
+- **Single-page browser UI, the local lab** (light theme since October 29, 2026) with these parts:
+  - the five guided steps, with reset in the header and the steps panel,
+  - a mode banner that names the active mode ("Fixture — deterministic simulation" or "Live Gemma — local model inference") separately from whether a live model is available,
+  - a stage status line with the audit's counts (incomplete deletion, cleanup, a failed rebuild, or unrestorable storage). A failed rebuild is read from the server's current rebuild outcome (`state.rebuild`), kept apart from the 50-event ledger window, so the warning stays after a reload, a repeated cleanup or any number of later events, until a successful reset or a later successful rebuild (D-22). If a cleanup request fails after its purge committed (for example, the rebuilt summary could not be stored), the page reads the server's state back and shows it under the original error,
+  - a provenance graph that draws documents, chunks, summaries and saved answers as different shapes with text labels, highlights a selected or hovered artifact's ancestors and descendants, and keeps removed artifacts as content-free tombstones, plus an accessible list view of the same artifacts,
+  - an artifact inspector (a collapsible panel on narrow screens),
+  - a question box with shortcuts, and answer citations, timing and token info,
+  - the check results, grouped,
+  - the event ledger.
 
 ## Important limitations
 
@@ -67,7 +68,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 - **The summary prompt keeps the secret on purpose.** It explicitly asks the model to preserve the passphrase, which builds a known propagation path. GhostCache does not measure natural leakage.
 - **Fictional data only.** It has no document upload, no connector for other RAG systems, and has not been tested with real sensitive documents.
 - **Local only.** The server is single-user and localhost-only. It must not be exposed unchanged as a shared public service (see [architecture.md](architecture.md#security-boundaries)). The public walkthrough is a separate static page of recorded results: it runs no model and cannot answer new questions.
-- **Known UI and code inconsistencies** are listed in [architecture.md](architecture.md#known-discrepancies-between-code-ui-and-earlier-docs) and [tasks.md](tasks.md#a-consistency-and-hardening). Example: the UI has no dedicated display for the `storage_failed` stage.
+- **Known UI and code inconsistencies** are listed in [architecture.md](architecture.md#known-discrepancies-between-code-ui-and-earlier-docs) and [tasks.md](tasks.md#a-consistency-and-hardening). Example: the UI does not yet say, next to the checks, that the evaluator still holds the marker (T-A7).
 
 ## Stack and prerequisites
 
@@ -77,7 +78,7 @@ The theme of DEV Hacktoberfest Week 4 accepts spooky interpretations. GhostCache
 | Python packages | None required. The core uses only the standard library (`sqlite3`, `http.server`, `urllib`, `unittest`). The optional `sentry` extra (`sentry-sdk==2.72.0`) is needed only for tracing; install it into `.venv`, never the system Python. |
 | Front end | Plain HTML, CSS and JavaScript in `web/`. No build step or npm install. |
 | Live mode only | [Ollama](https://ollama.com) running locally, with the model pulled (`ollama list` should show `gemma4:e2b-it-qat`, about 4.3 GB). |
-| Optional | Node.js (verified with v22.23.4; no npm packages), only for 6 of the 7 UI contract tests and the syntax checks of `web/app.js` and `site/walkthrough.js`; those tests skip without it. |
+| Optional | Node.js (verified with v22.23.4; no npm packages), only for 21 of the 22 UI tests, the 3 `site/site.js` behaviour tests and the 1 public-site script syntax test (which checks the four `site/*.js` scripts): 25 tests in all, which skip without it. |
 
 ## Run it (fixture mode)
 
@@ -111,7 +112,7 @@ python3.12 -m ghostcache serve --port 8765 --mode live --model gemma4:e2b-it-qat
 
 You can also switch to live mode from the page's **Run mode** menu once the model shows as available. Changing mode starts a fresh experiment.
 
-Live seeding makes four model calls (three summaries and the saved baseline answer). The first call is slow when the model is not yet loaded: 81.2 s in the October 27 run and 40.4 s in the October 28 run that followed an Ollama server start, against 2.3 s in the run straight afterwards (see [What the real traces showed](#what-the-real-traces-showed)). Model loading is the likely cause, but it has not been measured.
+Live seeding makes four model calls (three summaries and the saved baseline answer). The first call can be slow: 81.2 s in the October 27 run and 40.4 s in the October 28 run that followed an Ollama server start, against 2.3 s in the run straight afterwards (see [What the real traces showed](#what-the-real-traces-showed)). Model loading is the likely cause, but it has not been measured.
 
 To use a different installed model, pass `--model` or set `GHOSTCACHE_MODEL` (see [.env.example](.env.example)). If Ollama is missing, the model errors, or its response is malformed (not a JSON object with `text` and supplied-context `citations`), live mode reports the error: HTTP 502 in the UI, or a failed report with exit status `1` from the CLI. It never substitutes fixture text. Connection problems are reported only as a fixed category, such as "Local model call failed (connection failed)." The underlying error text is never shown.
 
@@ -174,14 +175,22 @@ More screenshots: [the memory search that returned `c-vault`](results/sentry-c-v
 
 **Live at <https://ghostcache-walkthrough.onrender.com/>** (deployed October 28, 2026; deployment record, verification and known issues in [DEPLOYMENT.md](DEPLOYMENT.md)).
 
-[site/](site/) is a static, read-only walkthrough of the **recorded** live Gemma runs, for people who can't run the app. It says so at the top: *"Recorded local Gemma evaluation — no live inference."* It makes no model call and no `/api/*` request, stores nothing, and deletes nothing. Its only data request is `data/evidence.json` from the same site.
+[site/](site/) is a static, read-only site about the **recorded** live Gemma runs, for people who can't run the app. It makes no model call and no `/api/*` request, stores nothing, and deletes nothing. Its only data request is `data/evidence.json` from the same site.
 
-Visitors can:
+**Redesign, October 29, 2026 (implemented and tested locally; not yet deployed).** The deployed version is still the single dark walkthrough page. The working tree replaces it with a light "Residual Archive" design in four pages that share `style.css` and `site.js`:
+
+- **Home** (`index.html`): the headline, an explanatory drawing labelled *"Illustration · not recorded data"*, a three-part story, a preview of one recorded trail at three moments, the two ways in (public recording or local lab), and the scope.
+- **Walkthrough** (`walkthrough.html`): the recorded experiment, under a persistent *"Recorded evaluation · No live inference"* bar that also carries *"Recorded local Gemma evaluation — no live inference."*
+- **Methodology** (`method.html`): source-only deletion against provenance cleanup (diagrams labelled as drawings), the fictional corpus, the recorded results and evidence matrix, timings, limits and links.
+- **Run locally** (`run.html`): requirements, fixture and live-mode commands with copy buttons, and troubleshooting drawn from the code's own messages.
+
+On the walkthrough, visitors can:
 
 - pick one of the three recorded live runs (October 28 cold, October 28 warm, October 27);
-- step through the five stages, each with the report's audit counts and a memory trail of artifact IDs: the seeded memory, the source-only deletion, the recorded answer that still reveals the marker, the provenance cleanup, and the recorded checks. The step buttons only change the view;
+- step through the five stages (tabs with arrow-key support and deep links such as `walkthrough.html#run=warm&stage=cleanup`). Each stage shows the report's audit counts and a memory-trail diagram whose nodes keep their places across stages: the seeded memory, the source-only deletion, the recorded answer that still reveals the marker, the provenance cleanup, and the recorded checks. Selecting a node shows its recorded parents, what it fed into at that stage (never an artifact created later), and whether it held the marker at each stage so far; a list view gives the same content as text. The stage controls only change the view;
 - open the six preset questions and read Gemma's recorded answers, with the context IDs, citations, durations and tokens;
-- compare the cold and warm runs' recorded model-call durations.
+- compare the cold and warm runs' recorded model-call durations, with a table of every call;
+- open the run's metadata, recorded event log and audit IDs.
 
 Everything shown comes from three saved reports: [results/sentry-live-cold.json](results/sentry-live-cold.json), [results/sentry-live-warm.json](results/sentry-live-warm.json) and [results/live-gemma.json](results/live-gemma.json). The reports hold artifact IDs, counts, answers, checks and event timings, not summary or document text, so the page shows no artifact bodies. "From" links are labelled by origin: **recorded** (summary parents in the report's event log), **seed design** (one chunk per document, fixed in `app.py`) or **inferred** (the saved answer's parents, from the order of recorded events). The fixture report is not used. The fictional marker stays visible because these reports are evaluator evidence (see [Important limitations](#important-limitations)).
 
@@ -194,7 +203,7 @@ python3.12 scripts/export_site_data.py --check  # exit 1 if it is out of date (a
 
 **Preview, deploy and verify.** Local preview, the Render Blueprint, deployment steps, the verification commands and the full deployment record are in [DEPLOYMENT.md](DEPLOYMENT.md). In short: [render.yaml](render.yaml) defines one Render static site that publishes only `site/`, with security headers and no server, database, model, environment variable or secret. The owner deployed it on October 28, 2026 (initial deployment from commit `8013d01`, [dashboard screenshot](screenshots/00-render-dashboard-live-8013d01.png)). Read-only checks found the page and `/data/evidence.json` returning 200, the exact `/api/state` returning 404, the Blueprint's headers present, and every run, stage and question button working in desktop Chrome. Screenshots of the deployed page are indexed in [screenshots/README.md](screenshots/README.md).
 
-**Not shown, and known issues.** No real phone, other browser or assistive-technology check has been done (T-E6). The deployed page used to overflow horizontally in an emulated 375 px viewport (the "Run it yourself" command block held a one-column grid at about 557 px). A two-rule fix in `site/style.css` was verified locally and is now live from commit `2a1ffb0`. The served stylesheet is byte-identical to the fixed file, and the user's Chrome DevTools checks on the public URL found no horizontal overflow at 320, 360, 375, 390, 414, 768, 980, 981 and 1280 px (T-E7, done; [evidence](screenshots/mobile-overflow-fix/deployed-2a1ffb0/README.md)). The site also has no favicon, so browsers log one 404 (T-E8). The site performs **no live inference**; the Python backend and Ollama stay on the laptop.
+**Not shown, and known issues.** No real phone, other browser or assistive-technology check has been done (T-E6). The deployed page used to overflow horizontally in an emulated 375 px viewport (the "Run it yourself" command block held a one-column grid at about 557 px). A two-rule fix in `site/style.css` was verified locally and is now live from commit `2a1ffb0`. The served stylesheet is byte-identical to the fixed file, and the user's Chrome DevTools checks on the public URL found no horizontal overflow at 320, 360, 375, 390, 414, 768, 980, 981 and 1280 px (T-E7, done; [evidence](screenshots/mobile-overflow-fix/deployed-2a1ffb0/README.md)). The deployed site also has no favicon, so browsers log one 404; the redesign links `favicon.svg`, which removes that request once deployed (T-E8). The redesign's checks so far are local only: headless Chrome at 320 to 1440 px, keyboard and reduced-motion checks, and the test suite ([TESTING.md](TESTING.md), "Residual Archive redesign"). A review pass on October 29 fixed eight problems in it, including a 320 px overflow of the home page's illustration badge that the first sweep missed because Chrome's scrollbars were hidden ([TESTING.md](TESTING.md), "Review fixes to the redesign"). The site performs **no live inference**; the Python backend and Ollama stay on the laptop.
 
 ## Demonstration workflow (browser)
 
@@ -217,7 +226,7 @@ python3.12 -m unittest discover -s tests -v              # core suite; the 6 SDK
 python3.12 -m ghostcache evaluate --mode fixture --output results/fixture-new-run.json
 python3.12 -m ghostcache evaluate --mode live --model gemma4:e2b-it-qat --output results/live-gemma-new-run.json
 python3.12 scripts/export_site_data.py --check           # walkthrough data matches the selected reports
-node --check web/app.js && node --check site/walkthrough.js   # optional, needs Node
+for f in web/app.js site/*.js; do node --check "$f"; done   # optional, needs Node
 (cd screenshots && shasum -a 256 -c SHA256SUMS.txt)      # deployment screenshots unchanged
 ```
 
@@ -297,8 +306,8 @@ A longer project handoff (`context.md`) is kept in the author's workspace, outsi
 The full list, with acceptance criteria, is in [tasks.md](tasks.md). As of October 28, 2026:
 
 - **Submission:** confirm the deadline (the written rules and the DEV API disagree), record a short demo video, write the DEV draft, run the final verification, and publish only after the author approves (T-I0 to T-I4).
-- **Public walkthrough:** check a real phone, other browsers and assistive technology (T-E6), and optionally add a favicon (T-E8). The narrow-screen fix (T-E7) is deployed and verified.
-- **Evidence and hardening:** run metadata in new reports (T-A8), repeated live runs including failures (T-C1), a load-time and memory measurement (T-C2), an evaluator-retention note in the UI (T-A7), new local-UI screenshots (T-A9), and a dedicated UI state for `storage_failed`.
+- **Public walkthrough:** deploy and verify the light redesign (T-E9), which also adds the favicon (T-E8); check a real phone, other browsers and assistive technology (T-E6). The narrow-screen fix (T-E7) is deployed and verified.
+- **Evidence and hardening:** run metadata in new reports (T-A8), repeated live runs including failures (T-C1), a load-time and memory measurement (T-C2), an evaluator-retention note in the UI (T-A7) and new local-UI screenshots (T-A9). The dedicated UI state for `storage_failed` (T-A10) was added with the redesign.
 
 ## Prior work
 
