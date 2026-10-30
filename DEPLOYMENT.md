@@ -10,6 +10,10 @@ Render is used only for hosting: it serves these static files and runs nothing e
 
 *(Until October 29, 2026, Render was hosting only and not one of the submission's categories.)*
 
+## Pending local update: demo video status (October 30, 2026)
+
+The local methodology page now links the [public demo video](https://www.youtube.com/watch?v=yzjmyaA-9Vw) (4:55) and identifies the DEV submission as remaining work. The owner confirmed Public visibility and accepted the final duration on October 30. This content edit is uncommitted and has not been pushed or deployed in this update. The historical deployment checks below remain unchanged; verify the new served page after deployment before claiming it is live.
+
 ## Earlier pending record: the UI content refresh (October 29, 2026)
 
 **Resolution, October 30, 2026 (T-E9 done):** read-only checks at 19:53–20:10 UTC on October 29 found both addresses serving all 11 site files byte-identical to `site/` at `04407eb`, the latest `main`. That commit includes this refresh and the audit fixes (`00cfb10`), the CI-evidence edit (`3932562`) and an accent-colour change to `style.css` and `favicon.svg` (`04407eb`). Status codes, headers, served content, links and a live-browser pass all met the T-E9 criteria ([evidence](screenshots/public-deploy-04407eb-2026-10-30/README.md); [Verification record](#verification-record)). No October 30 Render dashboard screenshot was supplied, so the commit Render built is not established. The record below is kept as history.

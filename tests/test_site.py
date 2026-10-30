@@ -23,6 +23,7 @@ SCRIPTS = ("site.js", "home.js", "walkthrough.js", "method.js")
 # The only external destinations the public pages link to.
 EXTERNAL = ("https://github.com/bipul724/GhostCache", "https://ollama.com",
             "https://ghostcache.bipulchamoli.tech/", "https://ghostcache-walkthrough.onrender.com/",
+            "https://www.youtube.com/watch?v=yzjmyaA-9Vw",
             "https://dev.to/vectorlinklabs/stale-rag-vs-expensive-rag-how-to-cache-rag-context-without-serving-outdated-answers-335f",
             "https://dev.to/fusionaldev/where-retrieval-assistants-leak-the-title-the-summary-and-the-cache-4po4")
 
