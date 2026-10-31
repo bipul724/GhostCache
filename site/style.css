@@ -235,7 +235,7 @@ h1 em,h2 em,.display em{font-style:italic;color:var(--gc-violet)}
 .tlist__item.is-context-clean .tlist__btn{box-shadow:inset 3px 0 0 var(--gc-teal)}
 
 /* Home: hero and the afterimage drawing */
-.hero{padding:clamp(40px,6.5vw,92px) 0 clamp(56px,7vw,104px)}
+.hero{padding:clamp(20px,2.5vw,36px) 0 clamp(56px,7vw,104px)}
 .hero__grid{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:clamp(36px,5vw,76px);align-items:center}
 .hero__sub{margin:18px 0 0;max-width:36em;color:var(--gc-ink-2)}
 .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
@@ -627,6 +627,15 @@ h1 em,h2 em,.display em{font-style:italic;color:var(--gc-violet)}
 
 /* Responsive */
 @media(min-width:981px){.hero-br{display:inline}}
+/* Desktop hero scales with viewport height so the buttons and note fit on the first screen */
+@media(min-width:981px){
+.hero{padding-top:clamp(16px,2.6vh,36px)}
+.hero .display{font-size:clamp(46px,min(7vw,8.3vh),98px)}
+.hero .lede{margin-top:clamp(12px,2vh,22px);font-size:clamp(17px,min(1.5vw,2.35vh),21px)}
+.hero__sub{margin-top:clamp(10px,1.6vh,18px)}
+.hero .cta-row{margin-top:clamp(16px,2.8vh,32px)}
+.hero__note{margin-top:clamp(12px,2.2vh,26px)}
+}
 @media(max-width:1359px){
 .wt-grid{grid-template-columns:minmax(0,1fr)}
 .wt-aside{position:static}
